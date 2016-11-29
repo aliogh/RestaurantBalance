@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.di.modules
+package com.mrebollob.m2p.presentation.presenter.main
 
-import android.app.Application
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import com.mrebollob.m2p.presentation.presenter.Presenter
+import com.mrebollob.m2p.presentation.view.main.MainMvpView
 
-@Module
-class AppModule(val app: Application) {
 
-    @Provides
-    @Singleton
-    fun provideApplication(): Application {
-        return app
+class MainPresenter : Presenter<MainMvpView> {
+    override fun attachView(view: MainMvpView) {
+        throw UnsupportedOperationException("not implemented")
+    }
+
+    override fun detachView() {
+        throw UnsupportedOperationException("not implemented")
     }
 }

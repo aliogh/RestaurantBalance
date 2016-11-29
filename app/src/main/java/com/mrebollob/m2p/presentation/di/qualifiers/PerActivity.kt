@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.di.modules
+package com.mrebollob.m2p.presentation.di.qualifiers
 
-import android.app.Activity
-import android.content.Context
-import com.mrebollob.m2p.di.qualifiers.PerActivity
-import dagger.Module
-import dagger.Provides
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy.RUNTIME
+import javax.inject.Scope
 
-@Module
-class ActivityModule(val activity: Activity) {
-
-    @Provides
-    @PerActivity
-    fun provideActivityContext(): Context {
-        return activity
-    }
-
-    @Provides
-    @PerActivity
-    fun provideActivity(): Activity {
-        return activity
-    }
-}
+@Scope
+@Retention(RUNTIME)
+annotation class PerActivity

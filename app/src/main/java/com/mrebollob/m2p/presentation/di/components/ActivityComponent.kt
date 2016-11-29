@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.entities
+package com.mrebollob.m2p.presentation.di.components
 
-class CreditCardBalance(val balance: String) {
+import com.mrebollob.m2p.presentation.view.form.CardFormFragment
+import com.mrebollob.m2p.presentation.di.modules.ActivityModule
+import com.mrebollob.m2p.presentation.di.qualifiers.PerActivity
+import dagger.Component
+
+@PerActivity
+@Component(dependencies = arrayOf(AppComponent::class), modules = arrayOf(ActivityModule::class))
+interface ActivityComponent {
+
+    fun inject(cardFormFragment: CardFormFragment)
+
 }

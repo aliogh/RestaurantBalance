@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.di.components
+package com.mrebollob.m2p.presentation.view.main
 
-import android.app.Application
-import com.mrebollob.m2p.di.modules.AppModule
-import dagger.Component
-import javax.inject.Singleton
+import com.mrebollob.m2p.presentation.view.MvpView
 
-@Singleton
-@Component(modules = arrayOf(AppModule::class)
-)
-interface AppComponent {
 
-    fun app(): Application
+interface MainMvpView : MvpView {
+
+    fun showMessage(stringId: Int)
+
+    fun showProgressIndicator()
 }

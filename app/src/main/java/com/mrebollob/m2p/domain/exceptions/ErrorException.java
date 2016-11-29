@@ -14,27 +14,28 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p
+package com.mrebollob.m2p.domain.exceptions;
 
-import android.app.Application
-import com.mrebollob.m2p.di.components.AppComponent
-import com.mrebollob.m2p.di.components.DaggerAppComponent
-import com.mrebollob.m2p.di.modules.AppModule
+public class ErrorException extends RuntimeException {
 
-class M2PApp : Application() {
+    private final String code;
+    private final String errorMessage;
 
-    companion object {
-        lateinit var appComponent: AppComponent
+    public ErrorException() {
+        this.code = "";
+        this.errorMessage = "";
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        appComponent = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
+    public ErrorException(String code, String errorMessage) {
+        this.code = code;
+        this.errorMessage = errorMessage;
     }
 
-    fun getAppComponent(): AppComponent {
-        return appComponent
+    public String getCode() {
+        return code;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

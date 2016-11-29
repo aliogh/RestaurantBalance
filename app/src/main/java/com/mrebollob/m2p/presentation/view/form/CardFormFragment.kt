@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez.
+ * Copyright (c) 2016. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mrebollob.m2p
+
+package com.mrebollob.m2p.presentation.view.form
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mrebollob.m2p.di.components.DaggerActivityComponent
-import com.mrebollob.m2p.di.modules.ActivityModule
-import com.mrebollob.m2p.extensions.inflate
+import com.mrebollob.m2p.presentation.presenter.M2PManager
+import com.mrebollob.m2p.R
+import com.mrebollob.m2p.presentation.view.BaseFragment
+import com.mrebollob.m2p.presentation.di.components.DaggerActivityComponent
+import com.mrebollob.m2p.presentation.di.modules.ActivityModule
+import com.mrebollob.m2p.presentation.M2PApp
+import com.mrebollob.m2p.utils.extensions.inflate
 import kotlinx.android.synthetic.main.fragment_card_form.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
-class CardFormFragment : RxBaseFragment() {
+class CardFormFragment : BaseFragment() {
 
     @Inject lateinit var m2pManager: M2PManager
 

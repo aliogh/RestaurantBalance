@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez.
+ * Copyright (c) 2016. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mrebollob.m2p
+
+package com.mrebollob.m2p.presentation.view.main
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import com.mrebollob.m2p.R
+import com.mrebollob.m2p.presentation.view.form.CardFormFragment
 
 class MainActivity : AppCompatActivity() {
 

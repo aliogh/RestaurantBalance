@@ -14,24 +14,11 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p
+package com.mrebollob.m2p.presentation.view
 
-import com.mrebollob.m2p.di.qualifiers.PerActivity
-import com.mrebollob.m2p.entities.CreditCardBalance
-import rx.Observable
-import javax.inject.Inject
+import android.content.Context
 
-@PerActivity
-class M2PManager @Inject constructor() {
+interface MvpView {
 
-    fun getCardBalance(): Observable<CreditCardBalance> {
-        return Observable.create {
-            subscriber ->
-
-            val creditCardBalance = CreditCardBalance("hola")
-
-            subscriber.onNext(creditCardBalance)
-            subscriber.onCompleted()
-        }
-    }
+    val context: Context
 }

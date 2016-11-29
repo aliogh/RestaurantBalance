@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.di.qualifiers
+package com.mrebollob.m2p.presentation.view
 
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy.RUNTIME
-import javax.inject.Scope
+import android.support.v4.app.Fragment
+import rx.subscriptions.CompositeSubscription
 
-@Scope
-@Retention(RUNTIME)
-annotation class PerActivity
+open class BaseFragment() : Fragment() {
+
+    protected var subscriptions = CompositeSubscription()
+
+    override fun onResume() {
+        super.onResume()
+        subscriptions = CompositeSubscription()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        subscriptions.clear()
+    }
+}

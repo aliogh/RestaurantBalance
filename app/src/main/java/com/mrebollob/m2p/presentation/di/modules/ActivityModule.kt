@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.di.components
+package com.mrebollob.m2p.presentation.di.modules
 
-import com.mrebollob.m2p.CardFormFragment
-import com.mrebollob.m2p.di.modules.ActivityModule
-import com.mrebollob.m2p.di.qualifiers.PerActivity
-import dagger.Component
+import android.app.Activity
+import android.content.Context
+import com.mrebollob.m2p.presentation.di.qualifiers.PerActivity
+import dagger.Module
+import dagger.Provides
 
-@PerActivity
-@Component(dependencies = arrayOf(AppComponent::class), modules = arrayOf(ActivityModule::class))
-interface ActivityComponent {
+@Module
+class ActivityModule(val activity: Activity) {
 
-    fun inject(cardFormFragment: CardFormFragment)
+    @Provides
+    @PerActivity
+    fun provideActivityContext(): Context {
+        return activity
+    }
 
+    @Provides
+    @PerActivity
+    fun provideActivity(): Activity {
+        return activity
+    }
 }
