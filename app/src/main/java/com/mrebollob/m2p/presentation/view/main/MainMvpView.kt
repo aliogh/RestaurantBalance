@@ -16,12 +16,13 @@
 
 package com.mrebollob.m2p.presentation.view.main
 
+import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.presentation.view.MvpView
 
 
 interface MainMvpView : MvpView {
 
-    fun showMessage(stringId: Int)
+    fun showCardBalance(creditCardBalance: CreditCardBalance)
 
-    fun showProgressIndicator()
+    fun showError(error: String)
 }

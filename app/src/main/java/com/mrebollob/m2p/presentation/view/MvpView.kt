@@ -16,9 +16,6 @@
 
 package com.mrebollob.m2p.presentation.view
 
-import android.content.Context
-
 interface MvpView {
 
-    val context: Context
 }

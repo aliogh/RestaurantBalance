@@ -23,11 +23,40 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/activity_base_content"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    </FrameLayout>
 
+        <EditText
+            android:id="@+id/numberEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/card_number"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/expDateEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/exp_date"
+            android:inputType="date"/>
+
+        <EditText
+            android:id="@+id/cvvEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/cvv"
+            android:inputType="number"/>
+
+        <Button
+            android:id="@+id/showBalanceBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button"/>
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

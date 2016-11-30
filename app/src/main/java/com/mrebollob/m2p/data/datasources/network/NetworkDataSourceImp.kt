@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.view
+package com.mrebollob.m2p.data.datasources.network
 
-import android.support.v4.app.Fragment
-import rx.subscriptions.CompositeSubscription
+import com.mrebollob.m2p.domain.datasources.NetworkDataSource
+import com.mrebollob.m2p.domain.entities.CreditCard
+import com.mrebollob.m2p.domain.entities.CreditCardBalance
+import rx.Observable
 
-open class BaseFragment() : Fragment() {
+class NetworkDataSourceImp : NetworkDataSource {
 
-    protected var subscriptions = CompositeSubscription()
-
-    override fun onResume() {
-        super.onResume()
-        subscriptions = CompositeSubscription()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        subscriptions.clear()
+    override fun getCreditCardBalance(creditCard: CreditCard): Observable<CreditCardBalance> {
+        return Observable.create {
+            subscriber ->
+            subscriber.onNext(CreditCardBalance(creditCard.name))
+            subscriber.onCompleted()
+        }
     }
 }

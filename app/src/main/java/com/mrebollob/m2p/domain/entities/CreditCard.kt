@@ -16,5 +16,5 @@
 
 package com.mrebollob.m2p.domain.entities
 
-class CreditCard {
+class CreditCard(val name: String) {
 }

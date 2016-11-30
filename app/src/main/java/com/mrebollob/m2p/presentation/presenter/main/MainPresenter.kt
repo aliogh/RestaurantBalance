@@ -16,16 +16,38 @@
 
 package com.mrebollob.m2p.presentation.presenter.main
 
+import com.mrebollob.m2p.data.datasources.network.NetworkDataSourceImp
+import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.presentation.presenter.Presenter
 import com.mrebollob.m2p.presentation.view.main.MainMvpView
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import rx.subscriptions.CompositeSubscription
 
 
 class MainPresenter : Presenter<MainMvpView> {
+
+    private val mSubscriptions = CompositeSubscription()
+    private val networkDataSource by lazy { NetworkDataSourceImp() }
+    private var mView: MainMvpView? = null
+
     override fun attachView(view: MainMvpView) {
-        throw UnsupportedOperationException("not implemented")
+        mView = view
+    }
+
+    fun showBalance(creditCard: CreditCard) {
+        val subscription = networkDataSource.getCreditCardBalance(creditCard)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ creditCardBalance ->
+                    mView?.showCardBalance(creditCardBalance)
+                }, { e ->
+                    mView?.showError("No se")
+                })
+        mSubscriptions.add(subscription)
     }
 
     override fun detachView() {
-        throw UnsupportedOperationException("not implemented")
+        mSubscriptions.clear()
     }
 }

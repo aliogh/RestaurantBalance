@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.di.modules
+package com.mrebollob.m2p.domain.datasources
 
-import android.app.Application
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import com.mrebollob.m2p.domain.entities.CreditCard
+import com.mrebollob.m2p.domain.entities.CreditCardBalance
+import rx.Observable
 
-@Module
-class AppModule(val app: Application) {
+interface NetworkDataSource {
 
-    @Provides
-    @Singleton
-    fun provideApplication(): Application {
-        return app
-    }
+    fun getCreditCardBalance(creditCard: CreditCard): Observable<CreditCardBalance>
 }

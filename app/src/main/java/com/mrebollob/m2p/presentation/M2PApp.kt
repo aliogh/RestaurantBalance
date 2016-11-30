@@ -17,24 +17,11 @@
 package com.mrebollob.m2p.presentation
 
 import android.app.Application
-import com.mrebollob.m2p.presentation.di.components.AppComponent
-import com.mrebollob.m2p.presentation.di.components.DaggerAppComponent
-import com.mrebollob.m2p.presentation.di.modules.AppModule
 
 class M2PApp : Application() {
 
-    companion object {
-        lateinit var appComponent: AppComponent
-    }
-
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
-    }
 
-    fun getAppComponent(): AppComponent {
-        return appComponent
     }
 }
