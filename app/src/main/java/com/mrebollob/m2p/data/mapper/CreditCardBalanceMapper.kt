@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.domain.entities
+package com.mrebollob.m2p.data.mapper
 
-class CreditCard(val number: String, val expDate: String, val cvv: String) {
+import com.mrebollob.m2p.domain.entities.CreditCardBalance
 
-    fun isValid(): Boolean {
-        return true
+class CreditCardBalanceMapper {
+
+    fun transform(response: String): CreditCardBalance {
+        return CreditCardBalance(response)
     }
 }

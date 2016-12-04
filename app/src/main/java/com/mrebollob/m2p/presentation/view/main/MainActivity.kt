@@ -49,12 +49,12 @@ class MainActivity : BaseActivity(), MainMvpView {
     }
 
     fun onShowBalanceClick() {
-        val number = numberEt.text.toString()
+        val creditCard = CreditCard(numberEt.text.toString(), expDateEt.text.toString(), cvvEt.text.toString())
 
-        if (!number.isEmpty()) {
-            mPresenter.showBalance(CreditCard(number))
+        if (creditCard.isValid()) {
+            mPresenter.showBalance(creditCard)
         } else {
-            Toast.makeText(this, "DO", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Card not valid", Toast.LENGTH_SHORT).show()
         }
     }
 
