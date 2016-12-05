@@ -23,12 +23,12 @@ import com.mrebollob.m2p.presentation.view.main.MainMvpView
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
+import javax.inject.Inject
 
 
-class MainPresenter : Presenter<MainMvpView> {
+class MainPresenter @Inject constructor(private val networkDataSource: NetworkDataSourceImp) : Presenter<MainMvpView> {
 
     private val mSubscriptions = CompositeSubscription()
-    private val networkDataSource by lazy { NetworkDataSourceImp() }
     private var mView: MainMvpView? = null
 
     override fun attachView(view: MainMvpView) {

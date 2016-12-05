@@ -25,17 +25,23 @@ import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 
 class MainActivity : BaseActivity(), MainMvpView {
 
-    private val mPresenter: MainPresenter = MainPresenter()
+    @Inject lateinit var mPresenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initializeDependencyInjector()
 
         initUI()
+    }
+
+    private fun initializeDependencyInjector() {
+        this.getApplicationComponent().inject(this)
     }
 
     fun initUI() {

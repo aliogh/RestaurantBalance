@@ -14,32 +14,26 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation
+package com.mrebollob.m2p.presentation.di.components
 
 import android.app.Application
-import com.mrebollob.m2p.presentation.di.components.AppComponent
-import com.mrebollob.m2p.presentation.di.components.DaggerAppComponent
+import com.mrebollob.m2p.domain.datasources.NetworkDataSource
 import com.mrebollob.m2p.presentation.di.modules.AppModule
+import com.mrebollob.m2p.presentation.di.modules.NetworkModule
+import com.mrebollob.m2p.presentation.view.main.MainActivity
+import dagger.Component
+import okhttp3.OkHttpClient
+import javax.inject.Singleton
 
-class M2PApp : Application() {
+@Singleton
+@Component(modules = arrayOf(AppModule::class, NetworkModule::class))
+interface AppComponent {
 
-    companion object {
-        lateinit var mAppComponent: AppComponent
-    }
+    fun inject(activity: MainActivity)
 
-    override fun onCreate() {
-        super.onCreate()
+    fun app(): Application
 
-        initializeInjector()
-    }
+    fun networkDataSource(): NetworkDataSource
 
-    private fun initializeInjector() {
-        mAppComponent = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
-    }
-
-    fun getAppComponent(): AppComponent {
-        return mAppComponent
-    }
+    fun okHttpClient(): OkHttpClient
 }

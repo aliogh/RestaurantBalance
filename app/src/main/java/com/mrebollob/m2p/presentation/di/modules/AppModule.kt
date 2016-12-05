@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.view
+package com.mrebollob.m2p.presentation.di.modules
 
-import android.support.v7.app.AppCompatActivity
-import com.mrebollob.m2p.presentation.M2PApp
-import com.mrebollob.m2p.presentation.di.components.AppComponent
+import android.app.Application
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
-open class BaseActivity : AppCompatActivity() {
+@Module
+class AppModule(val mApplication: Application) {
 
-    protected fun getApplicationComponent(): AppComponent {
-        return (application as M2PApp).getAppComponent()
+    @Provides
+    @Singleton
+    fun provideApplicationContext(): Application {
+        return mApplication
     }
 }
