@@ -16,7 +16,6 @@
 
 package com.mrebollob.m2p.data.datasources.network
 
-import com.mrebollob.m2p.data.mapper.CreditCardBalanceMapper
 import com.mrebollob.m2p.data.scraper.M2PWebScraper
 import com.mrebollob.m2p.domain.datasources.NetworkDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
@@ -32,8 +31,6 @@ import javax.inject.Inject
 class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient,
                                                val m2PWebScraper: M2PWebScraper) : NetworkDataSource {
 
-    val creditCardBalanceMapper = CreditCardBalanceMapper()
-
     override fun getCreditCardBalance(creditCard: CreditCard): Observable<CreditCardBalance> {
         return Observable.create {
             subscriber ->
@@ -48,16 +45,23 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient,
                 val formUrl = m2PWebScraper.getFormUrl(baseResponse.body().string())
                 val requestForm = Request.Builder()
                         .url(formUrl)
+                        .get()
+                        .build()
+                val formResponse = httpClient.newCall(requestForm).execute()
+
+                val postFormUrl = m2PWebScraper.getPostFormUrl(formResponse.body().string())
+                val requestCard = Request.Builder()
+                        .url(postFormUrl)
                         .post(getFormBody())
                         .build()
-                val response = httpClient.newCall(requestForm).execute()
+                val response = httpClient.newCall(requestCard).execute()
 
-                subscriber.onNext(creditCardBalanceMapper.transform(creditCard.number))
+                subscriber.onNext(m2PWebScraper.getCardBalance(response.body().string()))
                 subscriber.onCompleted()
 
-//                if (!response.isSuccessful) {
-//                    subscriber.onError(Exception("error"))
-//                }
+                if (!response.isSuccessful) {
+                    subscriber.onError(Exception("error"))
+                }
             } catch (exception: IOException) {
                 subscriber.onError(exception)
             }

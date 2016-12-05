@@ -16,6 +16,7 @@
 
 package com.mrebollob.m2p.data.scraper
 
+import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import org.jsoup.Jsoup
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,5 +37,25 @@ class M2PWebScraper @Inject constructor() {
                 .forEach { return it }
 
         throw  RuntimeException("Link not found")
+    }
+
+    fun getPostFormUrl(html: String): String {
+        val document = Jsoup.parse(html)
+
+        val form = document.select("form#activation-form").first()
+
+        return form.attr("action")
+    }
+
+    fun getCardBalance(html: String): CreditCardBalance {
+        val document = Jsoup.parse(html)
+
+        val infoElements = document.select("div.col-xs-12.usuario-acciones-bloque > div.col-xs-12.col-sm-3")
+
+        infoElements.filter { it.select("p.usuario-acciones-bloque-title").text().contains("Saldo") }
+                .map { it.text() }
+                .forEach { return CreditCardBalance(it) }
+
+        throw  RuntimeException("Data not found")
     }
 }
