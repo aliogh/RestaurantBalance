@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez.
+ * Copyright (c) 2016. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p;
+package com.mrebollob.m2p.presentation.di.modules
 
-import org.junit.Test;
+import android.app.Application
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
-import static org.junit.Assert.*;
+@Module
+class AppModule(val mApplication: Application) {
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
-public class ExampleUnitTest {
-    @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    @Provides
+    @Singleton
+    fun provideApplicationContext(): Application {
+        return mApplication
     }
 }

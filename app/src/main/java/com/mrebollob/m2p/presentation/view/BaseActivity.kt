@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez.
+ * Copyright (c) 2016. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p;
+package com.mrebollob.m2p.presentation.view
 
-import org.junit.Test;
+import android.support.v7.app.AppCompatActivity
+import com.mrebollob.m2p.presentation.M2PApp
+import com.mrebollob.m2p.presentation.di.components.AppComponent
 
-import static org.junit.Assert.*;
+open class BaseActivity : AppCompatActivity() {
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
-public class ExampleUnitTest {
-    @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    protected fun getApplicationComponent(): AppComponent {
+        return (application as M2PApp).getAppComponent()
     }
 }
