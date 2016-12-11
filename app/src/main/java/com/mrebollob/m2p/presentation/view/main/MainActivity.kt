@@ -55,23 +55,28 @@ class MainActivity : BaseActivity(), MainMvpView {
     }
 
     fun onShowBalanceClick() {
-        val creditCard = CreditCard(numberEt.text.toString(), expDateEt.text.toString(), cvvEt.text.toString())
+        numberIl.error = null
+        expDateIl.error = null
+        cvvIl.error = null
+
+        val expDate = expDateEt.text.split("/")
+        val creditCard = CreditCard(numberEt.text.toString(), expDate[0], expDate[1], cvvEt.text.toString())
 
         if (creditCard.isValid()) {
             mPresenter.showBalance(creditCard)
         } else {
-            Toast.makeText(this, "Card not valid", Toast.LENGTH_SHORT).show()
+            numberIl.error = "Card not valid"
+            expDateIl.error = "MM/YY"
         }
     }
 
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
-        Toast.makeText(this, creditCardBalance.balance, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, creditCardBalance.balance, Toast.LENGTH_LONG).show()
     }
 
     override fun showError(error: String) {
         Toast.makeText(this, "ERROR: " + error, Toast.LENGTH_SHORT).show()
     }
-
 
     override fun onStart() {
         super.onStart()

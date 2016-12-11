@@ -28,8 +28,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 
-class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient,
-                                               val m2PWebScraper: M2PWebScraper) : NetworkDataSource {
+class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val m2PWebScraper: M2PWebScraper)
+    : NetworkDataSource {
 
     override fun getCreditCardBalance(creditCard: CreditCard): Observable<CreditCardBalance> {
         return Observable.create {
@@ -52,7 +52,7 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient,
                 val postFormUrl = m2PWebScraper.getPostFormUrl(formResponse.body().string())
                 val requestCard = Request.Builder()
                         .url(postFormUrl)
-                        .post(getFormBody())
+                        .post(getFormBody(creditCard))
                         .build()
                 val response = httpClient.newCall(requestCard).execute()
 
@@ -68,15 +68,15 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient,
         }
     }
 
-    fun getFormBody(): FormBody {
+    fun getFormBody(creditCard: CreditCard): FormBody {
         return FormBody.Builder()
-                .add("card1", "0000")
-                .add("card2", "0000")
-                .add("card3", "0000")
-                .add("card4", "0000")
-                .add("cardMonth", "00")
-                .add("cardYear", "00")
-                .add("ccv2", "000")
+                .add("card1", creditCard.number.substring(0, 4))
+                .add("card2", creditCard.number.substring(4, 8))
+                .add("card3", creditCard.number.substring(8, 12))
+                .add("card4", creditCard.number.substring(12, 16))
+                .add("cardMonth", creditCard.expMonth)
+                .add("cardYear", creditCard.expYear)
+                .add("ccv2", creditCard.cvv)
                 .build()
     }
 
