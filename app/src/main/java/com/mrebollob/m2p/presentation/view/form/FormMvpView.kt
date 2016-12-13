@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.view.main
+package com.mrebollob.m2p.presentation.view.form
 
 import com.mrebollob.m2p.domain.entities.CreditCard
-import com.mrebollob.m2p.domain.entities.CreditCardBalance
-import com.mrebollob.m2p.presentation.view.MvpView
 
-
-interface MainMvpView : MvpView {
+interface FormMvpView {
 
     fun showCreditCard(creditCard: CreditCard)
-
-    fun showCardBalance(creditCardBalance: CreditCardBalance)
 
     fun showError(error: String)
 }

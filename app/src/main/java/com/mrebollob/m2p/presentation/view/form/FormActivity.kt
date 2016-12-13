@@ -14,51 +14,30 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.view.main
+package com.mrebollob.m2p.presentation.view.form
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
-import com.mrebollob.m2p.domain.entities.CreditCardBalance
-import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
+import com.mrebollob.m2p.presentation.presenter.form.FormPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
-import com.mrebollob.m2p.presentation.view.form.FormActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_form.*
 import javax.inject.Inject
 
+class FormActivity : BaseActivity(), FormMvpView {
 
-class MainActivity : BaseActivity(), MainMvpView {
-
-    @Inject lateinit var mPresenter: MainPresenter
+    @Inject lateinit var mPresenter: FormPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_form)
         initializeDependencyInjector()
 
         initUI()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.action_create -> {
-                val intent = Intent(this, FormActivity::class.java)
-                startActivityForResult(intent, 0x62)
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
     }
 
     private fun initializeDependencyInjector() {
@@ -67,8 +46,7 @@ class MainActivity : BaseActivity(), MainMvpView {
 
     fun initUI() {
         initToolbar()
-
-        cardNumberTv.text = "Loading..."
+        saveBtn.setOnClickListener { onShowBalanceClick() }
     }
 
     fun initToolbar() {
@@ -76,12 +54,26 @@ class MainActivity : BaseActivity(), MainMvpView {
         setSupportActionBar(toolbar)
     }
 
-    override fun showCreditCard(creditCard: CreditCard) {
-        cardNumberTv.text = "****" + creditCard.number.substring(creditCard.number.length - 4)
+    fun onShowBalanceClick() {
+        numberIl.error = null
+        expDateIl.error = null
+        cvvIl.error = null
+
+        val expDate = expDateEt.text.split("/")
+        val creditCard = CreditCard(numberEt.text.toString(), expDate[0], expDate[1], cvvEt.text.toString())
+
+        if (creditCard.isValid()) {
+            mPresenter.createCreditCard(creditCard)
+        } else {
+            numberIl.error = "Card not valid"
+            expDateIl.error = "MM/YY"
+        }
     }
 
-    override fun showCardBalance(creditCardBalance: CreditCardBalance) {
-        cardBalanceTv.text = "Balance: " + creditCardBalance.balance
+    override fun showCreditCard(creditCard: CreditCard) {
+        val returnIntent = Intent()
+        setResult(Activity.RESULT_OK, returnIntent)
+        finish()
     }
 
     override fun showError(error: String) {

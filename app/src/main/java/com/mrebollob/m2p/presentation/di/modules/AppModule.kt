@@ -17,6 +17,7 @@
 package com.mrebollob.m2p.presentation.di.modules
 
 import android.app.Application
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -28,5 +29,11 @@ class AppModule(val mApplication: Application) {
     @Singleton
     fun provideApplicationContext(): Application {
         return mApplication
+    }
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return Gson()
     }
 }

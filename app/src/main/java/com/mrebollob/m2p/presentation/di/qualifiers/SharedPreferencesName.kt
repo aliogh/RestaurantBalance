@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.view.main
+package com.mrebollob.m2p.presentation.di.qualifiers
 
-import com.mrebollob.m2p.domain.entities.CreditCard
-import com.mrebollob.m2p.domain.entities.CreditCardBalance
-import com.mrebollob.m2p.presentation.view.MvpView
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy.RUNTIME
+import javax.inject.Qualifier
 
 
-interface MainMvpView : MvpView {
-
-    fun showCreditCard(creditCard: CreditCard)
-
-    fun showCardBalance(creditCardBalance: CreditCardBalance)
-
-    fun showError(error: String)
-}
+@Qualifier
+@Retention(RUNTIME)
+annotation class SharedPreferencesName

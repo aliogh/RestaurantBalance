@@ -19,17 +19,21 @@ package com.mrebollob.m2p.presentation.di.components
 import android.app.Application
 import com.mrebollob.m2p.domain.datasources.NetworkDataSource
 import com.mrebollob.m2p.presentation.di.modules.AppModule
+import com.mrebollob.m2p.presentation.di.modules.DbModule
 import com.mrebollob.m2p.presentation.di.modules.NetworkModule
+import com.mrebollob.m2p.presentation.view.form.FormActivity
 import com.mrebollob.m2p.presentation.view.main.MainActivity
 import dagger.Component
 import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class, NetworkModule::class))
+@Component(modules = arrayOf(AppModule::class, NetworkModule::class, DbModule::class))
 interface AppComponent {
 
     fun inject(activity: MainActivity)
+
+    fun inject(activity: FormActivity)
 
     fun app(): Application
 

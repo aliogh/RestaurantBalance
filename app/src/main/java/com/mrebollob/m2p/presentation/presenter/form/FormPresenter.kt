@@ -14,49 +14,32 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.presenter.main
+package com.mrebollob.m2p.presentation.presenter.form
 
-import com.mrebollob.m2p.data.datasources.network.NetworkDataSourceImp
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.presentation.presenter.Presenter
-import com.mrebollob.m2p.presentation.view.main.MainMvpView
+import com.mrebollob.m2p.presentation.view.form.FormMvpView
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
-
-class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSourceImp,
-                                        val dbDataSource: DbDataSource) : Presenter<MainMvpView> {
+class FormPresenter @Inject constructor(val dbDataSource: DbDataSource) : Presenter<FormMvpView> {
 
     private val mSubscriptions = CompositeSubscription()
-    private var mView: MainMvpView? = null
+    private var mView: FormMvpView? = null
 
-    override fun attachView(view: MainMvpView) {
+    override fun attachView(view: FormMvpView) {
         mView = view
-        getCreditCard()
     }
 
-    fun getCreditCard() {
-        val subscription = dbDataSource.getCreditCard()
+    fun createCreditCard(creditCard: CreditCard) {
+        val subscription = dbDataSource.createCreditCard(creditCard)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ creditCard ->
                     mView?.showCreditCard(creditCard)
-                    showBalance(creditCard)
-                }, { e ->
-                    mView?.showError("No se")
-                })
-        mSubscriptions.add(subscription)
-    }
-
-    fun showBalance(creditCard: CreditCard) {
-        val subscription = networkDataSource.getCreditCardBalance(creditCard)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ creditCardBalance ->
-                    mView?.showCardBalance(creditCardBalance)
                 }, { e ->
                     mView?.showError("No se")
                 })

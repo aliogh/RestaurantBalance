@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.view.main
+package com.mrebollob.m2p.domain.datasources
 
 import com.mrebollob.m2p.domain.entities.CreditCard
-import com.mrebollob.m2p.domain.entities.CreditCardBalance
-import com.mrebollob.m2p.presentation.view.MvpView
+import rx.Observable
 
+interface DbDataSource {
 
-interface MainMvpView : MvpView {
+    fun createCreditCard(creditCard: CreditCard): Observable<CreditCard>
 
-    fun showCreditCard(creditCard: CreditCard)
-
-    fun showCardBalance(creditCardBalance: CreditCardBalance)
-
-    fun showError(error: String)
+    fun getCreditCard(): Observable<CreditCard>
 }
