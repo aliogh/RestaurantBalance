@@ -17,27 +17,29 @@
 package com.mrebollob.m2p.domain
 
 import com.mrebollob.m2p.domain.entities.CreditCard
-import junit.framework.Assert.assertEquals
-import org.jetbrains.spek.api.Spek
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
 
-class CreditCardTest : Spek({
-    given("a valid Credit Card") {
-        val creditCard = CreditCard("4242424242424242", "10", "21", "111")
-        on("check if is valid") {
-            val isValid = creditCard.isValid()
-            it("should be valid") {
-                assertEquals(true, isValid)
-            }
-        }
+
+class CreditCardTest {
+
+    @Test
+    fun shouldBeAValidCreditCard() {
+
+        val validCreditCard = CreditCard("4242424242424242", "10", "21", "111")
+
+        val isValid = validCreditCard.isValid()
+
+        assertThat(isValid).isTrue()
     }
 
-    given("a not valid Credit Card") {
-        val creditCard = CreditCard("4242424242420000", "10", "21", "111")
-        on("check if is valid") {
-            val isValid = creditCard.isValid()
-            it("should not be valid") {
-                assertEquals(false, isValid)
-            }
-        }
+    @Test
+    fun shouldBeANotValidCreditCard() {
+
+        val notValidCreditCard = CreditCard("4242424242420000", "10", "21", "111")
+
+        val isValid = notValidCreditCard.isValid()
+
+        assertThat(isValid).isFalse()
     }
-})
+}
