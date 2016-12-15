@@ -25,6 +25,8 @@ import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
 import com.mrebollob.m2p.presentation.view.form.FormActivity
+import com.mrebollob.m2p.utils.extensions.gone
+import com.mrebollob.m2p.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -47,6 +49,7 @@ class MainActivity : BaseActivity(), MainMvpView {
 
     fun initUI() {
         initFab()
+
     }
 
     fun initFab() {
@@ -70,6 +73,18 @@ class MainActivity : BaseActivity(), MainMvpView {
 
     override fun showError(error: String) {
         Toast.makeText(this, "ERROR: " + error, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showLoading() {
+        loading.visible()
+        cardBalanceTv.gone()
+        loading.start()
+    }
+
+    override fun hideLoading() {
+        loading.gone()
+        cardBalanceTv.visible()
+        loading.stop()
     }
 
     override fun onStart() {

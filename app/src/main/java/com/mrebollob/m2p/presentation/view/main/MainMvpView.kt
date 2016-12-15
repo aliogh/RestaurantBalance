@@ -28,4 +28,8 @@ interface MainMvpView : MvpView {
     fun showCardBalance(creditCardBalance: CreditCardBalance)
 
     fun showError(error: String)
+
+    fun showLoading()
+
+    fun hideLoading()
 }

@@ -52,12 +52,15 @@ class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSource
     }
 
     fun showBalance(creditCard: CreditCard) {
+        mView?.showLoading()
         val subscription = networkDataSource.getCreditCardBalance(creditCard)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ creditCardBalance ->
+                    mView?.hideLoading()
                     mView?.showCardBalance(creditCardBalance)
                 }, { e ->
+                    mView?.hideLoading()
                     mView?.showError("No se")
                 })
         mSubscriptions.add(subscription)

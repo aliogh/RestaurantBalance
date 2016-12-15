@@ -50,6 +50,14 @@
             android:layout_margin="@dimen/spacing_medium"
             android:orientation="vertical">
 
+            <com.victor.loading.rotate.RotateLoading
+                android:id="@+id/loading"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                app:loading_color="@color/accent"
+                app:loading_width="5dp"/>
+
             <TextView
                 android:id="@+id/cardBalanceTv"
                 android:layout_width="match_parent"
