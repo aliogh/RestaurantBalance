@@ -18,9 +18,6 @@ package com.mrebollob.m2p.presentation.view.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
@@ -44,40 +41,27 @@ class MainActivity : BaseActivity(), MainMvpView {
         initUI()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.action_create -> {
-                val intent = Intent(this, FormActivity::class.java)
-                startActivityForResult(intent, 0x62)
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun initializeDependencyInjector() {
         this.getApplicationComponent().inject(this)
     }
 
     fun initUI() {
-        initToolbar()
-
-        cardNumberTv.text = "Loading..."
+        initFab()
     }
 
-    fun initToolbar() {
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
+    fun initFab() {
+        fab.setOnClickListener { view ->
+            val intent = Intent(this, FormActivity::class.java)
+            startActivityForResult(intent, 0x62)
+        }
     }
 
     override fun showCreditCard(creditCard: CreditCard) {
-        cardNumberTv.text = "****" + creditCard.number.substring(creditCard.number.length - 4)
+        val cardNumber = "****" + creditCard.number.substring(creditCard.number.length - 4)
+
+        creditCardView.cardNumber = creditCard.number
+        creditCardView.setCardExpiry(creditCard.expMonth + "/" + creditCard.expYear)
+        creditCardView.cardHolderName = "Money to Pay"
     }
 
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
