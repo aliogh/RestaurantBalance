@@ -47,6 +47,10 @@ class FormActivity : BaseActivity(), FormMvpView {
     fun initUI() {
         initToolbar()
         saveBtn.setOnClickListener { onShowBalanceClick() }
+
+//        numberEt.setText("4047000019143012")
+//        expDateEt.setText("08/21")
+//        cvvEt.setText("582")
     }
 
     fun initToolbar() {
