@@ -1,4 +1,4 @@
-# M2P
+# M2P [![Build Status](https://travis-ci.org/mrebollob/m2p.svg?branch=develop)](https://travis-ci.org/mrebollob/m2p)
 Kotlin android app following mvp pattern (Under development)
 
 ## Libraries used:
