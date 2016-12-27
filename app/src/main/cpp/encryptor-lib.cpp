@@ -14,28 +14,10 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.utils.extensions
+#include <jni.h>
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_mrebollob_m2p_presentation_view_main_MainActivity_getKey(JNIEnv *env, jobject instance) {
 
-fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
-    return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
-}
-
-fun Context.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-
-fun View.visible() {
-    this.visibility = View.VISIBLE
-}
-
-fun View.invisible() {
-    this.visibility = View.INVISIBLE
-}
-
-fun View.gone() {
-    this.visibility = View.GONE
+    return env->NewStringUTF("TEST_KEY");
 }

@@ -18,7 +18,6 @@ package com.mrebollob.m2p.presentation.view.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
@@ -26,12 +25,17 @@ import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
 import com.mrebollob.m2p.presentation.view.form.FormActivity
 import com.mrebollob.m2p.utils.extensions.gone
+import com.mrebollob.m2p.utils.extensions.toast
 import com.mrebollob.m2p.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
 class MainActivity : BaseActivity(), MainMvpView {
+
+    init {
+        System.loadLibrary("encryptor-lib")
+    }
 
     @Inject lateinit var mPresenter: MainPresenter
 
@@ -65,6 +69,8 @@ class MainActivity : BaseActivity(), MainMvpView {
         creditCardView.cardNumber = creditCard.number
         creditCardView.setCardExpiry(creditCard.expMonth + "/" + creditCard.expYear)
         creditCardView.cardHolderName = "Money to Pay"
+
+        toast(getKey())
     }
 
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
@@ -72,7 +78,7 @@ class MainActivity : BaseActivity(), MainMvpView {
     }
 
     override fun showError(error: String) {
-        Toast.makeText(this, "ERROR: " + error, Toast.LENGTH_SHORT).show()
+        toast("ERROR: " + error)
     }
 
     override fun showLoading() {
@@ -96,4 +102,6 @@ class MainActivity : BaseActivity(), MainMvpView {
         super.onStop()
         mPresenter.detachView()
     }
+
+    external fun getKey(): String
 }
