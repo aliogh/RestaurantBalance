@@ -56,7 +56,16 @@ class M2PWebScraper @Inject constructor() {
                 .map { it.text() }
                 .forEach { return CreditCardBalance(getFloatFromString(it)) }
 
-        //.forEach { return CreditCardBalance(it) }
+        throw  RuntimeException("Data not found")
+    }
+
+    fun getError(html: String): String {
+        val document = Jsoup.parse(html)
+
+        val infoElements = document.select("div.error-div")
+
+        infoElements.map { it.text() }
+                .forEach { return it }
 
         throw  RuntimeException("Data not found")
     }

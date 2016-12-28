@@ -44,28 +44,67 @@
                 android:layout_gravity="top|center_horizontal"/>
         </FrameLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/spacing_medium"
-            android:orientation="vertical">
+            android:layout_margin="@dimen/spacing_medium">
 
             <com.victor.loading.rotate.RotateLoading
-                android:id="@+id/loading"
+                android:id="@+id/loadingView"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center"
+                android:visibility="gone"
                 app:loading_color="@color/accent"
-                app:loading_width="5dp"/>
+                app:loading_width="5dp"
+                tools:visibility="visible"/>
 
-            <TextView
-                android:id="@+id/cardBalanceTv"
+            <FrameLayout
+                android:id="@+id/dataView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/primary_text"
-                android:textSize="@dimen/text_size_medium"
-                tools:text="Balance: 8,04 €"/>
-        </LinearLayout>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/cardBalanceTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="Balance: 8,04 €"/>
+
+                <LinearLayout
+                    android:id="@+id/errorView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/error"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/text_size_title"/>
+
+                    <TextView
+                        android:id="@+id/errorTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/text_size_large"
+                        tools:text="Unknown error"/>
+
+                    <Button
+                        android:id="@+id/retryBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:text="@string/retry"/>
+                </LinearLayout>
+            </FrameLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton

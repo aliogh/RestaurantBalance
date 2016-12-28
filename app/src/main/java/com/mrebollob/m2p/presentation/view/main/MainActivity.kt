@@ -61,6 +61,10 @@ class MainActivity : BaseActivity(), MainMvpView {
             val intent = Intent(this, FormActivity::class.java)
             startActivityForResult(intent, 0x62)
         }
+
+        retryBtn.setOnClickListener { view ->
+            mPresenter.update()
+        }
     }
 
     override fun showCreditCard(creditCard: CreditCard) {
@@ -74,23 +78,29 @@ class MainActivity : BaseActivity(), MainMvpView {
     }
 
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
+        errorView.gone()
+        cardBalanceTv.visible()
+
         cardBalanceTv.text = getString(R.string.balance_format, creditCardBalance.balance)
     }
 
     override fun showError(error: String) {
-        toast("ERROR: " + error)
+        cardBalanceTv.gone()
+        errorView.visible()
+
+        errorTv.text = error
     }
 
     override fun showLoading() {
-        loading.visible()
-        cardBalanceTv.gone()
-        loading.start()
+        loadingView.visible()
+        dataView.gone()
+        loadingView.start()
     }
 
     override fun hideLoading() {
-        loading.gone()
-        cardBalanceTv.visible()
-        loading.stop()
+        loadingView.stop()
+        loadingView.gone()
+        dataView.visible()
     }
 
     override fun onStart() {

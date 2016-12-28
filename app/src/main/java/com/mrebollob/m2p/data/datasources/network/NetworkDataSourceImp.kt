@@ -21,6 +21,7 @@ import com.mrebollob.m2p.data.scraper.M2PWebScraper
 import com.mrebollob.m2p.domain.datasources.NetworkDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
+import com.mrebollob.m2p.domain.exceptions.GetBalanceException
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -56,16 +57,19 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val
                         .post(getFormBody(creditCard))
                         .build()
                 val response = httpClient.newCall(requestCard).execute()
+                val stringBody = response.body().string()
+                val error = m2PWebScraper.getError(stringBody)
 
-                subscriber.onNext(m2PWebScraper.getCardBalance(response.body().string()))
-                subscriber.onCompleted()
-
-                if (!response.isSuccessful) {
-                    subscriber.onError(Exception("error"))
+                if (error.isEmpty()) {
+                    subscriber.onNext(m2PWebScraper.getCardBalance(stringBody))
+                    subscriber.onCompleted()
+                } else {
+                    subscriber.onError(GetBalanceException(error))
                 }
+
             } catch (exception: IOException) {
                 Log.e("NetworkDataSourceImp", "getCreditCardBalance", exception)
-                subscriber.onError(exception)
+                subscriber.onError(GetBalanceException(""))
             }
         }
     }

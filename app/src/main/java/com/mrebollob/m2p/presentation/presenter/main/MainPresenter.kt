@@ -19,6 +19,7 @@ package com.mrebollob.m2p.presentation.presenter.main
 import com.mrebollob.m2p.data.datasources.network.NetworkDataSourceImp
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
+import com.mrebollob.m2p.domain.exceptions.GetBalanceException
 import com.mrebollob.m2p.presentation.presenter.Presenter
 import com.mrebollob.m2p.presentation.view.main.MainMvpView
 import rx.android.schedulers.AndroidSchedulers
@@ -30,12 +31,17 @@ import javax.inject.Inject
 class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSourceImp,
                                         val dbDataSource: DbDataSource) : Presenter<MainMvpView> {
 
-    private val mSubscriptions = CompositeSubscription()
-    private var mView: MainMvpView? = null
+    val mSubscriptions = CompositeSubscription()
+    var mView: MainMvpView? = null
+    var mCreditCard: CreditCard? = null
 
     override fun attachView(view: MainMvpView) {
         mView = view
         getCreditCard()
+    }
+
+    fun update() {
+        if (mCreditCard != null) getBalance(mCreditCard as CreditCard)
     }
 
     fun getCreditCard() {
@@ -43,15 +49,16 @@ class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSource
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ creditCard ->
+                    mCreditCard = creditCard
                     mView?.showCreditCard(creditCard)
-                    showBalance(creditCard)
+                    getBalance(creditCard)
                 }, { e ->
                     mView?.showError("No se")
                 })
         mSubscriptions.add(subscription)
     }
 
-    fun showBalance(creditCard: CreditCard) {
+    fun getBalance(creditCard: CreditCard) {
         mView?.showLoading()
         val subscription = networkDataSource.getCreditCardBalance(creditCard)
                 .subscribeOn(Schedulers.io())
@@ -61,7 +68,11 @@ class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSource
                     mView?.showCardBalance(creditCardBalance)
                 }, { e ->
                     mView?.hideLoading()
-                    mView?.showError("No se")
+                    if (e is GetBalanceException && !e.error.isEmpty()) {
+                        mView?.showError(e.error)
+                    } else {
+                        mView?.showError("Unknown error")
+                    }
                 })
         mSubscriptions.add(subscription)
     }
