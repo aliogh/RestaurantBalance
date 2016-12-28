@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2016. Manuel Rebollo Báez.
+  ~ Copyright (c) 2016. Manuel Rebollo Báez
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -19,8 +19,9 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.mrebollob.m2p.presentation.view.main.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_create"
+        android:icon="@drawable/ic_add"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"/>
+        android:title="@string/create"
+        app:showAsAction="ifRoom"/>
 </menu>

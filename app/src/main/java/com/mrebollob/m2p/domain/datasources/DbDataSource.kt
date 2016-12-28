@@ -14,28 +14,14 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.utils.extensions
+package com.mrebollob.m2p.domain.datasources
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import com.mrebollob.m2p.domain.entities.CreditCard
+import rx.Observable
 
-fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
-    return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
-}
+interface DbDataSource {
 
-fun Context.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    fun createCreditCard(creditCard: CreditCard): Observable<CreditCard>
 
-fun View.visible() {
-    this.visibility = View.VISIBLE
-}
-
-fun View.invisible() {
-    this.visibility = View.INVISIBLE
-}
-
-fun View.gone() {
-    this.visibility = View.GONE
+    fun getCreditCard(): Observable<CreditCard>
 }

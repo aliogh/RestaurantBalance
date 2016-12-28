@@ -16,20 +16,25 @@
 
 package com.mrebollob.m2p.presentation.view.main
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
-import android.widget.Toast
+import com.cooltechworks.creditcarddesign.CardEditActivity
+import com.cooltechworks.creditcarddesign.CreditCardUtils
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
+import com.mrebollob.m2p.utils.extensions.gone
+import com.mrebollob.m2p.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
 class MainActivity : BaseActivity(), MainMvpView {
 
+    val GET_NEW_CARD = 0x62
     @Inject lateinit var mPresenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,41 +46,65 @@ class MainActivity : BaseActivity(), MainMvpView {
     }
 
     private fun initializeDependencyInjector() {
-        this.getApplicationComponent().inject(this)
+        getApplicationComponent().inject(this)
     }
 
     fun initUI() {
-        initToolbar()
-        showBalanceBtn.setOnClickListener { onShowBalanceClick() }
-    }
+        fab.setOnClickListener { view ->
+            mPresenter.addNewCreditCard()
+        }
 
-    fun initToolbar() {
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
-    }
-
-    fun onShowBalanceClick() {
-        numberIl.error = null
-        expDateIl.error = null
-        cvvIl.error = null
-
-        val expDate = expDateEt.text.split("/")
-        val creditCard = CreditCard(numberEt.text.toString(), expDate[0], expDate[1], cvvEt.text.toString())
-
-        if (creditCard.isValid()) {
-            mPresenter.showBalance(creditCard)
-        } else {
-            numberIl.error = "Card not valid"
-            expDateIl.error = "MM/YY"
+        retryBtn.setOnClickListener { view ->
+            mPresenter.update()
         }
     }
 
+    override fun showCreditCard(creditCard: CreditCard) {
+        creditCardView.cardHolderName = creditCard.holderName
+        creditCardView.cardNumber = creditCard.number
+        creditCardView.setCardExpiry(creditCard.expDate)
+    }
+
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
-        Toast.makeText(this, creditCardBalance.balance, Toast.LENGTH_LONG).show()
+        errorView.gone()
+        cardBalanceTv.visible()
+
+        cardBalanceTv.text = getString(R.string.balance_format, creditCardBalance.balance)
     }
 
     override fun showError(error: String) {
-        Toast.makeText(this, "ERROR: " + error, Toast.LENGTH_SHORT).show()
+        cardBalanceTv.gone()
+        errorView.visible()
+
+        errorTv.text = error
+    }
+
+    override fun showCreditCardForm() {
+        val intent = Intent(this, CardEditActivity::class.java)
+        startActivityForResult(intent, GET_NEW_CARD)
+    }
+
+    override fun showLoading() {
+        loadingView.visible()
+        dataView.gone()
+        loadingView.start()
+    }
+
+    override fun hideLoading() {
+        loadingView.stop()
+        loadingView.gone()
+        dataView.visible()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == GET_NEW_CARD && resultCode == Activity.RESULT_OK && data != null) {
+            val cardHolderName = data.getStringExtra(CreditCardUtils.EXTRA_CARD_HOLDER_NAME)
+            val cardNumber = data.getStringExtra(CreditCardUtils.EXTRA_CARD_NUMBER)
+            val expiry = data.getStringExtra(CreditCardUtils.EXTRA_CARD_EXPIRY)
+            val cvv = data.getStringExtra(CreditCardUtils.EXTRA_CARD_CVV)
+
+            mPresenter.createCreditCard(CreditCard(cardHolderName, cardNumber, expiry, cvv))
+        }
     }
 
     override fun onStart() {

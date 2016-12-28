@@ -14,24 +14,31 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.view.main
+package com.mrebollob.m2p.domain
 
 import com.mrebollob.m2p.domain.entities.CreditCard
-import com.mrebollob.m2p.domain.entities.CreditCardBalance
-import com.mrebollob.m2p.presentation.view.MvpView
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
 
+class CreditCardTest {
 
-interface MainMvpView : MvpView {
+    @Test
+    fun shouldGetCreditCardExpMonth() {
 
-    fun showCreditCard(creditCard: CreditCard)
+        val validCreditCard = CreditCard("TEST_CARD", "4242424242424242", "10/21", "111")
 
-    fun showCardBalance(creditCardBalance: CreditCardBalance)
+        val expMonth = validCreditCard.getExpMonth()
 
-    fun showError(error: String)
+        assertThat(expMonth).isEqualTo("10")
+    }
 
-    fun showCreditCardForm()
+    @Test
+    fun shouldGetCreditCardExpYear() {
 
-    fun showLoading()
+        val validCreditCard = CreditCard("TEST_CARD", "4242424242424242", "10/21", "111")
 
-    fun hideLoading()
+        val expYear = validCreditCard.getExpYear()
+
+        assertThat(expYear).isEqualTo("21")
+    }
 }

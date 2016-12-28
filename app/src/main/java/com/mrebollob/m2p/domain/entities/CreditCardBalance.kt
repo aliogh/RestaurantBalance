@@ -16,5 +16,4 @@
 
 package com.mrebollob.m2p.domain.entities
 
-class CreditCardBalance(val balance: String) {
-}
+data class CreditCardBalance(val balance: Float)

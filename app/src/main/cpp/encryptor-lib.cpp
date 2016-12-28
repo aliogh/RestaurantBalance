@@ -14,28 +14,10 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.domain.exceptions;
+#include <jni.h>
 
-public class ErrorException extends RuntimeException {
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_mrebollob_m2p_data_datasources_db_DbDataSourceImp_getKey(JNIEnv *env, jobject instance) {
 
-    private final String code;
-    private final String errorMessage;
-
-    public ErrorException() {
-        this.code = "";
-        this.errorMessage = "";
-    }
-
-    public ErrorException(String code, String errorMessage) {
-        this.code = code;
-        this.errorMessage = errorMessage;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
+    return env->NewStringUTF("TEST_KEY");
 }

@@ -16,9 +16,13 @@
 
 package com.mrebollob.m2p.domain.entities
 
-class CreditCard(val number: String, val expMonth: String, val expYear: String, val cvv: String) {
+data class CreditCard(val holderName: String, val number: String, val expDate: String, val cvv: String) {
 
-    fun isValid(): Boolean {
-        return true
+    fun getExpMonth(): String {
+        return expDate.split("/")[0]
+    }
+
+    fun getExpYear(): String {
+        return expDate.split("/")[1]
     }
 }

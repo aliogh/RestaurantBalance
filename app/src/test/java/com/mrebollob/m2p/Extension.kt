@@ -14,28 +14,8 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.utils.extensions
+package com.mrebollob.m2p
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import org.mockito.Mockito
 
-fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
-    return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
-}
-
-fun Context.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-
-fun View.visible() {
-    this.visibility = View.VISIBLE
-}
-
-fun View.invisible() {
-    this.visibility = View.INVISIBLE
-}
-
-fun View.gone() {
-    this.visibility = View.GONE
-}
+inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)

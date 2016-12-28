@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+  ~ Copyright (c) 2016. Manuel Rebollo Báez
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,76 +25,94 @@
     android:fitsSystemWindows="true"
     tools:context="com.mrebollob.m2p.presentation.view.main.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-    </android.support.design.widget.AppBarLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/numberIl"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true">
+            android:background="@color/primary"
+            android:paddingBottom="@dimen/spacing_large">
 
-            <EditText
-                android:id="@+id/numberEt"
-                android:layout_width="match_parent"
+            <com.cooltechworks.creditcarddesign.CreditCardView
+                android:id="@+id/creditCardView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/card_number"
-                android:inputType="number"/>
-        </android.support.design.widget.TextInputLayout>
+                android:layout_gravity="top|center_horizontal"/>
+        </FrameLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/expDateIl"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true">
+            android:layout_margin="@dimen/spacing_medium">
 
-            <EditText
-                android:id="@+id/expDateEt"
+            <com.victor.loading.rotate.RotateLoading
+                android:id="@+id/loadingView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:loading_color="@color/accent"
+                app:loading_width="5dp"
+                tools:visibility="visible"/>
+
+            <FrameLayout
+                android:id="@+id/dataView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/exp_date"
-                android:inputType="date"/>
-        </android.support.design.widget.TextInputLayout>
+                android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/cvvIl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:errorEnabled="true">
+                <TextView
+                    android:id="@+id/cardBalanceTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="Balance: 8,04 €"/>
 
-            <EditText
-                android:id="@+id/cvvEt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/cvv"
-                android:inputType="number"/>
-        </android.support.design.widget.TextInputLayout>
+                <LinearLayout
+                    android:id="@+id/errorView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
-        <Button
-            android:id="@+id/showBalanceBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/next"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/error"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/text_size_title"/>
+
+                    <TextView
+                        android:id="@+id/errorTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/text_size_large"
+                        tools:text="Unknown error"/>
+
+                    <Button
+                        android:id="@+id/retryBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:text="@string/retry"/>
+                </LinearLayout>
+            </FrameLayout>
+        </FrameLayout>
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_add"/>
+
 </android.support.design.widget.CoordinatorLayout>

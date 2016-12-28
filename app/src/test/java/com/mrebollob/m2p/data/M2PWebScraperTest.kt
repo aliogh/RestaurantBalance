@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.utils.extensions
+package com.mrebollob.m2p.data
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import com.mrebollob.m2p.data.scraper.M2PWebScraper
+import org.assertj.core.api.Assertions
+import org.junit.Test
 
-fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
-    return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
-}
+class M2PWebScraperTest {
 
-fun Context.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    @Test
+    fun shouldGetFloatFromString() {
 
-fun View.visible() {
-    this.visibility = View.VISIBLE
-}
+        val m2PWebScraper = M2PWebScraper()
+        val testString = "saldo: 1,1 €"
 
-fun View.invisible() {
-    this.visibility = View.INVISIBLE
-}
+        val testFloat = m2PWebScraper.getFloatFromString(testString)
 
-fun View.gone() {
-    this.visibility = View.GONE
+        Assertions.assertThat(testFloat).isEqualTo(1.1f)
+    }
 }

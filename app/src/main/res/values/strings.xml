@@ -20,5 +20,11 @@
     <string name="card_number">Card number</string>
     <string name="exp_date">Exp. date</string>
     <string name="cvv">CVV</string>
+    <string name="new_card">New card</string>
     <string name="next">Next</string>
+    <string name="save">Save</string>
+    <string name="create">Create</string>
+    <string name="balance_format">Balance: %1$.2f €</string>
+    <string name="retry">Retry</string>
+    <string name="error">Error</string>
 </resources>

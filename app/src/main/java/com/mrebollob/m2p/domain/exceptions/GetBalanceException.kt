@@ -14,26 +14,6 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.di.modules
+package com.mrebollob.m2p.domain.exceptions
 
-import android.app.Application
-import com.google.gson.Gson
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
-
-@Module
-class AppModule(val mApplication: Application) {
-
-    @Provides
-    @Singleton
-    fun provideApplicationContext(): Application {
-        return mApplication
-    }
-
-    @Provides
-    @Singleton
-    fun provideGson(): Gson {
-        return Gson()
-    }
-}
+class GetBalanceException(val error: String) : Exception()
