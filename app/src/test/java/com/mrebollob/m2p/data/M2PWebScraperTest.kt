@@ -14,31 +14,22 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.domain
+package com.mrebollob.m2p.data
 
-import com.mrebollob.m2p.domain.entities.CreditCard
-import org.assertj.core.api.Assertions.assertThat
+import com.mrebollob.m2p.data.scraper.M2PWebScraper
+import org.assertj.core.api.Assertions
 import org.junit.Test
 
-class CreditCardTest {
+class M2PWebScraperTest {
 
     @Test
-    fun shouldBeAValidCreditCard() {
+    fun shouldGetFloatFromString() {
 
-        val validCreditCard = CreditCard("4242424242424242", "10", "21", "111")
+        val m2PWebScraper = M2PWebScraper()
+        val testString = "saldo: 1,1 €"
 
-        val isValid = validCreditCard.isValid()
+        val testFloat = m2PWebScraper.getFloatFromString(testString)
 
-        assertThat(isValid).isTrue()
-    }
-
-    @Test
-    fun shouldBeANotValidCreditCard() {
-
-        val notValidCreditCard = CreditCard("4242424242420000", "10", "21", "111")
-
-        val isValid = notValidCreditCard.isValid()
-
-        assertThat(isValid).isFalse()
+        Assertions.assertThat(testFloat).isEqualTo(1.1f)
     }
 }

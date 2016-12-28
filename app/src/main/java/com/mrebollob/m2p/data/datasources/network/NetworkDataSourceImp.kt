@@ -16,6 +16,7 @@
 
 package com.mrebollob.m2p.data.datasources.network
 
+import android.util.Log
 import com.mrebollob.m2p.data.scraper.M2PWebScraper
 import com.mrebollob.m2p.domain.datasources.NetworkDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
@@ -63,6 +64,7 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val
                     subscriber.onError(Exception("error"))
                 }
             } catch (exception: IOException) {
+                Log.e("NetworkDataSourceImp", "getCreditCardBalance", exception)
                 subscriber.onError(exception)
             }
         }

@@ -54,8 +54,14 @@ class M2PWebScraper @Inject constructor() {
 
         infoElements.filter { it.select("p.usuario-acciones-bloque-title").text().contains("Saldo") }
                 .map { it.text() }
-                .forEach { return CreditCardBalance(it) }
+                .forEach { return CreditCardBalance(getFloatFromString(it)) }
+
+        //.forEach { return CreditCardBalance(it) }
 
         throw  RuntimeException("Data not found")
+    }
+
+    fun getFloatFromString(text: String): Float {
+        return text.replace(",", ".").replace("[^\\d.]+|\\.(?!\\d)".toRegex(), "").toFloat()
     }
 }

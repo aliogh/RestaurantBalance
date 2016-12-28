@@ -74,7 +74,7 @@ class MainActivity : BaseActivity(), MainMvpView {
     }
 
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
-        cardBalanceTv.text = "Balance: " + creditCardBalance.balance
+        cardBalanceTv.text = getString(R.string.balance_format, creditCardBalance.balance)
     }
 
     override fun showError(error: String) {
