@@ -17,6 +17,7 @@
 package com.mrebollob.m2p.data.datasources.db
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.google.gson.Gson
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
@@ -25,11 +26,17 @@ import javax.inject.Inject
 
 class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferences, val gson: Gson) : DbDataSource {
 
+    init {
+        System.loadLibrary("encryptor-lib")
+    }
+
     val CREDIT_CARD_KEY = "credit_card_key"
 
     override fun getCreditCard(): Observable<CreditCard> {
         return Observable.create {
             subscriber ->
+
+            Log.d("DbDataSourceImp", "Key: " + getKey())
 
             val creditCardJson = sharedPreferences.getString(CREDIT_CARD_KEY, "")
 
@@ -54,4 +61,6 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
             subscriber.onCompleted()
         }
     }
+
+    external fun getKey(): String
 }

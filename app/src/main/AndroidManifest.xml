@@ -39,8 +39,8 @@
         </activity>
 
         <activity
-            android:name=".presentation.view.form.FormActivity"
+            android:name="com.cooltechworks.creditcarddesign.CardEditActivity"
             android:label="@string/new_card"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:screenOrientation="portrait"/>
     </application>
 </manifest>

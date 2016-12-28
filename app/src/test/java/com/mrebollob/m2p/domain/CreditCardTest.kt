@@ -23,22 +23,22 @@ import org.junit.Test
 class CreditCardTest {
 
     @Test
-    fun shouldBeAValidCreditCard() {
+    fun shouldGetCreditCardExpMonth() {
 
-        val validCreditCard = CreditCard("4242424242424242", "10", "21", "111")
+        val validCreditCard = CreditCard("TEST_CARD", "4242424242424242", "10/21", "111")
 
-        val isValid = validCreditCard.isValid()
+        val expMonth = validCreditCard.getExpMonth()
 
-        assertThat(isValid).isTrue()
+        assertThat(expMonth).isEqualTo("10")
     }
 
     @Test
-    fun shouldBeANotValidCreditCard() {
+    fun shouldGetCreditCardExpYear() {
 
-        val notValidCreditCard = CreditCard("4242424242420000", "10", "21", "111")
+        val validCreditCard = CreditCard("TEST_CARD", "4242424242424242", "10/21", "111")
 
-        val isValid = notValidCreditCard.isValid()
+        val expYear = validCreditCard.getExpYear()
 
-        assertThat(isValid).isFalse()
+        assertThat(expYear).isEqualTo("21")
     }
 }

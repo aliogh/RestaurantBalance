@@ -29,6 +29,8 @@ interface MainMvpView : MvpView {
 
     fun showError(error: String)
 
+    fun showCreditCardForm()
+
     fun showLoading()
 
     fun hideLoading()

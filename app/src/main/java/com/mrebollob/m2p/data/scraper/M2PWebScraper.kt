@@ -64,10 +64,12 @@ class M2PWebScraper @Inject constructor() {
 
         val infoElements = document.select("div.error-div")
 
-        infoElements.map { it.text() }
-                .forEach { return it }
+        if (!infoElements.isEmpty()) {
+            infoElements.map { it.text() }
+                    .forEach { return it }
+        }
 
-        throw  RuntimeException("Data not found")
+        return ""
     }
 
     fun getFloatFromString(text: String): Float {

@@ -40,6 +40,10 @@ class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSource
         getCreditCard()
     }
 
+    fun addNewCreditCard() {
+        mView?.showCreditCardForm()
+    }
+
     fun update() {
         if (mCreditCard != null) getBalance(mCreditCard as CreditCard)
     }
@@ -53,7 +57,21 @@ class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSource
                     mView?.showCreditCard(creditCard)
                     getBalance(creditCard)
                 }, { e ->
-                    mView?.showError("No se")
+                    mView?.showError("Unknown error")
+                })
+        mSubscriptions.add(subscription)
+    }
+
+    fun createCreditCard(creditCard: CreditCard) {
+        val subscription = dbDataSource.createCreditCard(creditCard)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ creditCard ->
+                    mCreditCard = creditCard
+                    mView?.showCreditCard(creditCard)
+                    getBalance(creditCard)
+                }, { e ->
+                    mView?.showError("Unknown error")
                 })
         mSubscriptions.add(subscription)
     }

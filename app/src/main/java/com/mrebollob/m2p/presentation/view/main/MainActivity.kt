@@ -16,16 +16,17 @@
 
 package com.mrebollob.m2p.presentation.view.main
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import com.cooltechworks.creditcarddesign.CardEditActivity
+import com.cooltechworks.creditcarddesign.CreditCardUtils
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
-import com.mrebollob.m2p.presentation.view.form.FormActivity
 import com.mrebollob.m2p.utils.extensions.gone
-import com.mrebollob.m2p.utils.extensions.toast
 import com.mrebollob.m2p.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -33,10 +34,7 @@ import javax.inject.Inject
 
 class MainActivity : BaseActivity(), MainMvpView {
 
-    init {
-        System.loadLibrary("encryptor-lib")
-    }
-
+    val GET_NEW_CARD = 0x62
     @Inject lateinit var mPresenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,18 +46,12 @@ class MainActivity : BaseActivity(), MainMvpView {
     }
 
     private fun initializeDependencyInjector() {
-        this.getApplicationComponent().inject(this)
+        getApplicationComponent().inject(this)
     }
 
     fun initUI() {
-        initFab()
-
-    }
-
-    fun initFab() {
         fab.setOnClickListener { view ->
-            val intent = Intent(this, FormActivity::class.java)
-            startActivityForResult(intent, 0x62)
+            mPresenter.addNewCreditCard()
         }
 
         retryBtn.setOnClickListener { view ->
@@ -68,13 +60,9 @@ class MainActivity : BaseActivity(), MainMvpView {
     }
 
     override fun showCreditCard(creditCard: CreditCard) {
-        val cardNumber = "****" + creditCard.number.substring(creditCard.number.length - 4)
-
+        creditCardView.cardHolderName = creditCard.holderName
         creditCardView.cardNumber = creditCard.number
-        creditCardView.setCardExpiry(creditCard.expMonth + "/" + creditCard.expYear)
-        creditCardView.cardHolderName = "Money to Pay"
-
-        toast(getKey())
+        creditCardView.setCardExpiry(creditCard.expDate)
     }
 
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
@@ -91,6 +79,11 @@ class MainActivity : BaseActivity(), MainMvpView {
         errorTv.text = error
     }
 
+    override fun showCreditCardForm() {
+        val intent = Intent(this, CardEditActivity::class.java)
+        startActivityForResult(intent, GET_NEW_CARD)
+    }
+
     override fun showLoading() {
         loadingView.visible()
         dataView.gone()
@@ -103,6 +96,17 @@ class MainActivity : BaseActivity(), MainMvpView {
         dataView.visible()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == GET_NEW_CARD && resultCode == Activity.RESULT_OK && data != null) {
+            val cardHolderName = data.getStringExtra(CreditCardUtils.EXTRA_CARD_HOLDER_NAME)
+            val cardNumber = data.getStringExtra(CreditCardUtils.EXTRA_CARD_NUMBER)
+            val expiry = data.getStringExtra(CreditCardUtils.EXTRA_CARD_EXPIRY)
+            val cvv = data.getStringExtra(CreditCardUtils.EXTRA_CARD_CVV)
+
+            mPresenter.createCreditCard(CreditCard(cardHolderName, cardNumber, expiry, cvv))
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         mPresenter.attachView(this)
@@ -112,6 +116,4 @@ class MainActivity : BaseActivity(), MainMvpView {
         super.onStop()
         mPresenter.detachView()
     }
-
-    external fun getKey(): String
 }

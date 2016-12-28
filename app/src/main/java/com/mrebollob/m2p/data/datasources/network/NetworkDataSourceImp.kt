@@ -37,7 +37,6 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val
         return Observable.create {
             subscriber ->
             try {
-
                 val requestCookie = Request.Builder()
                         .url(getUrl())
                         .get()
@@ -80,8 +79,8 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val
                 .add("card2", creditCard.number.substring(4, 8))
                 .add("card3", creditCard.number.substring(8, 12))
                 .add("card4", creditCard.number.substring(12, 16))
-                .add("cardMonth", creditCard.expMonth)
-                .add("cardYear", creditCard.expYear)
+                .add("cardMonth", creditCard.getExpMonth())
+                .add("cardYear", creditCard.getExpYear())
                 .add("ccv2", creditCard.cvv)
                 .build()
     }
