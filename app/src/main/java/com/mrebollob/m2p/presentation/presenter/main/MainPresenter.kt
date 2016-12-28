@@ -37,7 +37,7 @@ class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSource
 
     override fun attachView(view: MainMvpView) {
         mView = view
-        getCreditCard()
+        if (mCreditCard == null) getCreditCard()
     }
 
     fun addNewCreditCard() {
