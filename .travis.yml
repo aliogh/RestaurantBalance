@@ -31,7 +31,6 @@ before_install:
   - export ANDROID_NDK_HOME=`pwd`/android-ndk-r12b
   - export PATH=$PATH:$ANDROID_NDK_HOME
   - echo $PATH
-  - chmod +x gradlew
 
 before_script:
   - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
