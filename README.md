@@ -5,7 +5,9 @@ Kotlin android app following mvp pattern to check m2p card balance.
 
 Add a new card to check your balance.
 
-<img src="art/NewCardForm.png" width="128">
+<img src="art/CardBalance.png" width="256">
+
+<img src="art/NewCardForm.png" width="256">
 
 ## Libraries used:
 - RxJava

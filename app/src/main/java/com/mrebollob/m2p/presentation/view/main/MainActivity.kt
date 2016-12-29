@@ -19,6 +19,7 @@ package com.mrebollob.m2p.presentation.view.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import com.cooltechworks.creditcarddesign.CardEditActivity
 import com.cooltechworks.creditcarddesign.CreditCardUtils
 import com.mrebollob.m2p.R
@@ -32,7 +33,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity(), MainMvpView {
+class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshListener {
 
     val GET_NEW_CARD = 0x62
     @Inject lateinit var mPresenter: MainPresenter
@@ -50,6 +51,8 @@ class MainActivity : BaseActivity(), MainMvpView {
     }
 
     fun initUI() {
+        dataView.setOnRefreshListener(this)
+
         fab.setOnClickListener { view ->
             mPresenter.addNewCreditCard()
         }
@@ -67,13 +70,13 @@ class MainActivity : BaseActivity(), MainMvpView {
 
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
         errorView.gone()
-        cardBalanceTv.visible()
+        dataView.visible()
 
         cardBalanceTv.text = getString(R.string.balance_format, creditCardBalance.balance)
     }
 
     override fun showError(error: String) {
-        cardBalanceTv.gone()
+        dataView.gone()
         errorView.visible()
 
         errorTv.text = error
@@ -86,14 +89,19 @@ class MainActivity : BaseActivity(), MainMvpView {
 
     override fun showLoading() {
         loadingView.visible()
-        dataView.gone()
+        mainView.gone()
         loadingView.start()
     }
 
     override fun hideLoading() {
         loadingView.stop()
         loadingView.gone()
-        dataView.visible()
+        mainView.visible()
+    }
+
+    override fun onRefresh() {
+        mPresenter.update()
+        dataView.isRefreshing = false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
