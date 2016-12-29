@@ -20,6 +20,7 @@ import com.mrebollob.m2p.data.datasources.network.NetworkDataSourceImp
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.exceptions.GetBalanceException
+import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
 import com.mrebollob.m2p.presentation.presenter.Presenter
 import com.mrebollob.m2p.presentation.view.main.MainMvpView
 import rx.android.schedulers.AndroidSchedulers
@@ -57,7 +58,12 @@ class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSource
                     mView?.showCreditCard(creditCard)
                     getBalance(creditCard)
                 }, { e ->
-                    mView?.showError("Unknown error")
+                    mView?.hideLoading()
+                    if (e is NoCreditCardException) {
+                        mView?.showCreditCardForm()
+                    } else {
+                        mView?.showError("Unknown error")
+                    }
                 })
         mSubscriptions.add(subscription)
     }

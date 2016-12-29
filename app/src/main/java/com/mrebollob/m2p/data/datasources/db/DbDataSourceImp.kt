@@ -21,6 +21,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
+import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
 import rx.Observable
 import javax.inject.Inject
 
@@ -39,6 +40,10 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
             Log.d("DbDataSourceImp", "Key: " + getKey())
 
             val creditCardJson = sharedPreferences.getString(CREDIT_CARD_KEY, "")
+
+            if (creditCardJson.isEmpty()) {
+                subscriber.onError(NoCreditCardException())
+            }
 
             val creditCard = gson.fromJson(creditCardJson, CreditCard::class.java)
 
