@@ -1,16 +1,28 @@
 # M2P [![Build Status](https://travis-ci.org/mrebollob/m2p.svg?branch=master)](https://travis-ci.org/mrebollob/m2p)
-Kotlin android app following mvp pattern (Under development)
+Kotlin android app following mvp pattern to check m2p card balance.
 
+## Getting started
 
-![NewCardForm][NewCardForm]
+Add a new card to check your balance.
 
-<img src="art/NewCardForm.png" width="48">
-
-![NewCardForm](./art/NewCardForm.png =144x256)
+<img src="art/NewCardForm.png" width="128">
 
 ## Libraries used:
 - RxJava
 - RxAndroid
+- Dagger 2
+- Okhttp3
+- Jsoup
+- Gson
+- CreditCardView
+
+## Libraries used for test:
+- Junit
+- Mockito
+- Assertj
+- DaggerMock
+- Espresso
+
 
 ## License
 
