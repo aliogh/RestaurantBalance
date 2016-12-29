@@ -13,16 +13,8 @@ env:
 jdk:
   - oraclejdk8
 
-android:
-  components:
-    - tools
-    - build-tools-24.0.2
-    - android-25
-    - extra-android-support
-    - extra-google-m2repository
-    - extra-android-m2repository
-
 before_install:
+  - chmod +x gradlew
   - cd $TRAVIS_BUILD_DIR/..
   - wget https://dl.google.com/android/repository/android-ndk-r12b-linux-x86_64.zip -O ndk.zip
   - chmod a+x ndk.zip
@@ -31,6 +23,15 @@ before_install:
   - export ANDROID_NDK_HOME=`pwd`/android-ndk-r12b
   - export PATH=$PATH:$ANDROID_NDK_HOME
   - echo $PATH
+
+android:
+  components:
+    - tools
+    - build-tools-24.0.2
+    - android-25
+    - extra-android-support
+    - extra-google-m2repository
+    - extra-android-m2repository
 
 before_script:
   - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
@@ -42,6 +43,6 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-  - gradlew checkstyle
-  - gradlew test
-  - gradlew build connectedCheck
+  - ./gradlew checkstyle
+  - ./gradlew test
+  - ./gradlew build connectedCheck
