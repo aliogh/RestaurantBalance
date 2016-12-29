@@ -17,7 +17,7 @@
 #include <jni.h>
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_mrebollob_m2p_data_datasources_db_DbDataSourceImp_getKey(JNIEnv *env, jobject instance) {
+Java_com_mrebollob_m2p_presentation_di_modules_AppModule_getKey(JNIEnv *env, jobject instance) {
 
-    return env->NewStringUTF("TEST_KEY");
+    return env->NewStringUTF("Bar12345Bar12345");
 }

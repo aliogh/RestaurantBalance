@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.domain.entities
+package com.mrebollob.m2p.presentation.di.qualifiers
 
-import java.io.Serializable
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import javax.inject.Qualifier
 
-data class CreditCard(val holderName: String, val number: String, val expDate: String, val cvv: String)
-    : Serializable {
-
-    fun getExpMonth(): String {
-        return expDate.split("/")[0]
-    }
-
-    fun getExpYear(): String {
-        return expDate.split("/")[1]
-    }
-}
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+annotation class EncryptorKey
