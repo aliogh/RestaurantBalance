@@ -79,7 +79,7 @@ dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
     testCompile 'junit:junit:4.12'
-    testCompile 'com.nhaarman:mockito-kotlin:0.7.0'
+    testCompile 'com.nhaarman:mockito-kotlin:1.1.0'
     testCompile 'org.assertj:assertj-core:3.6.1'
 
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
