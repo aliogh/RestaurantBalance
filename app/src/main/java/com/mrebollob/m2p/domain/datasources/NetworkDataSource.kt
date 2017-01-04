@@ -18,7 +18,7 @@ package com.mrebollob.m2p.domain.datasources
 
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
-import rx.Observable
+import io.reactivex.Observable
 
 interface NetworkDataSource {
 

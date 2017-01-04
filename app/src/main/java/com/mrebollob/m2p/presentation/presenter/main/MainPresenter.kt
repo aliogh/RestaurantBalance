@@ -16,23 +16,23 @@
 
 package com.mrebollob.m2p.presentation.presenter.main
 
-import com.mrebollob.m2p.data.datasources.network.NetworkDataSourceImp
-import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
+import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.domain.exceptions.GetBalanceException
 import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
+import com.mrebollob.m2p.domain.interactor.CreateCreditCard
+import com.mrebollob.m2p.domain.interactor.DefaultObserver
+import com.mrebollob.m2p.domain.interactor.GetCreditCard
+import com.mrebollob.m2p.domain.interactor.GetCreditCardBalance
 import com.mrebollob.m2p.presentation.presenter.Presenter
 import com.mrebollob.m2p.presentation.view.main.MainMvpView
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
 
-class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSourceImp,
-                                        val dbDataSource: DbDataSource) : Presenter<MainMvpView> {
+class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardBalance,
+                                        val createCreditCard: CreateCreditCard,
+                                        val getCreditCard: GetCreditCard) : Presenter<MainMvpView> {
 
-    val mSubscriptions = CompositeSubscription()
     var mView: MainMvpView? = null
     var mCreditCard: CreditCard? = null
 
@@ -49,59 +49,61 @@ class MainPresenter @Inject constructor(val networkDataSource: NetworkDataSource
         if (mCreditCard != null) getBalance(mCreditCard as CreditCard)
     }
 
-    fun getCreditCard() {
-        val subscription = dbDataSource.getCreditCard()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ creditCard ->
-                    mCreditCard = creditCard
-                    mView?.showCreditCard(creditCard)
-                    getBalance(creditCard)
-                }, { e ->
-                    mView?.hideLoading()
-                    if (e is NoCreditCardException) {
-                        mView?.showCreditCardForm()
-                    } else {
-                        mView?.showError("Unknown error")
-                    }
-                })
-        mSubscriptions.add(subscription)
-    }
-
     fun createCreditCard(creditCard: CreditCard) {
-        val subscription = dbDataSource.createCreditCard(creditCard)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ creditCard ->
-                    mCreditCard = creditCard
-                    mView?.showCreditCard(creditCard)
-                    getBalance(creditCard)
-                }, { e ->
-                    mView?.showError("Unknown error")
-                })
-        mSubscriptions.add(subscription)
+        createCreditCard.execute(CreditCardObserver(), creditCard)
     }
 
-    fun getBalance(creditCard: CreditCard) {
+    private fun getCreditCard() {
+        getCreditCard.execute(CreditCardObserver(), Unit)
+    }
+
+    private fun getBalance(creditCard: CreditCard) {
         mView?.showLoading()
-        val subscription = networkDataSource.getCreditCardBalance(creditCard)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ creditCardBalance ->
-                    mView?.hideLoading()
-                    mView?.showCardBalance(creditCardBalance)
-                }, { e ->
-                    mView?.hideLoading()
-                    if (e is GetBalanceException && !e.error.isEmpty()) {
-                        mView?.showError(e.error)
-                    } else {
-                        mView?.showError("Unknown error")
-                    }
-                })
-        mSubscriptions.add(subscription)
+        getCreditCardBalance.execute(BalanceObserver(), creditCard)
     }
 
     override fun detachView() {
-        mSubscriptions.clear()
+        getCreditCardBalance.dispose()
+        createCreditCard.dispose()
+        getCreditCard.dispose()
+    }
+
+    private inner class CreditCardObserver : DefaultObserver<CreditCard>() {
+
+        override fun onNext(value: CreditCard) {
+            mCreditCard = value
+            mView?.showCreditCard(value)
+            getBalance(value)
+        }
+
+        override fun onComplete() {
+        }
+
+        override fun onError(e: Throwable?) {
+            if (e is NoCreditCardException) {
+                mView?.showCreditCardForm()
+            } else {
+                mView?.showError("Unknown error")
+            }
+        }
+    }
+
+    private inner class BalanceObserver : DefaultObserver<CreditCardBalance>() {
+
+        override fun onNext(value: CreditCardBalance) {
+            mView?.showCardBalance(value)
+        }
+
+        override fun onComplete() {
+            mView?.hideLoading()
+        }
+
+        override fun onError(e: Throwable?) {
+            if (e is GetBalanceException && !e.error.isEmpty()) {
+                mView?.showError(e.error)
+            } else {
+                mView?.showError("Unknown error")
+            }
+        }
     }
 }

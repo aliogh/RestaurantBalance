@@ -22,7 +22,7 @@ import com.google.gson.Gson
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
-import rx.Observable
+import io.reactivex.Observable
 import java.io.IOException
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
@@ -48,7 +48,7 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
                 val creditCard = gson.fromJson(decrypt(creditCardJson), CreditCard::class.java)
 
                 subscriber.onNext(creditCard)
-                subscriber.onCompleted()
+                subscriber.onComplete()
             } catch (exception: IOException) {
                 //TODO change exception
                 subscriber.onError(exception)
@@ -67,7 +67,7 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
                         .apply()
 
                 subscriber.onNext(creditCard)
-                subscriber.onCompleted()
+                subscriber.onComplete()
             } catch (exception: IOException) {
                 //TODO change exception
                 subscriber.onError(exception)

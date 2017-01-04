@@ -22,10 +22,10 @@ import com.mrebollob.m2p.domain.datasources.NetworkDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.domain.exceptions.GetBalanceException
+import io.reactivex.Observable
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import rx.Observable
 import java.io.IOException
 import javax.inject.Inject
 
@@ -61,7 +61,7 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val
 
                 if (error.isEmpty()) {
                     subscriber.onNext(m2PWebScraper.getCardBalance(stringBody))
-                    subscriber.onCompleted()
+                    subscriber.onComplete()
                 } else {
                     subscriber.onError(GetBalanceException(error))
                 }

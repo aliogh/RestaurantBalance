@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez
+ * Copyright (c) 2017. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.domain.datasources
+package com.mrebollob.m2p.presentation
 
-import com.mrebollob.m2p.domain.entities.CreditCard
-import io.reactivex.Observable
+import com.mrebollob.m2p.domain.executor.PostExecutionThread
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface DbDataSource {
 
-    fun createCreditCard(creditCard: CreditCard): Observable<CreditCard>
+@Singleton
+class UIThread @Inject internal constructor() : PostExecutionThread {
 
-    fun getCreditCard(): Observable<CreditCard>
+    override fun getScheduler(): Scheduler {
+        return AndroidSchedulers.mainThread()
+    }
 }

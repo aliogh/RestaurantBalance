@@ -50,7 +50,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         getApplicationComponent().inject(this)
     }
 
-    fun initUI() {
+    private fun initUI() {
         dataView.setOnRefreshListener(this)
 
         fab.setOnClickListener { view ->
