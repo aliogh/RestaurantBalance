@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez
+ * Copyright (c) 2017. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p
+package com.mrebollob.m2p.domain.interactor
 
-import org.mockito.Mockito
+import io.reactivex.observers.DisposableObserver
 
-inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)
+open class DefaultObserver<T> : DisposableObserver<T>() {
+    override fun onNext(value: T) {
+        // no-op by default.
+    }
+
+    override fun onComplete() {
+        // no-op by default.
+    }
+
+    override fun onError(e: Throwable?) {
+        // no-op by default.
+    }
+}

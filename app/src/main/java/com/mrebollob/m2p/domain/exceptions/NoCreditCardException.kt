@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.di.qualifiers
+package com.mrebollob.m2p.domain.exceptions
 
-import javax.inject.Qualifier
-
-
-@Qualifier
-@Retention
-annotation class SharedPreferencesName
+class NoCreditCardException : Exception()

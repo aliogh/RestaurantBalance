@@ -24,7 +24,8 @@
     <string name="next">Next</string>
     <string name="save">Save</string>
     <string name="create">Create</string>
-    <string name="balance_format">Balance: %1$.2f €</string>
+    <string name="balance_format">%1$.2f €</string>
     <string name="retry">Retry</string>
     <string name="error">Error</string>
+    <string name="balance">Balance</string>
 </resources>

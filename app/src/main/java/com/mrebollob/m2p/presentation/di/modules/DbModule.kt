@@ -23,6 +23,7 @@ import com.google.gson.Gson
 import com.mrebollob.m2p.BuildConfig
 import com.mrebollob.m2p.data.datasources.db.DbDataSourceImp
 import com.mrebollob.m2p.domain.datasources.DbDataSource
+import com.mrebollob.m2p.presentation.di.qualifiers.EncryptorKey
 import com.mrebollob.m2p.presentation.di.qualifiers.SharedPreferencesName
 import dagger.Module
 import dagger.Provides
@@ -34,8 +35,9 @@ class DbModule {
 
     @Provides
     @Singleton
-    fun provideDbDataSource(sharedPreferences: SharedPreferences, gson: Gson): DbDataSource {
-        return DbDataSourceImp(sharedPreferences, gson)
+    fun provideDbDataSource(sharedPreferences: SharedPreferences, gson: Gson, @EncryptorKey key: String)
+            : DbDataSource {
+        return DbDataSourceImp(sharedPreferences, gson, key)
     }
 
     @Provides

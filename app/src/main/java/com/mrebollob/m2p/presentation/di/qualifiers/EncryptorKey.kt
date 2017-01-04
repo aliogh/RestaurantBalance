@@ -18,7 +18,6 @@ package com.mrebollob.m2p.presentation.di.qualifiers
 
 import javax.inject.Qualifier
 
-
 @Qualifier
 @Retention
-annotation class SharedPreferencesName
+annotation class EncryptorKey

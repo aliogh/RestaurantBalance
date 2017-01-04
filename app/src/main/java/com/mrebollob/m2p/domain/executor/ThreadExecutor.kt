@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez
+ * Copyright (c) 2017. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.di.qualifiers
+package com.mrebollob.m2p.domain.executor
 
-import javax.inject.Qualifier
+import java.util.concurrent.Executor
 
-
-@Qualifier
-@Retention
-annotation class SharedPreferencesName
+interface ThreadExecutor : Executor

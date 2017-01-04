@@ -18,12 +18,22 @@ package com.mrebollob.m2p.presentation.di.modules
 
 import android.app.Application
 import com.google.gson.Gson
+import com.mrebollob.m2p.data.executor.JobExecutor
+import com.mrebollob.m2p.domain.executor.PostExecutionThread
+import com.mrebollob.m2p.domain.executor.ThreadExecutor
+import com.mrebollob.m2p.presentation.UIThread
+import com.mrebollob.m2p.presentation.di.qualifiers.EncryptorKey
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
+
 @Module
 class AppModule(val mApplication: Application) {
+
+    init {
+        System.loadLibrary("encryptor-lib")
+    }
 
     @Provides
     @Singleton
@@ -36,4 +46,25 @@ class AppModule(val mApplication: Application) {
     fun provideGson(): Gson {
         return Gson()
     }
+
+    @Provides
+    @Singleton
+    fun provideThreadExecutor(jobExecutor: JobExecutor): ThreadExecutor {
+        return jobExecutor
+    }
+
+    @Provides
+    @Singleton
+    fun providePostExecutionThread(uiThread: UIThread): PostExecutionThread {
+        return uiThread
+    }
+
+    @Provides
+    @Singleton
+    @EncryptorKey
+    fun provideEncryptorKey(): String {
+        return getKey()
+    }
+
+    external fun getKey(): String
 }

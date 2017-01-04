@@ -16,7 +16,10 @@
 
 package com.mrebollob.m2p.domain.entities
 
-data class CreditCard(val holderName: String, val number: String, val expDate: String, val cvv: String) {
+import java.io.Serializable
+
+data class CreditCard(val holderName: String, val number: String, val expDate: String, val cvv: String)
+    : Serializable {
 
     fun getExpMonth(): String {
         return expDate.split("/")[0]
