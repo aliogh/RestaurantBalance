@@ -18,7 +18,7 @@ package com.mrebollob.m2p.presentation.presenter
 
 interface Presenter<V> {
 
-    fun attachView(view: V)
+    fun attachView(view: V, isNew: Boolean)
 
     fun detachView()
 }

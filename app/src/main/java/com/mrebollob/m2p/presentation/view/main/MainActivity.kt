@@ -36,13 +36,14 @@ import javax.inject.Inject
 class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshListener {
 
     val GET_NEW_CARD = 0x62
+    var isNewActivity = false
     @Inject lateinit var mPresenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initializeDependencyInjector()
-
+        isNewActivity = (savedInstanceState == null)
         initUI()
     }
 
@@ -117,7 +118,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
 
     override fun onStart() {
         super.onStart()
-        mPresenter.attachView(this)
+        mPresenter.attachView(this, isNewActivity)
     }
 
     override fun onStop() {

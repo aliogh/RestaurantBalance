@@ -28,7 +28,6 @@ import com.mrebollob.m2p.presentation.presenter.Presenter
 import com.mrebollob.m2p.presentation.view.main.MainMvpView
 import javax.inject.Inject
 
-
 class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardBalance,
                                         val createCreditCard: CreateCreditCard,
                                         val getCreditCard: GetCreditCard) : Presenter<MainMvpView> {
@@ -36,7 +35,7 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
     var mView: MainMvpView? = null
     var mCreditCard: CreditCard? = null
 
-    override fun attachView(view: MainMvpView) {
+    override fun attachView(view: MainMvpView, isNew: Boolean) {
         mView = view
         if (mCreditCard == null) getCreditCard()
     }
@@ -99,6 +98,7 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
         }
 
         override fun onError(e: Throwable?) {
+            mView?.hideLoading()
             if (e is GetBalanceException && !e.error.isEmpty()) {
                 mView?.showError(e.error)
             } else {
