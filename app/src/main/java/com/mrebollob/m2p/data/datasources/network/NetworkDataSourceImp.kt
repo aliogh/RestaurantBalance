@@ -34,8 +34,12 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val
     : NetworkDataSource {
 
     override fun getCreditCardBalance(creditCard: CreditCard): Observable<CreditCardBalance> {
+
+        return getServerData(creditCard).map { m2PWebScraper.getCardBalance(it) }
+    }
+
+    fun getServerData(creditCard: CreditCard): Observable<String> {
         return Observable.create {
-            emitter ->
             try {
                 val requestCookie = Request.Builder()
                         .url(getUrl())
@@ -60,15 +64,15 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val
                 val error = m2PWebScraper.getError(stringBody)
 
                 if (error.isEmpty()) {
-                    emitter.onNext(m2PWebScraper.getCardBalance(stringBody))
-                    emitter.onComplete()
+                    it.onNext(stringBody)
+                    it.onComplete()
                 } else {
-                    emitter.onError(GetBalanceException(error))
+                    it.onError(GetBalanceException(error))
                 }
 
             } catch (exception: IOException) {
                 Log.e("NetworkDataSourceImp", "getCreditCardBalance", exception)
-                emitter.onError(GetBalanceException(""))
+                it.onError(GetBalanceException(""))
             }
         }
     }

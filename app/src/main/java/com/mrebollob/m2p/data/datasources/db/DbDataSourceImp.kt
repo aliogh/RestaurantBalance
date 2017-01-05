@@ -18,6 +18,7 @@ package com.mrebollob.m2p.data.datasources.db
 
 import android.content.SharedPreferences
 import android.util.Base64
+import android.util.Log
 import com.google.gson.Gson
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
@@ -38,27 +39,26 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
 
     override fun getCreditCard(): Observable<CreditCard> {
         return Observable.create {
-            emitter ->
             try {
                 val creditCardJson = sharedPreferences.getString(CREDIT_CARD_KEY, "")
                 val creditCard = gson.fromJson(decrypt(creditCardJson), CreditCard::class.java)
 
                 if (creditCard != null) {
-                    emitter.onNext(creditCard)
-                    emitter.onComplete()
+                    it.onNext(creditCard)
+                    it.onComplete()
                 } else {
-                    emitter.onError(NoCreditCardException())
+                    it.onError(NoCreditCardException())
                 }
             } catch (exception: IOException) {
+                Log.e("DbDataSourceImp", "getCreditCard", exception)
                 //TODO change exception
-                emitter.onError(exception)
+                it.onError(exception)
             }
         }
     }
 
     override fun createCreditCard(creditCard: CreditCard): Observable<CreditCard> {
         return Observable.create {
-            emitter ->
             try {
                 val creditCardJson = gson.toJson(creditCard)
 
@@ -66,11 +66,12 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
                         .putString(CREDIT_CARD_KEY, encrypt(creditCardJson))
                         .apply()
 
-                emitter.onNext(creditCard)
-                emitter.onComplete()
+                it.onNext(creditCard)
+                it.onComplete()
             } catch (exception: IOException) {
+                Log.e("DbDataSourceImp", "createCreditCard", exception)
                 //TODO change exception
-                emitter.onError(exception)
+                it.onError(exception)
             }
         }
     }

@@ -24,6 +24,9 @@ before_install:
   - export ANDROID_NDK_HOME=`pwd`/android-ndk-r12b
   - export PATH=$PATH:$ANDROID_NDK_HOME
   - echo $PATH
+  - wget https://github.com/Commit451/android-cmake-installer/releases/download/1.1.0/install-cmake.sh
+  - chmod +x install-cmake.sh
+  - ./install-cmake.sh
   - cd $TRAVIS_BUILD_DIR/
 
 android:
