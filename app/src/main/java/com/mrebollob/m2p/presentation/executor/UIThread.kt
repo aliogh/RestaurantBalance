@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation
+package com.mrebollob.m2p.presentation.executor
 
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import io.reactivex.Scheduler
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-class UIThread @Inject internal constructor() : PostExecutionThread {
+class UIThread @Inject constructor() : PostExecutionThread {
 
     override fun getScheduler(): Scheduler {
         return AndroidSchedulers.mainThread()

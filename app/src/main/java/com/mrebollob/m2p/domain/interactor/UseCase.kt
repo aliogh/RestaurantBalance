@@ -25,15 +25,20 @@ import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
 
-abstract class UseCase<T, Params> internal constructor(private val threadExecutor: ThreadExecutor,
-                                                       private val postExecutionThread: PostExecutionThread) {
+abstract class UseCase<T, Params> constructor(private val threadExecutor: ThreadExecutor,
+                                              private val postExecutionThread: PostExecutionThread) {
 
-    private val disposables = CompositeDisposable()
+    private var disposables = CompositeDisposable()
 
     internal abstract fun buildUseCaseObservable(params: Params): Observable<T>
 
     // TODO This should not be open
     open fun execute(observer: DisposableObserver<T>, params: Params) {
+
+        if (disposables.isDisposed) {
+            disposables = CompositeDisposable()
+        }
+
         val observable = buildUseCaseObservable(params)
                 .subscribeOn(Schedulers.from(threadExecutor))
                 .observeOn(postExecutionThread.getScheduler())

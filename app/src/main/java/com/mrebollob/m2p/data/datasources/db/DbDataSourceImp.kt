@@ -18,10 +18,12 @@ package com.mrebollob.m2p.data.datasources.db
 
 import android.content.SharedPreferences
 import android.util.Base64
+import android.util.Log
 import com.google.gson.Gson
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
+import com.mrebollob.m2p.presentation.di.qualifiers.EncryptorKey
 import io.reactivex.Observable
 import java.io.IOException
 import javax.crypto.Cipher
@@ -29,36 +31,34 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 
-class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferences, val gson: Gson, val key: String)
-    : DbDataSource {
+class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferences, val gson: Gson,
+                                          @EncryptorKey val key: String) : DbDataSource {
 
     val initVector = "RandomInitVector"
     val CREDIT_CARD_KEY = "credit_card_key"
 
     override fun getCreditCard(): Observable<CreditCard> {
         return Observable.create {
-            subscriber ->
             try {
                 val creditCardJson = sharedPreferences.getString(CREDIT_CARD_KEY, "")
-
-                if (creditCardJson.isEmpty()) {
-                    subscriber.onError(NoCreditCardException())
-                }
-
                 val creditCard = gson.fromJson(decrypt(creditCardJson), CreditCard::class.java)
 
-                subscriber.onNext(creditCard)
-                subscriber.onComplete()
+                if (creditCard != null) {
+                    it.onNext(creditCard)
+                    it.onComplete()
+                } else {
+                    it.onError(NoCreditCardException())
+                }
             } catch (exception: IOException) {
+                Log.e("DbDataSourceImp", "getCreditCard", exception)
                 //TODO change exception
-                subscriber.onError(exception)
+                it.onError(exception)
             }
         }
     }
 
     override fun createCreditCard(creditCard: CreditCard): Observable<CreditCard> {
         return Observable.create {
-            subscriber ->
             try {
                 val creditCardJson = gson.toJson(creditCard)
 
@@ -66,11 +66,12 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
                         .putString(CREDIT_CARD_KEY, encrypt(creditCardJson))
                         .apply()
 
-                subscriber.onNext(creditCard)
-                subscriber.onComplete()
+                it.onNext(creditCard)
+                it.onComplete()
             } catch (exception: IOException) {
+                Log.e("DbDataSourceImp", "createCreditCard", exception)
                 //TODO change exception
-                subscriber.onError(exception)
+                it.onError(exception)
             }
         }
     }

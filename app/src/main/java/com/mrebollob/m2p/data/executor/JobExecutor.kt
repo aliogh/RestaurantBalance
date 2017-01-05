@@ -25,7 +25,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class JobExecutor @Inject internal constructor() : ThreadExecutor {
+class JobExecutor @Inject constructor() : ThreadExecutor {
     private val threadPoolExecutor: ThreadPoolExecutor
 
     init {
