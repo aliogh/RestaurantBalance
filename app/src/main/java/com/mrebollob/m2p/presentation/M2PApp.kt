@@ -17,9 +17,12 @@
 package com.mrebollob.m2p.presentation
 
 import android.app.Application
+import com.crashlytics.android.Crashlytics
 import com.mrebollob.m2p.presentation.di.components.AppComponent
 import com.mrebollob.m2p.presentation.di.components.DaggerAppComponent
 import com.mrebollob.m2p.presentation.di.modules.AppModule
+import io.fabric.sdk.android.Fabric
+
 
 class M2PApp : Application() {
 
@@ -31,12 +34,17 @@ class M2PApp : Application() {
         super.onCreate()
 
         initializeInjector()
+        initializeCrashlytics()
     }
 
     private fun initializeInjector() {
         mAppComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .build()
+    }
+
+    private fun initializeCrashlytics() {
+        Fabric.with(this, Crashlytics())
     }
 
     fun getAppComponent(): AppComponent {
