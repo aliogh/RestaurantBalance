@@ -113,6 +113,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
             val cvv = data.getStringExtra(CreditCardUtils.EXTRA_CARD_CVV)
 
             mPresenter.createCreditCard(CreditCard(cardHolderName, cardNumber, expiry, cvv))
+            isNewActivity = false
         }
     }
 
