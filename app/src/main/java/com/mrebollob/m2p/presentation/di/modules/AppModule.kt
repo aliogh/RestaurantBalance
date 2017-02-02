@@ -31,10 +31,6 @@ import javax.inject.Singleton
 @Module
 class AppModule(val mApplication: Application) {
 
-    init {
-        System.loadLibrary("encryptor-lib")
-    }
-
     @Provides
     @Singleton
     fun provideApplicationContext(): Application {
@@ -63,8 +59,6 @@ class AppModule(val mApplication: Application) {
     @Singleton
     @EncryptorKey
     fun provideEncryptorKey(): String {
-        return getKey()
+        return "hola"
     }
-
-    external fun getKey(): String
 }
