@@ -17,18 +17,17 @@
 package com.mrebollob.m2p.domain.interactor
 
 import com.mrebollob.m2p.domain.datasources.DbDataSource
-import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
-import io.reactivex.Observable
 import javax.inject.Inject
 
 
-class CreateCreditCard @Inject constructor(private val dbDataSource: DbDataSource, threadExecutor: ThreadExecutor,
+class CreateCreditCard @Inject constructor(val dbDataSource: DbDataSource,
+                                           threadExecutor: ThreadExecutor,
                                            postExecutionThread: PostExecutionThread)
-    : UseCase<CreditCard, CreditCard>(threadExecutor, postExecutionThread) {
+    : AbstractInteractor<Unit>(threadExecutor, postExecutionThread) {
 
-    override fun buildUseCaseObservable(params: CreditCard): Observable<Unit> {
-        return dbDataSource.createCreditCard(params)
+    fun create(number: String, expDate: String, observer: DefaultObserver<Unit>) {
+        execute(dbDataSource.createCreditCard(number, expDate), observer)
     }
 }

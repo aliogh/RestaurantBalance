@@ -121,7 +121,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
                     val cardNumber = data.getStringExtra(CreditCardUtils.EXTRA_CARD_NUMBER)
                     val expiry = data.getStringExtra(CreditCardUtils.EXTRA_CARD_EXPIRY)
 
-                    mPresenter.createCreditCard(CreditCard(cardNumber, expiry))
+                    mPresenter.createCreditCard(cardNumber, expiry)
                     isNewActivity = false
                 }
                 GET_CVV -> {

@@ -21,14 +21,14 @@ import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
-import io.reactivex.Observable
 import javax.inject.Inject
 
-class GetCreditCardBalance @Inject constructor(private val networkDataSource: NetworkDataSource,
-                                               threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread)
-    : UseCase<CreditCardBalance, CreditCard>(threadExecutor, postExecutionThread) {
+class GetCreditCardBalance @Inject constructor(val networkDataSource: NetworkDataSource,
+                                               threadExecutor: ThreadExecutor,
+                                               postExecutionThread: PostExecutionThread)
+    : AbstractInteractor<CreditCardBalance>(threadExecutor, postExecutionThread) {
 
-    override fun buildUseCaseObservable(params: CreditCard): Observable<CreditCardBalance> {
-        return networkDataSource.getCreditCardBalance(params)
+    fun get(creditCard: CreditCard, observer: DefaultObserver<CreditCardBalance>) {
+        execute(networkDataSource.getCreditCardBalance(creditCard), observer)
     }
 }

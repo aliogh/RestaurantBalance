@@ -17,34 +17,27 @@
 package com.mrebollob.m2p.data.datasources.db
 
 import android.content.SharedPreferences
-import android.util.Base64
 import android.util.Log
-import com.google.gson.Gson
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
-import com.mrebollob.m2p.presentation.di.qualifiers.EncryptorKey
 import io.reactivex.Observable
 import java.io.IOException
-import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 
-class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferences, val gson: Gson,
-                                          @EncryptorKey val key: String) : DbDataSource {
+class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferences) : DbDataSource {
 
-    val initVector = "RandomInitVector"
-    val CREDIT_CARD_KEY = "credit_card_key"
+    val CREDIT_CARD_NUMBER = "credit_card_number"
+    val CREDIT_CARD_EXP_DATE = "credit_card_exp_date"
 
     override fun getCreditCard(): Observable<CreditCard> {
         return Observable.create {
             try {
-                val creditCardJson = sharedPreferences.getString(CREDIT_CARD_KEY, "")
-                val creditCard = gson.fromJson(decrypt(creditCardJson), CreditCard::class.java)
+                val number = sharedPreferences.getString(CREDIT_CARD_NUMBER, "")
+                val expDate = sharedPreferences.getString(CREDIT_CARD_EXP_DATE, "")
 
-                if (creditCard != null) {
-                    it.onNext(creditCard)
+                if (number.isNotBlank() && expDate.isNotBlank()) {
+                    it.onNext(CreditCard(number, expDate))
                     it.onComplete()
                 } else {
                     it.onError(NoCreditCardException())
@@ -57,16 +50,13 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
         }
     }
 
-    override fun createCreditCard(creditCard: CreditCard): Observable<CreditCard> {
+    override fun createCreditCard(number: String, expDate: String): Observable<Unit> {
         return Observable.create {
             try {
-                val creditCardJson = gson.toJson(creditCard)
-
                 sharedPreferences.edit()
-                        .putString(CREDIT_CARD_KEY, encrypt(creditCardJson))
+                        .putString(CREDIT_CARD_NUMBER, number)
+                        .putString(CREDIT_CARD_EXP_DATE, expDate)
                         .apply()
-
-                it.onNext(creditCard)
                 it.onComplete()
             } catch (exception: IOException) {
                 Log.e("DbDataSourceImp", "createCreditCard", exception)
@@ -74,29 +64,5 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
                 it.onError(exception)
             }
         }
-    }
-
-    fun encrypt(value: String): String {
-        val iv = IvParameterSpec(initVector.toByteArray(charset("UTF-8")))
-        val skeySpec = SecretKeySpec(key.toByteArray(charset("UTF-8")), "AES")
-
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv)
-
-        val encrypted = cipher.doFinal(value.toByteArray())
-
-        return Base64.encodeToString(encrypted, Base64.DEFAULT)
-    }
-
-    fun decrypt(encrypted: String): String {
-        val iv = IvParameterSpec(initVector.toByteArray(charset("UTF-8")))
-        val skeySpec = SecretKeySpec(key.toByteArray(charset("UTF-8")), "AES")
-
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv)
-
-        val original = cipher.doFinal(Base64.decode(encrypted, Base64.DEFAULT))
-
-        return String(original)
     }
 }

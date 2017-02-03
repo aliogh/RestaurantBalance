@@ -38,7 +38,13 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
 
     override fun attachView(view: MainMvpView, isNew: Boolean) {
         mView = view
-        if (mCreditCard == null && isNew) getCreditCard()
+        if (mCvv.isNullOrBlank()) {
+            mView?.showLockScreen()
+        } else {
+            if (mCreditCard == null && isNew) {
+                getCreditCard()
+            }
+        }
     }
 
     fun addNewCreditCard() {
@@ -49,12 +55,12 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
         if (mCreditCard != null) getBalance(mCreditCard as CreditCard)
     }
 
-    fun createCreditCard(creditCard: CreditCard) {
-        createCreditCard.execute(CreditCardObserver(), creditCard)
+    fun createCreditCard(number: String, expDate: String) {
+        createCreditCard.create(number, expDate, CreateCreditCardObserver())
     }
 
     private fun getCreditCard() {
-        getCreditCard.execute(CreditCardObserver(), Unit)
+        getCreditCard.get(CreditCardObserver())
     }
 
     private fun getBalance(creditCard: CreditCard) {
@@ -63,7 +69,7 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
         } else {
             mView?.showLoading()
             creditCard.cvv = mCvv as String
-            getCreditCardBalance.execute(BalanceObserver(), creditCard)
+            getCreditCardBalance.get(creditCard, BalanceObserver())
         }
     }
 
@@ -73,12 +79,30 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
         getCreditCard.dispose()
     }
 
+    private inner class CreateCreditCardObserver : DefaultObserver<Unit>() {
+
+        override fun onNext(value: Unit) {
+            update()
+        }
+
+        override fun onComplete() {
+        }
+
+        override fun onError(e: Throwable?) {
+            if (e is NoCreditCardException) {
+                mView?.showCreditCardForm()
+            } else {
+                mView?.showError("Unknown error")
+            }
+        }
+    }
+
     private inner class CreditCardObserver : DefaultObserver<CreditCard>() {
 
         override fun onNext(value: CreditCard) {
             mCreditCard = value
             mView?.showCreditCard(value)
-//            getBalance(value)
+            getBalance(value)
         }
 
         override fun onComplete() {
