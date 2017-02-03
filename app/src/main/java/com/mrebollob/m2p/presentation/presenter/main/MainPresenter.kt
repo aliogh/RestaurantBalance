@@ -34,10 +34,11 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
 
     var mView: MainMvpView? = null
     var mCreditCard: CreditCard? = null
+    var mCvv: String? = null
 
     override fun attachView(view: MainMvpView, isNew: Boolean) {
         mView = view
-        if (mCreditCard == null&&isNew) getCreditCard()
+        if (mCreditCard == null && isNew) getCreditCard()
     }
 
     fun addNewCreditCard() {
@@ -57,8 +58,13 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
     }
 
     private fun getBalance(creditCard: CreditCard) {
-        mView?.showLoading()
-        getCreditCardBalance.execute(BalanceObserver(), creditCard)
+        if (mCvv.isNullOrBlank()) {
+            mView?.showLockScreen()
+        } else {
+            mView?.showLoading()
+            creditCard.cvv = mCvv as String
+            getCreditCardBalance.execute(BalanceObserver(), creditCard)
+        }
     }
 
     override fun detachView() {
@@ -72,7 +78,7 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
         override fun onNext(value: CreditCard) {
             mCreditCard = value
             mView?.showCreditCard(value)
-            getBalance(value)
+//            getBalance(value)
         }
 
         override fun onComplete() {

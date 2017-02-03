@@ -28,7 +28,7 @@ class CreateCreditCard @Inject constructor(private val dbDataSource: DbDataSourc
                                            postExecutionThread: PostExecutionThread)
     : UseCase<CreditCard, CreditCard>(threadExecutor, postExecutionThread) {
 
-    override fun buildUseCaseObservable(params: CreditCard): Observable<CreditCard> {
+    override fun buildUseCaseObservable(params: CreditCard): Observable<Unit> {
         return dbDataSource.createCreditCard(params)
     }
 }

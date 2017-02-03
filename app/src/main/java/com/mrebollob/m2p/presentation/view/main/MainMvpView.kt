@@ -31,6 +31,8 @@ interface MainMvpView : MvpView {
 
     fun showCreditCardForm()
 
+    fun showLockScreen()
+
     fun showLoading()
 
     fun hideLoading()

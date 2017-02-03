@@ -27,7 +27,7 @@ android {
         applicationId "com.mrebollob.balance"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
+        versionCode computeVersionCode()
         versionName "0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -57,6 +57,7 @@ dependencies {
     compile 'com.android.support:design:25.1.1'
     compile 'com.victor:lib:1.0.4' // Loading view
     compile 'com.github.cooltechworks:CreditCardView:v1.0.2'
+    compile 'com.andrognito.pinlockview:pinlockview:1.0.1'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
@@ -103,4 +104,16 @@ repositories {
     maven { url "https://jitpack.io" }
     maven { url "http://repository.jetbrains.com/all" }
     maven { url 'https://maven.fabric.io/public' }
+}
+
+/**
+ * Gets the commit number from the current Git commit. E.g. 538
+ */
+def computeVersionCode() {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-list', '--count', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim().toInteger()
 }
