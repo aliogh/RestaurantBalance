@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.andrognito.pinlockview.PinLockListener
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.view.main.MainActivity
@@ -28,8 +27,6 @@ import kotlinx.android.synthetic.main.activity_lock.*
 
 
 class LockActivity : AppCompatActivity() {
-
-    val TAG = "LockActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,16 +38,14 @@ class LockActivity : AppCompatActivity() {
 
     private val mPinLockListener = object : PinLockListener {
         override fun onComplete(pin: String) {
-            Log.d(TAG, "Pin complete: " + pin)
+            finish()
             MainActivity.open(this@LockActivity, pin)
         }
 
         override fun onEmpty() {
-            Log.d(TAG, "Pin empty")
         }
 
         override fun onPinChange(pinLength: Int, intermediatePin: String) {
-            Log.d(TAG, "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
         }
     }
 
