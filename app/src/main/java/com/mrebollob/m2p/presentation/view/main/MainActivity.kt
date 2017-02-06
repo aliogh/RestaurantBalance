@@ -67,7 +67,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     }
 
     override fun showCreditCard(creditCard: CreditCard) {
-        creditCardView.cardHolderName = creditCard.holderName
+        creditCardView.cardHolderName = "M2P"
         creditCardView.cardNumber = creditCard.number
         creditCardView.setCardExpiry(creditCard.expDate)
     }

@@ -18,10 +18,7 @@ package com.mrebollob.m2p.domain.entities
 
 import java.io.Serializable
 
-data class CreditCard(val number: String, val expDate: String) : Serializable {
-
-    val holderName = ""
-    var cvv: String = ""
+data class CreditCard(val number: String, val expDate: String, val cvv: String) : Serializable {
 
     fun getExpMonth(): String {
         return expDate.split("/")[0]
@@ -29,5 +26,13 @@ data class CreditCard(val number: String, val expDate: String) : Serializable {
 
     fun getExpYear(): String {
         return expDate.split("/")[1]
+    }
+
+    fun isValid(): Boolean {
+        return number.isNotBlank() && expDate.isNotBlank() && cvv.isNotBlank()
+    }
+
+    fun isNotValid(): Boolean {
+        return !isValid()
     }
 }

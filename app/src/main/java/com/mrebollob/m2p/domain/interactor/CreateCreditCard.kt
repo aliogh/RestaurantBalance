@@ -17,17 +17,32 @@
 package com.mrebollob.m2p.domain.interactor
 
 import com.mrebollob.m2p.domain.datasources.DbDataSource
+import com.mrebollob.m2p.domain.exceptions.InvalidCreditCardException
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
+import io.reactivex.Observable
 import javax.inject.Inject
 
 
 class CreateCreditCard @Inject constructor(val dbDataSource: DbDataSource,
                                            threadExecutor: ThreadExecutor,
                                            postExecutionThread: PostExecutionThread)
-    : AbstractInteractor<Unit>(threadExecutor, postExecutionThread) {
+    : AbstractInteractor<Unit, CreateCreditCard.Params>(threadExecutor, postExecutionThread) {
 
-    fun create(number: String, expDate: String, observer: DefaultObserver<Unit>) {
-        execute(dbDataSource.createCreditCard(number, expDate), observer)
+    override fun buildInteractorObservable(params: Params): Observable<Unit> {
+
+        if (params.number.isBlank() || params.expDate.isBlank()) {
+            throw (InvalidCreditCardException())
+        }
+
+        return dbDataSource.createCreditCard(params.number, params.expDate)
+    }
+
+    class Params private constructor(val number: String, val expDate: String) {
+        companion object {
+            fun newCreditCard(number: String, expDate: String): Params {
+                return Params(number, expDate)
+            }
+        }
     }
 }

@@ -20,14 +20,15 @@ import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
+import io.reactivex.Observable
 import javax.inject.Inject
 
 class GetCreditCard @Inject constructor(val dbDataSource: DbDataSource,
                                         threadExecutor: ThreadExecutor,
                                         postExecutionThread: PostExecutionThread)
-    : AbstractInteractor<CreditCard>(threadExecutor, postExecutionThread) {
+    : AbstractInteractor<CreditCard, Unit>(threadExecutor, postExecutionThread) {
 
-    fun get(observer: DefaultObserver<CreditCard>) {
-        execute(dbDataSource.getCreditCard(), observer)
+    override fun buildInteractorObservable(params: Unit): Observable<CreditCard> {
+        return dbDataSource.getCreditCard()
     }
 }

@@ -56,11 +56,12 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
     }
 
     fun createCreditCard(number: String, expDate: String) {
-        createCreditCard.create(number, expDate, CreateCreditCardObserver())
+        createCreditCard.execute(CreateCreditCardObserver(),
+                CreateCreditCard.Params.newCreditCard(number, expDate))
     }
 
     private fun getCreditCard() {
-        getCreditCard.get(CreditCardObserver())
+        getCreditCard.execute(CreditCardObserver(), Unit)
     }
 
     private fun getBalance(creditCard: CreditCard) {
@@ -68,8 +69,8 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
             mView?.showLockScreen()
         } else {
             mView?.showLoading()
-            creditCard.cvv = mCvv as String
-            getCreditCardBalance.get(creditCard, BalanceObserver())
+            getCreditCardBalance.execute(BalanceObserver(), GetCreditCardBalance.Params
+                    .forCreditCard(creditCard.copy(cvv = mCvv as String)))
         }
     }
 

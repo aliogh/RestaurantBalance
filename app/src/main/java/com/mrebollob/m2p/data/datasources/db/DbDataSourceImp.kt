@@ -37,7 +37,7 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
                 val expDate = sharedPreferences.getString(CREDIT_CARD_EXP_DATE, "")
 
                 if (number.isNotBlank() && expDate.isNotBlank()) {
-                    it.onNext(CreditCard(number, expDate))
+                    it.onNext(CreditCard(number, expDate, ""))
                     it.onComplete()
                 } else {
                     it.onError(NoCreditCardException())

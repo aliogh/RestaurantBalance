@@ -24,18 +24,21 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
-abstract class AbstractInteractor<T> constructor(val threadExecutor: ThreadExecutor,
-                                                 val postExecutionThread: PostExecutionThread) {
+
+abstract class AbstractInteractor<T, Params> constructor(val threadExecutor: ThreadExecutor,
+                                                         val postExecutionThread: PostExecutionThread) {
 
     private var disposables = CompositeDisposable()
 
-    fun execute(baseObservable: Observable<T>, observer: DisposableObserver<T>) {
+    internal abstract fun buildInteractorObservable(params: Params): Observable<T>
+
+    fun execute(observer: DisposableObserver<T>, params: Params) {
 
         if (disposables.isDisposed) {
             disposables = CompositeDisposable()
         }
 
-        val observable = baseObservable
+        val observable = buildInteractorObservable(params)
                 .subscribeOn(Schedulers.from(threadExecutor))
                 .observeOn(postExecutionThread.getScheduler())
         addDisposable(observable.subscribeWith(observer))
