@@ -47,10 +47,11 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name="com.cooltechworks.creditcarddesign.CardEditActivity"
-            android:label="@string/new_card"
+            android:name=".presentation.view.form.FormActivity"
+            android:label="@string/edit_card"
             android:parentActivityName=".presentation.view.main.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".presentation.view.main.MainActivity"/>

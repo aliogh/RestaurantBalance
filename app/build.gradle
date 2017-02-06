@@ -57,6 +57,7 @@ dependencies {
     compile 'com.android.support:design:25.1.1'
     compile 'com.victor:lib:1.0.4' // Loading view
     compile 'com.github.cooltechworks:CreditCardView:v1.0.2'
+    compile 'morxander.editcard:EditCard:1.0.1'
     compile 'com.andrognito.pinlockview:pinlockview:1.0.1'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

@@ -38,26 +38,17 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
 
     override fun attachView(view: MainMvpView, isNew: Boolean) {
         mView = view
-        if (mCvv.isNullOrBlank()) {
-            mView?.showLockScreen()
-        } else {
-            if (mCreditCard == null && isNew) {
-                getCreditCard()
-            }
+        if (mCreditCard == null) {
+            getCreditCard()
         }
     }
 
-    fun addNewCreditCard() {
-        mView?.showCreditCardForm()
+    fun onEditCreditCardClick() {
+        mView?.showCreditCardForm(mCreditCard?.number, mCreditCard?.expDate)
     }
 
     fun update() {
         if (mCreditCard != null) getBalance(mCreditCard as CreditCard)
-    }
-
-    fun createCreditCard(number: String, expDate: String) {
-        createCreditCard.execute(CreateCreditCardObserver(),
-                CreateCreditCard.Params.newCreditCard(number, expDate))
     }
 
     private fun getCreditCard() {
@@ -80,24 +71,6 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
         getCreditCard.dispose()
     }
 
-    private inner class CreateCreditCardObserver : DefaultObserver<Unit>() {
-
-        override fun onNext(value: Unit) {
-            update()
-        }
-
-        override fun onComplete() {
-        }
-
-        override fun onError(e: Throwable?) {
-            if (e is NoCreditCardException) {
-                mView?.showCreditCardForm()
-            } else {
-                mView?.showError("Unknown error")
-            }
-        }
-    }
-
     private inner class CreditCardObserver : DefaultObserver<CreditCard>() {
 
         override fun onNext(value: CreditCard) {
@@ -111,7 +84,7 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
 
         override fun onError(e: Throwable?) {
             if (e is NoCreditCardException) {
-                mView?.showCreditCardForm()
+                mView?.showCreditCardForm(mCreditCard?.number, mCreditCard?.expDate)
             } else {
                 mView?.showError("Unknown error")
             }

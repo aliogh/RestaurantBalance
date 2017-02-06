@@ -29,7 +29,7 @@ interface MainMvpView : MvpView {
 
     fun showError(error: String)
 
-    fun showCreditCardForm()
+    fun showCreditCardForm(number: String?, expDate: String?)
 
     fun showLockScreen()
 

@@ -21,13 +21,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
-import com.cooltechworks.creditcarddesign.CardEditActivity
-import com.cooltechworks.creditcarddesign.CreditCardUtils
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
+import com.mrebollob.m2p.presentation.view.form.FormActivity
 import com.mrebollob.m2p.presentation.view.lock.LockActivity
 import com.mrebollob.m2p.utils.extensions.gone
 import com.mrebollob.m2p.utils.extensions.visible
@@ -38,7 +37,6 @@ import javax.inject.Inject
 class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshListener {
 
     val GET_CVV = 0x61
-    val GET_NEW_CARD = 0x62
     var isNewActivity = false
     @Inject lateinit var mPresenter: MainPresenter
 
@@ -58,7 +56,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         dataView.setOnRefreshListener(this)
 
         fab.setOnClickListener { view ->
-            mPresenter.addNewCreditCard()
+            mPresenter.onEditCreditCardClick()
         }
 
         retryBtn.setOnClickListener { view ->
@@ -86,9 +84,8 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         errorTv.text = error
     }
 
-    override fun showCreditCardForm() {
-        val intent = Intent(this, CardEditActivity::class.java)
-        startActivityForResult(intent, GET_NEW_CARD)
+    override fun showCreditCardForm(number: String?, expDate: String?) {
+        FormActivity.openForResult(this@MainActivity, number, expDate)
     }
 
     override fun showLockScreen() {
@@ -114,16 +111,8 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
         if (resultCode == Activity.RESULT_OK && data != null) {
             when (requestCode) {
-                GET_NEW_CARD -> {
-                    val cardNumber = data.getStringExtra(CreditCardUtils.EXTRA_CARD_NUMBER)
-                    val expiry = data.getStringExtra(CreditCardUtils.EXTRA_CARD_EXPIRY)
-
-                    mPresenter.createCreditCard(cardNumber, expiry)
-                    isNewActivity = false
-                }
                 GET_CVV -> {
                     mPresenter.mCvv = data.getStringExtra(EXTRA_CARD_CVV)
                 }

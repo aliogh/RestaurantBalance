@@ -29,4 +29,8 @@
     <string name="retry">Retry</string>
     <string name="error">Error</string>
     <string name="balance">Balance</string>
+    <string name="edit_card">Edit Card</string>
+    <string name="invalid_card">Invalid card</string>
+    <string name="error_invalid_month">Invalid month</string>
+    <string name="error_card_expired">Card expired</string>
 </resources>
