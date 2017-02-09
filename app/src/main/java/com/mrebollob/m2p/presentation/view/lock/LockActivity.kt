@@ -19,27 +19,43 @@ package com.mrebollob.m2p.presentation.view.lock
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import com.andrognito.pinlockview.PinLockListener
 import com.mrebollob.m2p.R
+import com.mrebollob.m2p.presentation.presenter.lock.LockPresenter
+import com.mrebollob.m2p.presentation.view.BaseActivity
 import com.mrebollob.m2p.presentation.view.main.MainActivity
+import com.mrebollob.m2p.utils.extensions.toast
 import kotlinx.android.synthetic.main.activity_lock.*
+import javax.inject.Inject
 
 
-class LockActivity : AppCompatActivity() {
+class LockActivity : BaseActivity(), LockMvpView {
+
+    var isNewActivity = false
+    @Inject lateinit var mPresenter: LockPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lock)
+        initializeDependencyInjector()
+        isNewActivity = (savedInstanceState == null)
+        initUI()
+    }
 
+    private fun initializeDependencyInjector() {
+        getApplicationComponent().inject(this)
+    }
+
+    private fun initUI() {
         pinLockView.setPinLockListener(mPinLockListener)
         pinLockView.attachIndicatorDots(indicatorDots)
+
+        removeCardButton.setOnClickListener { mPresenter.onRemoveCreditCardClick() }
     }
 
     private val mPinLockListener = object : PinLockListener {
         override fun onComplete(pin: String) {
-            finish()
-            MainActivity.open(this@LockActivity, pin)
+            mPresenter.onCvvComplete(pin)
         }
 
         override fun onEmpty() {
@@ -47,6 +63,30 @@ class LockActivity : AppCompatActivity() {
 
         override fun onPinChange(pinLength: Int, intermediatePin: String) {
         }
+    }
+
+    override fun showCreditCardBalance(cvv: String) {
+        finish()
+        MainActivity.open(this@LockActivity, cvv)
+    }
+
+    override fun showCreditCardRemoved() {
+        finish()
+        MainActivity.open(this@LockActivity, "")
+    }
+
+    override fun showRemoveCreditCardError() {
+        toast(getString(R.string.remove_credit_card_error))
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mPresenter.attachView(this, isNewActivity)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mPresenter.detachView()
     }
 
     companion object Navigator {

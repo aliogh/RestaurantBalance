@@ -44,7 +44,7 @@
             android:name=".presentation.view.lock.LockActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Lock"/>
 
         <activity
             android:name=".presentation.view.form.FormActivity"

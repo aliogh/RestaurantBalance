@@ -33,4 +33,7 @@
     <string name="error_invalid_month">Invalid month</string>
     <string name="error_card_expired">Card expired</string>
     <string name="new_card">New Card</string>
+    <string name="remove_credit_card_error">Error deleting card</string>
+    <string name="remove_credit_card">Remove Credit Card</string>
+    <string name="lock_view_info_text">Enter your CVV to check credit card balance or remove to insert new card</string>
 </resources>

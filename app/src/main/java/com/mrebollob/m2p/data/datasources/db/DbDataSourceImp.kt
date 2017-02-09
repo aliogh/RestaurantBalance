@@ -50,6 +50,22 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
         }
     }
 
+    override fun removeCreditCard(): Observable<Unit> {
+        return Observable.create {
+            try {
+                sharedPreferences.edit()
+                        .putString(CREDIT_CARD_NUMBER, "")
+                        .putString(CREDIT_CARD_EXP_DATE, "")
+                        .apply()
+                it.onComplete()
+            } catch (exception: IOException) {
+                Log.e("DbDataSourceImp", "removeCreditCard", exception)
+                //TODO change exception
+                it.onError(exception)
+            }
+        }
+    }
+
     override fun createCreditCard(number: String, expDate: String): Observable<Unit> {
         return Observable.create {
             try {
