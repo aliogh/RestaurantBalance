@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez
+ * Copyright (c) 2017. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-#include <jni.h>
+package com.mrebollob.m2p.presentation.view.lock
 
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_mrebollob_m2p_presentation_di_modules_AppModule_getKey(JNIEnv *env, jobject instance) {
+interface LockMvpView {
 
-    return env->NewStringUTF("Bar12345Bar12345");
+    fun showCreditCardBalance(cvv: String)
+
+    fun showCreditCardRemoved()
+
+    fun showRemoveCreditCardError()
 }

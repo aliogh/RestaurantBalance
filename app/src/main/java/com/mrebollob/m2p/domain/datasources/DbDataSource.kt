@@ -21,7 +21,9 @@ import io.reactivex.Observable
 
 interface DbDataSource {
 
-    fun createCreditCard(creditCard: CreditCard): Observable<CreditCard>
+    fun createCreditCard(number: String, expDate: String): Observable<Unit>
+
+    fun removeCreditCard(): Observable<Unit>
 
     fun getCreditCard(): Observable<CreditCard>
 }

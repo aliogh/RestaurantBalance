@@ -23,11 +23,12 @@ import com.mrebollob.m2p.domain.executor.ThreadExecutor
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class GetCreditCard @Inject constructor(private val dbDataSource: DbDataSource, threadExecutor: ThreadExecutor,
+class GetCreditCard @Inject constructor(val dbDataSource: DbDataSource,
+                                        threadExecutor: ThreadExecutor,
                                         postExecutionThread: PostExecutionThread)
-    : UseCase<CreditCard, Unit>(threadExecutor, postExecutionThread) {
+    : AbstractInteractor<CreditCard, Unit>(threadExecutor, postExecutionThread) {
 
-    override fun buildUseCaseObservable(params: Unit): Observable<CreditCard> {
+    override fun buildInteractorObservable(params: Unit): Observable<CreditCard> {
         return dbDataSource.getCreditCard()
     }
 }

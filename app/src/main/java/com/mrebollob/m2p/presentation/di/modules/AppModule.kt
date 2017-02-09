@@ -21,7 +21,6 @@ import com.google.gson.Gson
 import com.mrebollob.m2p.data.executor.JobExecutor
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
-import com.mrebollob.m2p.presentation.di.qualifiers.EncryptorKey
 import com.mrebollob.m2p.presentation.executor.UIThread
 import dagger.Module
 import dagger.Provides
@@ -30,10 +29,6 @@ import javax.inject.Singleton
 
 @Module
 class AppModule(val mApplication: Application) {
-
-    init {
-        System.loadLibrary("encryptor-lib")
-    }
 
     @Provides
     @Singleton
@@ -58,13 +53,4 @@ class AppModule(val mApplication: Application) {
     fun providePostExecutionThread(uiThread: UIThread): PostExecutionThread {
         return uiThread
     }
-
-    @Provides
-    @Singleton
-    @EncryptorKey
-    fun provideEncryptorKey(): String {
-        return getKey()
-    }
-
-    external fun getKey(): String
 }

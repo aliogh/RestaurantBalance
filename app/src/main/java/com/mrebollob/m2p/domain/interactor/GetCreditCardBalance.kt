@@ -19,16 +19,31 @@ package com.mrebollob.m2p.domain.interactor
 import com.mrebollob.m2p.domain.datasources.NetworkDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
+import com.mrebollob.m2p.domain.exceptions.InvalidCreditCardException
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class GetCreditCardBalance @Inject constructor(private val networkDataSource: NetworkDataSource,
-                                               threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread)
-    : UseCase<CreditCardBalance, CreditCard>(threadExecutor, postExecutionThread) {
+class GetCreditCardBalance @Inject constructor(val networkDataSource: NetworkDataSource,
+                                               threadExecutor: ThreadExecutor,
+                                               postExecutionThread: PostExecutionThread)
+    : AbstractInteractor<CreditCardBalance, GetCreditCardBalance.Params>(threadExecutor, postExecutionThread) {
 
-    override fun buildUseCaseObservable(params: CreditCard): Observable<CreditCardBalance> {
-        return networkDataSource.getCreditCardBalance(params)
+    override fun buildInteractorObservable(params: Params): Observable<CreditCardBalance> {
+
+        if (params.creditCard.isNotValid()) {
+            throw (InvalidCreditCardException())
+        }
+
+        return networkDataSource.getCreditCardBalance(params.creditCard)
+    }
+
+    class Params private constructor(val creditCard: CreditCard) {
+        companion object {
+            fun forCreditCard(creditCard: CreditCard): Params {
+                return Params(creditCard)
+            }
+        }
     }
 }

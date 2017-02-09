@@ -16,66 +16,75 @@
 
 package com.mrebollob.m2p.domain
 
-import com.mrebollob.m2p.domain.datasources.DbDataSource
+import com.mrebollob.m2p.utils.mock
+import com.mrebollob.m2p.domain.datasources.NetworkDataSource
+import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.exceptions.InvalidCreditCardException
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
-import com.mrebollob.m2p.domain.interactor.CreateCreditCard
-import com.mrebollob.m2p.utils.mock
+import com.mrebollob.m2p.domain.interactor.GetCreditCardBalance
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.mockito.Mockito
 
-class CreateCreditCardTest {
+class GetCreditCardBalanceTest {
 
     @Rule @JvmField var expectedException = ExpectedException.none()
 
-    private lateinit var createCreditCard: CreateCreditCard
+    private lateinit var getCreditCardBalance: GetCreditCardBalance
 
-    private val mockDbDataSource: DbDataSource = mock()
+    private val mockNetworkDataSource: NetworkDataSource = mock()
     private val mockThreadExecutor: ThreadExecutor = mock()
     private val mockPostExecutionThread: PostExecutionThread = mock()
 
     @Before
     fun setUp() {
-        createCreditCard = CreateCreditCard(mockDbDataSource, mockThreadExecutor, mockPostExecutionThread)
+        getCreditCardBalance = GetCreditCardBalance(mockNetworkDataSource,
+                mockThreadExecutor, mockPostExecutionThread)
     }
 
     @Test
     fun shouldCreateACreditCard() {
-        val number = "4222222222222222"
-        val expDate = "08/21"
+        val testCreditCard = CreditCard("4222222222222222", "08/21", "000")
 
-        createCreditCard.buildInteractorObservable(
-                CreateCreditCard.Params.newCreditCard(number, expDate))
+        getCreditCardBalance.buildInteractorObservable(
+                GetCreditCardBalance.Params.forCreditCard(testCreditCard))
 
-        Mockito.verify(mockDbDataSource).createCreditCard(number, expDate)
-        Mockito.verifyNoMoreInteractions(mockDbDataSource)
+        Mockito.verify(mockNetworkDataSource).getCreditCardBalance(testCreditCard)
+        Mockito.verifyNoMoreInteractions(mockNetworkDataSource)
         Mockito.verifyZeroInteractions(mockPostExecutionThread)
         Mockito.verifyZeroInteractions(mockThreadExecutor)
     }
 
     @Test
     fun shouldFailWithEmptyNumber() {
-        val number = ""
-        val expDate = "08/21"
+        val testCreditCard = CreditCard("", "08/21", "000")
 
         expectedException.expect(InvalidCreditCardException::class.java)
 
-        createCreditCard.buildInteractorObservable(
-                CreateCreditCard.Params.newCreditCard(number, expDate))
+        getCreditCardBalance.buildInteractorObservable(
+                GetCreditCardBalance.Params.forCreditCard(testCreditCard))
     }
 
     @Test
     fun shouldFailWithEmptyExpDate() {
-        val number = "4222222222222222"
-        val expDate = ""
+        val testCreditCard = CreditCard("4222222222222222", "", "000")
 
         expectedException.expect(InvalidCreditCardException::class.java)
 
-        createCreditCard.buildInteractorObservable(
-                CreateCreditCard.Params.newCreditCard(number, expDate))
+        getCreditCardBalance.buildInteractorObservable(
+                GetCreditCardBalance.Params.forCreditCard(testCreditCard))
+    }
+
+    @Test
+    fun shouldFailWithEmptyCvv() {
+        val testCreditCard = CreditCard("4222222222222222", "08/21", "")
+
+        expectedException.expect(InvalidCreditCardException::class.java)
+
+        getCreditCardBalance.buildInteractorObservable(
+                GetCreditCardBalance.Params.forCreditCard(testCreditCard))
     }
 }

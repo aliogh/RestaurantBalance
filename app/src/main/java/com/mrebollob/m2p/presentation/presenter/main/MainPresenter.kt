@@ -34,22 +34,21 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
 
     var mView: MainMvpView? = null
     var mCreditCard: CreditCard? = null
+    var mCvv: String? = null
 
     override fun attachView(view: MainMvpView, isNew: Boolean) {
         mView = view
-        if (mCreditCard == null&&isNew) getCreditCard()
+        if (mCreditCard == null) {
+            getCreditCard()
+        }
     }
 
-    fun addNewCreditCard() {
-        mView?.showCreditCardForm()
+    fun onEditCreditCardClick() {
+        mView?.showCreditCardForm(mCreditCard?.number, mCreditCard?.expDate)
     }
 
     fun update() {
         if (mCreditCard != null) getBalance(mCreditCard as CreditCard)
-    }
-
-    fun createCreditCard(creditCard: CreditCard) {
-        createCreditCard.execute(CreditCardObserver(), creditCard)
     }
 
     private fun getCreditCard() {
@@ -57,8 +56,13 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
     }
 
     private fun getBalance(creditCard: CreditCard) {
-        mView?.showLoading()
-        getCreditCardBalance.execute(BalanceObserver(), creditCard)
+        if (mCvv.isNullOrBlank()) {
+            mView?.showLockScreen()
+        } else {
+            mView?.showLoading()
+            getCreditCardBalance.execute(BalanceObserver(), GetCreditCardBalance.Params
+                    .forCreditCard(creditCard.copy(cvv = mCvv as String)))
+        }
     }
 
     override fun detachView() {
@@ -80,7 +84,7 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
 
         override fun onError(e: Throwable?) {
             if (e is NoCreditCardException) {
-                mView?.showCreditCardForm()
+                mView?.showEmptyCreditCard()
             } else {
                 mView?.showError("Unknown error")
             }

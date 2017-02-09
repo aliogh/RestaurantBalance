@@ -17,7 +17,9 @@
 package com.mrebollob.m2p.presentation
 
 import android.app.Application
+import android.os.StrictMode
 import com.crashlytics.android.Crashlytics
+import com.mrebollob.m2p.BuildConfig
 import com.mrebollob.m2p.presentation.di.components.AppComponent
 import com.mrebollob.m2p.presentation.di.components.DaggerAppComponent
 import com.mrebollob.m2p.presentation.di.modules.AppModule
@@ -32,6 +34,10 @@ class M2PApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            enableStrictMode()
+        }
 
         initializeInjector()
         initializeCrashlytics()
@@ -49,5 +55,20 @@ class M2PApp : Application() {
 
     fun getAppComponent(): AppComponent {
         return mAppComponent
+    }
+
+    private fun enableStrictMode() {
+        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()
+                .penaltyLog()
+                .build())
+        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build())
     }
 }

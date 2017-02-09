@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez
+ * Copyright (c) 2017. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.di.qualifiers
+package com.mrebollob.m2p.utils
 
-import javax.inject.Qualifier
+import com.mrebollob.m2p.utils.encryption.Encryptor
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
 
-@Qualifier
-@Retention
-annotation class EncryptorKey
+class EncryptorTest {
+
+    @Test
+    fun shouldEncryptACreditCard() {
+        val number = "4222222222222222"
+        val encryptor = Encryptor()
+
+        val hash = encryptor.getAsHash(number)
+        val numberUnhashed = encryptor.getUnhashed(hash)
+
+        assertThat(numberUnhashed).isEqualTo(number)
+    }
+}

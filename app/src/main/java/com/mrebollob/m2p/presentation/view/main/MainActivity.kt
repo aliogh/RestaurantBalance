@@ -17,16 +17,18 @@
 package com.mrebollob.m2p.presentation.view.main
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
-import com.cooltechworks.creditcarddesign.CardEditActivity
-import com.cooltechworks.creditcarddesign.CreditCardUtils
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
+import com.mrebollob.m2p.presentation.view.form.FormActivity
+import com.mrebollob.m2p.presentation.view.lock.LockActivity
 import com.mrebollob.m2p.utils.extensions.gone
 import com.mrebollob.m2p.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main.*
@@ -35,7 +37,7 @@ import javax.inject.Inject
 
 class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshListener {
 
-    val GET_NEW_CARD = 0x62
+    val GET_CVV = 0x61
     var isNewActivity = false
     @Inject lateinit var mPresenter: MainPresenter
 
@@ -55,7 +57,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         dataView.setOnRefreshListener(this)
 
         fab.setOnClickListener { view ->
-            mPresenter.addNewCreditCard()
+            mPresenter.onEditCreditCardClick()
         }
 
         retryBtn.setOnClickListener { view ->
@@ -64,9 +66,11 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     }
 
     override fun showCreditCard(creditCard: CreditCard) {
-        creditCardView.cardHolderName = creditCard.holderName
+        creditCardView.cardHolderName = "M2P"
         creditCardView.cardNumber = creditCard.number
         creditCardView.setCardExpiry(creditCard.expDate)
+
+        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
     }
 
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
@@ -76,6 +80,17 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         cardBalanceTv.text = getString(R.string.balance_format, creditCardBalance.balance)
     }
 
+    override fun showEmptyCreditCard() {
+        creditCardView.cardHolderName = "M2P"
+        creditCardView.cardNumber = ""
+        creditCardView.setCardExpiry("")
+        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add))
+
+        errorView.gone()
+        dataView.visible()
+        cardBalanceTv.text = "Añade una tarjeta"
+    }
+
     override fun showError(error: String) {
         dataView.gone()
         errorView.visible()
@@ -83,9 +98,13 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         errorTv.text = error
     }
 
-    override fun showCreditCardForm() {
-        val intent = Intent(this, CardEditActivity::class.java)
-        startActivityForResult(intent, GET_NEW_CARD)
+    override fun showCreditCardForm(number: String?, expDate: String?) {
+        FormActivity.openForResult(this@MainActivity, number, expDate)
+    }
+
+    override fun showLockScreen() {
+        finish()
+        LockActivity.open(this@MainActivity)
     }
 
     override fun showLoading() {
@@ -106,24 +125,38 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == GET_NEW_CARD && resultCode == Activity.RESULT_OK && data != null) {
-            val cardHolderName = data.getStringExtra(CreditCardUtils.EXTRA_CARD_HOLDER_NAME)
-            val cardNumber = data.getStringExtra(CreditCardUtils.EXTRA_CARD_NUMBER)
-            val expiry = data.getStringExtra(CreditCardUtils.EXTRA_CARD_EXPIRY)
-            val cvv = data.getStringExtra(CreditCardUtils.EXTRA_CARD_CVV)
-
-            mPresenter.createCreditCard(CreditCard(cardHolderName, cardNumber, expiry, cvv))
-            isNewActivity = false
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            when (requestCode) {
+                GET_CVV -> {
+                    mPresenter.mCvv = data.getStringExtra(EXTRA_CARD_CVV)
+                }
+            }
         }
     }
 
     override fun onStart() {
         super.onStart()
+        mPresenter.mCvv = getCvv()
         mPresenter.attachView(this, isNewActivity)
     }
 
     override fun onStop() {
         super.onStop()
         mPresenter.detachView()
+    }
+
+    private fun getCvv(): String? {
+        return intent.getStringExtra(EXTRA_CARD_CVV)
+    }
+
+    companion object Navigator {
+
+        val EXTRA_CARD_CVV = "extra_card_cvv"
+
+        fun open(context: Context, pin: String) {
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra(EXTRA_CARD_CVV, pin)
+            context.startActivity(intent)
+        }
     }
 }
