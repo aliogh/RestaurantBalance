@@ -39,6 +39,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
 
     val GET_CVV = 0x61
     var isNewActivity = false
+    var shouldResetCvv = false
     @Inject lateinit var mPresenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +48,8 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         initializeDependencyInjector()
         isNewActivity = (savedInstanceState == null)
         initUI()
+
+        shouldResetCvv = false
     }
 
     private fun initializeDependencyInjector() {
@@ -130,6 +133,10 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
                 GET_CVV -> {
                     mPresenter.mCvv = data.getStringExtra(EXTRA_CARD_CVV)
                 }
+                FormActivity.CREDIT_CARD_FORM -> {
+                    isNewActivity = true
+                    shouldResetCvv = true
+                }
             }
         }
     }
@@ -146,7 +153,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     }
 
     private fun getCvv(): String? {
-        return intent.getStringExtra(EXTRA_CARD_CVV)
+        return if (shouldResetCvv) "" else intent.getStringExtra(EXTRA_CARD_CVV)
     }
 
     companion object Navigator {
