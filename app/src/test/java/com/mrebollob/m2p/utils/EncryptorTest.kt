@@ -16,35 +16,20 @@
 
 package com.mrebollob.m2p.utils
 
-import android.text.Editable
-import android.text.TextWatcher
+import com.mrebollob.m2p.utils.encryption.Encryptor
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
 
+class EncryptorTest {
 
-abstract class CreditCardTextWatcher constructor(val actionListener: CardActionListener)
-    : TextWatcher {
+    @Test
+    fun shouldEncryptACreditCard() {
+        val number = "4222222222222222"
+        val encryptor = Encryptor()
 
-    override fun afterTextChanged(s: Editable?) {
+        val hash = encryptor.getAsHash(number)
+        val numberUnhashed = encryptor.getUnhashed(hash)
 
-    }
-
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-    }
-
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-    }
-
-    abstract fun focus()
-
-    abstract fun getIndex(): Int
-
-    fun onComplete() {
-        actionListener.onComplete(getIndex())
-    }
-
-    interface CardActionListener {
-
-        fun onComplete(index: Int)
+        assertThat(numberUnhashed).isEqualTo(number)
     }
 }

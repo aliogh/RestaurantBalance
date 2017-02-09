@@ -29,9 +29,9 @@ import android.view.inputmethod.InputMethodManager
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.presenter.form.FormPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
-import com.mrebollob.m2p.utils.CardNumberTextWatcher
-import com.mrebollob.m2p.utils.CreditCardTextWatcher
-import com.mrebollob.m2p.utils.ExpDateTextWatcher
+import com.mrebollob.m2p.utils.creditcard.CardNumberTextWatcher
+import com.mrebollob.m2p.utils.creditcard.CreditCardTextWatcher
+import com.mrebollob.m2p.utils.creditcard.ExpDateTextWatcher
 import kotlinx.android.synthetic.main.activity_form.*
 import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
@@ -57,7 +57,7 @@ class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActi
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         toolbar.setNavigationOnClickListener({ onBackPressed() })
-        
+
         showInputMethod(numberEt)
 
         val cardNumberTextWatcher = CardNumberTextWatcher(numberEt, this)

@@ -21,11 +21,13 @@ import android.util.Log
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
+import com.mrebollob.m2p.utils.encryption.Encryptor
 import io.reactivex.Observable
 import java.io.IOException
 import javax.inject.Inject
 
-class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferences) : DbDataSource {
+class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferences,
+                                          val encryptor: Encryptor) : DbDataSource {
 
     val CREDIT_CARD_NUMBER = "credit_card_number"
     val CREDIT_CARD_EXP_DATE = "credit_card_exp_date"
@@ -33,8 +35,10 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
     override fun getCreditCard(): Observable<CreditCard> {
         return Observable.create {
             try {
-                val number = sharedPreferences.getString(CREDIT_CARD_NUMBER, "")
-                val expDate = sharedPreferences.getString(CREDIT_CARD_EXP_DATE, "")
+                val number = encryptor
+                        .getUnhashed(sharedPreferences.getString(CREDIT_CARD_NUMBER, ""))
+                val expDate = encryptor
+                        .getUnhashed(sharedPreferences.getString(CREDIT_CARD_EXP_DATE, ""))
 
                 if (number.isNotBlank() && expDate.isNotBlank()) {
                     it.onNext(CreditCard(number, expDate, ""))
@@ -70,8 +74,8 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
         return Observable.create {
             try {
                 sharedPreferences.edit()
-                        .putString(CREDIT_CARD_NUMBER, number)
-                        .putString(CREDIT_CARD_EXP_DATE, expDate)
+                        .putString(CREDIT_CARD_NUMBER, encryptor.getAsHash(number))
+                        .putString(CREDIT_CARD_EXP_DATE, encryptor.getAsHash(expDate))
                         .apply()
                 it.onComplete()
             } catch (exception: IOException) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.utils
+package com.mrebollob.m2p.utils.creditcard
 
 import android.text.Editable
 import android.widget.EditText
