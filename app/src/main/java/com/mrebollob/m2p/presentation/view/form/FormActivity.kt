@@ -54,6 +54,10 @@ class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActi
 
     private fun initUI() {
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        toolbar.setNavigationOnClickListener({ onBackPressed() })
+        
         showInputMethod(numberEt)
 
         val cardNumberTextWatcher = CardNumberTextWatcher(numberEt, this)
