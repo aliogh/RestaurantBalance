@@ -38,7 +38,7 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
 
     override fun attachView(view: MainMvpView, isNew: Boolean) {
         mView = view
-        if (mCreditCard == null) {
+        if (mCreditCard == null || isNew) {
             getCreditCard()
         }
     }

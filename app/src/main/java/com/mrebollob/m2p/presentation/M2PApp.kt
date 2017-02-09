@@ -68,7 +68,6 @@ class M2PApp : Application() {
                 .detectLeakedSqlLiteObjects()
                 .detectLeakedClosableObjects()
                 .penaltyLog()
-                .penaltyDeath()
                 .build())
     }
 }
