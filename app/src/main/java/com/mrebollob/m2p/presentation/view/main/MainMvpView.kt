@@ -27,6 +27,8 @@ interface MainMvpView : MvpView {
 
     fun showCardBalance(creditCardBalance: CreditCardBalance)
 
+    fun showEmptyCreditCard()
+
     fun showError(error: String)
 
     fun showCreditCardForm(number: String?, expDate: String?)

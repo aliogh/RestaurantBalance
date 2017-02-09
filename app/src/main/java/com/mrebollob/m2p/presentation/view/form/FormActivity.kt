@@ -17,36 +17,58 @@
 package com.mrebollob.m2p.presentation.view.form
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.presenter.form.FormPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
+import com.mrebollob.m2p.utils.CardNumberTextWatcher
+import com.mrebollob.m2p.utils.CreditCardTextWatcher
 import com.mrebollob.m2p.utils.ExpDateTextWatcher
 import kotlinx.android.synthetic.main.activity_form.*
 import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 
-class FormActivity : BaseActivity(), FormMvpView {
+class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActionListener {
 
-    var isNewActivity = false
     @Inject lateinit var mPresenter: FormPresenter
+    var isNewActivity = false
+    var expDateTextWatcher: ExpDateTextWatcher? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
         initializeDependencyInjector()
         isNewActivity = (savedInstanceState == null)
+
         initUI()
     }
 
     private fun initUI() {
         setSupportActionBar(toolbar)
-        expDateEt.addTextChangedListener(ExpDateTextWatcher(this, expDateEt))
+        showInputMethod(numberEt)
+
+        val cardNumberTextWatcher = CardNumberTextWatcher(numberEt, this)
+        numberEt.addTextChangedListener(cardNumberTextWatcher)
+        expDateTextWatcher = ExpDateTextWatcher(this, expDateEt, this)
+        expDateEt.addTextChangedListener(expDateTextWatcher)
+    }
+
+    fun showInputMethod(view: View) {
+        Handler().postDelayed({
+            view.isFocusableInTouchMode = true
+            view.requestFocus()
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(numberEt, InputMethodManager.SHOW_IMPLICIT)
+        }, 200)
     }
 
     private fun initializeDependencyInjector() {
@@ -68,13 +90,26 @@ class FormActivity : BaseActivity(), FormMvpView {
         }
     }
 
+    override fun onComplete(index: Int) {
+        if (index == 0) {
+            expDateTextWatcher?.focus()
+        }
+    }
+
     private fun updateCreditCard() {
-        mPresenter.updateCreditCard(numberEt.text.toString(), expDateEt.text.toString())
+        mPresenter.updateCreditCard(numberEt.text.toString().replace(" ", ""),
+                expDateEt.text.toString())
     }
 
     override fun showCreditCard(number: String?, expDate: String?) {
         numberEt.setText(number)
         expDateEt.setText(expDate)
+
+        if (number.isNullOrBlank()) {
+            title = getString(R.string.new_card)
+        } else {
+            title = getString(R.string.edit_card)
+        }
     }
 
     override fun showCardBalanceView() {

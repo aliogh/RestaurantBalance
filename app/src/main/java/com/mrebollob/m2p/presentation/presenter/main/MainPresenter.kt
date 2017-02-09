@@ -84,7 +84,7 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
 
         override fun onError(e: Throwable?) {
             if (e is NoCreditCardException) {
-                mView?.showCreditCardForm(mCreditCard?.number, mCreditCard?.expDate)
+                mView?.showEmptyCreditCard()
             } else {
                 mView?.showError("Unknown error")
             }

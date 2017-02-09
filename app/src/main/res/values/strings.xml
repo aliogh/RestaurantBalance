@@ -21,7 +21,6 @@
     <string name="card_number">Card number</string>
     <string name="exp_date">Exp. date</string>
     <string name="cvv">CVV</string>
-    <string name="new_card">New card</string>
     <string name="next">Next</string>
     <string name="save">Save</string>
     <string name="create">Create</string>
@@ -33,4 +32,5 @@
     <string name="invalid_card">Invalid card</string>
     <string name="error_invalid_month">Invalid month</string>
     <string name="error_card_expired">Card expired</string>
+    <string name="new_card">New Card</string>
 </resources>

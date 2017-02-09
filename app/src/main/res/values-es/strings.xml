@@ -28,4 +28,8 @@
     <string name="retry">Reintentar</string>
     <string name="error">Error</string>
     <string name="balance">Saldo</string>
+    <string name="edit_card">Editar tarjeta</string>
+    <string name="error_card_expired">Tarjeta caducada</string>
+    <string name="error_invalid_month">Mes no válido</string>
+    <string name="invalid_card">Tarjeta no válida</string>
 </resources>

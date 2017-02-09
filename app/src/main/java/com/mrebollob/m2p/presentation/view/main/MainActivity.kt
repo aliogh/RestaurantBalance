@@ -20,6 +20,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
@@ -68,6 +69,8 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         creditCardView.cardHolderName = "M2P"
         creditCardView.cardNumber = creditCard.number
         creditCardView.setCardExpiry(creditCard.expDate)
+
+        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
     }
 
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
@@ -75,6 +78,17 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         dataView.visible()
 
         cardBalanceTv.text = getString(R.string.balance_format, creditCardBalance.balance)
+    }
+
+    override fun showEmptyCreditCard() {
+        creditCardView.cardHolderName = "M2P"
+        creditCardView.cardNumber = ""
+        creditCardView.setCardExpiry("")
+        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add))
+
+        errorView.gone()
+        dataView.visible()
+        cardBalanceTv.text = "Añade una tarjeta"
     }
 
     override fun showError(error: String) {
