@@ -28,8 +28,10 @@ import io.fabric.sdk.android.Fabric
 
 class M2PApp : Application() {
 
-    companion object {
-        lateinit var mAppComponent: AppComponent
+    val appComponent: AppComponent by lazy {
+        DaggerAppComponent.builder()
+                .appModule(AppModule(this))
+                .build()
     }
 
     override fun onCreate() {
@@ -39,22 +41,11 @@ class M2PApp : Application() {
             enableStrictMode()
         }
 
-        initializeInjector()
         initializeCrashlytics()
-    }
-
-    private fun initializeInjector() {
-        mAppComponent = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
     }
 
     private fun initializeCrashlytics() {
         Fabric.with(this, Crashlytics())
-    }
-
-    fun getAppComponent(): AppComponent {
-        return mAppComponent
     }
 
     private fun enableStrictMode() {

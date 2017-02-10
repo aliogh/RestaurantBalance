@@ -18,11 +18,8 @@ package com.mrebollob.m2p.presentation.view
 
 import android.support.v7.app.AppCompatActivity
 import com.mrebollob.m2p.presentation.M2PApp
-import com.mrebollob.m2p.presentation.di.components.AppComponent
 
 open class BaseActivity : AppCompatActivity() {
 
-    protected fun getApplicationComponent(): AppComponent {
-        return (application as M2PApp).getAppComponent()
-    }
+    val appComponent by lazy { (application as M2PApp).appComponent }
 }

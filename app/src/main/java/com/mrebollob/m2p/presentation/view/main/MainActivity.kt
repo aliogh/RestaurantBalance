@@ -53,7 +53,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     }
 
     private fun initializeDependencyInjector() {
-        getApplicationComponent().inject(this)
+        appComponent.inject(this)
     }
 
     private fun initUI() {

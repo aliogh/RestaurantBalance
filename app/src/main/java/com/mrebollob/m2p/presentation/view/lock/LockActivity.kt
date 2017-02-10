@@ -43,7 +43,7 @@ class LockActivity : BaseActivity(), LockMvpView {
     }
 
     private fun initializeDependencyInjector() {
-        getApplicationComponent().inject(this)
+        appComponent.inject(this)
     }
 
     private fun initUI() {
