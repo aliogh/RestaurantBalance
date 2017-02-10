@@ -17,7 +17,10 @@
 package com.mrebollob.m2p.data.scraper
 
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
+import com.mrebollob.m2p.domain.entities.CreditCardMovement
 import org.jsoup.Jsoup
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,6 +29,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class M2PWebScraper @Inject constructor() {
+
+    val DATE_FORMAT = SimpleDateFormat("dd/MM/yyyy", Locale.US)
 
     fun getFormUrl(html: String): String {
         val document = Jsoup.parse(html)
@@ -51,12 +56,34 @@ class M2PWebScraper @Inject constructor() {
         val document = Jsoup.parse(html)
 
         val infoElements = document.select("div.col-xs-12.usuario-acciones-bloque > div.col-xs-12.col-sm-3")
+        val movements = getMovements(html)
 
         infoElements.filter { it.select("p.usuario-acciones-bloque-title").text().contains("Saldo") }
                 .map { it.text() }
-                .forEach { return CreditCardBalance(getFloatFromString(it)) }
+                .forEach { return CreditCardBalance(getFloatFromString(it), movements) }
 
         throw  RuntimeException("Data not found")
+    }
+
+    fun getMovements(html: String): List<CreditCardMovement> {
+        val document = Jsoup.parse(html)
+        val infoElements = document.select("div.col-xs-12.usuario-acciones-bloque.tabla")
+        val nameElements = infoElements.select("div.col-xs-5")[0].children()
+        val dateElements = infoElements.select("div.col-xs-3")[0].children()
+        val valueElements = infoElements.select("div.col-xs-3")[1].children()
+
+        val creditCardMovement: MutableList<CreditCardMovement> = ArrayList()
+
+        nameElements.forEachIndexed { i, element ->
+            if (i > 0) {
+                creditCardMovement.add(CreditCardMovement(
+                        element.text(),
+                        getDateFromString(dateElements[i].text()),
+                        getFloatFromString(valueElements[i].text())))
+            }
+        }
+
+        return creditCardMovement
     }
 
     fun getError(html: String): String {
@@ -70,6 +97,10 @@ class M2PWebScraper @Inject constructor() {
         }
 
         return ""
+    }
+
+    fun getDateFromString(text: String): Date {
+        return DATE_FORMAT.parse(text)
     }
 
     fun getFloatFromString(text: String): Float {

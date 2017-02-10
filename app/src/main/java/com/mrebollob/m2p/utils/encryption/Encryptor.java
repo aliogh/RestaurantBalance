@@ -33,6 +33,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.inject.Inject;
 
+/*
+ * https://github.com/novoda/android-demos/tree/master/encryption
+ */
 public class Encryptor {
 
     private static final String CIPHER_TYPE = "PBEWithMD5AndDES/CBC/PKCS5Padding";
