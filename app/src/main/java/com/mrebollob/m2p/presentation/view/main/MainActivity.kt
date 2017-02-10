@@ -22,6 +22,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.widget.LinearLayoutManager
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
@@ -29,6 +30,7 @@ import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
 import com.mrebollob.m2p.presentation.view.form.FormActivity
 import com.mrebollob.m2p.presentation.view.lock.LockActivity
+import com.mrebollob.m2p.presentation.view.main.adapter.MovementsAdapter
 import com.mrebollob.m2p.utils.extensions.gone
 import com.mrebollob.m2p.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main.*
@@ -38,6 +40,7 @@ import javax.inject.Inject
 class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshListener {
 
     val GET_CVV = 0x61
+    val movementsAdapter = MovementsAdapter()
     var isNewActivity = false
     var shouldResetCvv = false
     @Inject lateinit var mPresenter: MainPresenter
@@ -58,14 +61,19 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
 
     private fun initUI() {
         dataView.setOnRefreshListener(this)
+        initListView()
 
         fab.setOnClickListener { view ->
             mPresenter.onEditCreditCardClick()
         }
-
         retryBtn.setOnClickListener { view ->
             mPresenter.update()
         }
+    }
+
+    private fun initListView() {
+        movementList.layoutManager = LinearLayoutManager(this)
+        movementList.adapter = movementsAdapter
     }
 
     override fun showCreditCard(creditCard: CreditCard) {
@@ -80,7 +88,8 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         errorView.gone()
         dataView.visible()
 
-        cardBalanceTv.text = getString(R.string.balance_format, creditCardBalance.balance)
+        cardBalanceTv.text = getString(R.string.money_format, creditCardBalance.balance)
+        movementsAdapter.movements = creditCardBalance.movements
     }
 
     override fun showEmptyCreditCard() {

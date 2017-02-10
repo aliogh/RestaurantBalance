@@ -103,7 +103,8 @@ class M2PWebScraper @Inject constructor() {
         return DATE_FORMAT.parse(text)
     }
 
+    // ^-?[0-9]\d*(\.\d+)?$
     fun getFloatFromString(text: String): Float {
-        return text.replace(",", ".").replace("[^\\d.]+|\\.(?!\\d)".toRegex(), "").toFloat()
+        return text.replace(",", ".").replace("[^\\d.-]+|\\.(?!\\d)".toRegex(), "").toFloat()
     }
 }
