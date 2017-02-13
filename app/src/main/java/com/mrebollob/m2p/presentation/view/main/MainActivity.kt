@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
@@ -60,8 +61,8 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     }
 
     private fun initUI() {
-        dataView.setOnRefreshListener(this)
-        initListView()
+        initRecyclerView()
+        initRefreshLayout()
 
         fab.setOnClickListener { view ->
             mPresenter.onEditCreditCardClick()
@@ -71,9 +72,23 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         }
     }
 
-    private fun initListView() {
+    private fun initRecyclerView() {
         movementList.layoutManager = LinearLayoutManager(this)
         movementList.adapter = movementsAdapter
+    }
+
+    private fun initRefreshLayout() {
+        dataView.setOnRefreshListener(this)
+        movementList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {}
+
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                val topRowVerticalPosition = if (recyclerView == null || recyclerView.childCount == 0)
+                    0 else recyclerView.getChildAt(0).top
+                dataView.isEnabled = topRowVerticalPosition >= 0
+            }
+        })
     }
 
     override fun showCreditCard(creditCard: CreditCard) {

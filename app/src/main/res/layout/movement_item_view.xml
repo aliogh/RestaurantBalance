@@ -19,6 +19,12 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/spacing_tiny"
+              android:layout_marginEnd="@dimen/spacing_normal"
+              android:layout_marginLeft="@dimen/spacing_normal"
+              android:layout_marginRight="@dimen/spacing_normal"
+              android:layout_marginStart="@dimen/spacing_normal"
+              android:layout_marginTop="@dimen/spacing_tiny"
               android:orientation="horizontal">
 
     <TextView
@@ -40,15 +46,15 @@
         android:maxLines="1"
         android:textColor="@color/primary_text"
         android:textSize="@dimen/font_normal"
-        tools:text="10/02/2017"/>
+        tools:text="10 february 2017"/>
 
     <TextView
         android:id="@+id/amountTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:gravity="end"
-        android:maxLines="1"
+        android:maxLines="2"
         android:textColor="@color/primary_text"
         android:textSize="@dimen/font_normal"
         tools:text="8,30 €"/>
