@@ -28,7 +28,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode computeVersionCode()
-        versionName "0.7"
+        versionName "0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -58,6 +58,7 @@ dependencies {
     compile 'com.victor:lib:1.0.4' // Loading view
     compile 'com.github.cooltechworks:CreditCardView:v1.0.2'
     compile 'com.andrognito.pinlockview:pinlockview:1.0.1'
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 

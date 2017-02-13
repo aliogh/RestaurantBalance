@@ -20,10 +20,14 @@ import android.app.Application
 import android.os.StrictMode
 import com.crashlytics.android.Crashlytics
 import com.mrebollob.m2p.BuildConfig
+import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.di.components.AppComponent
 import com.mrebollob.m2p.presentation.di.components.DaggerAppComponent
 import com.mrebollob.m2p.presentation.di.modules.AppModule
 import io.fabric.sdk.android.Fabric
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig
+
+
 
 
 class M2PApp : Application() {
@@ -41,11 +45,20 @@ class M2PApp : Application() {
             enableStrictMode()
         }
 
+        initializeCalligraphy()
         initializeCrashlytics()
     }
 
     private fun initializeCrashlytics() {
         Fabric.with(this, Crashlytics())
+    }
+
+    private fun initializeCalligraphy(){
+        CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Roboto-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        )
     }
 
     private fun enableStrictMode() {
