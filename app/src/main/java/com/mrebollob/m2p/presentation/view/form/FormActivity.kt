@@ -76,7 +76,7 @@ class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActi
     }
 
     private fun initializeDependencyInjector() {
-        getApplicationComponent().inject(this)
+        appComponent.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

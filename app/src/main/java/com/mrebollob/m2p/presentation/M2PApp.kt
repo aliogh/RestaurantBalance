@@ -20,16 +20,22 @@ import android.app.Application
 import android.os.StrictMode
 import com.crashlytics.android.Crashlytics
 import com.mrebollob.m2p.BuildConfig
+import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.di.components.AppComponent
 import com.mrebollob.m2p.presentation.di.components.DaggerAppComponent
 import com.mrebollob.m2p.presentation.di.modules.AppModule
 import io.fabric.sdk.android.Fabric
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig
+
+
 
 
 class M2PApp : Application() {
 
-    companion object {
-        lateinit var mAppComponent: AppComponent
+    val appComponent: AppComponent by lazy {
+        DaggerAppComponent.builder()
+                .appModule(AppModule(this))
+                .build()
     }
 
     override fun onCreate() {
@@ -39,22 +45,20 @@ class M2PApp : Application() {
             enableStrictMode()
         }
 
-        initializeInjector()
+        initializeCalligraphy()
         initializeCrashlytics()
-    }
-
-    private fun initializeInjector() {
-        mAppComponent = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
     }
 
     private fun initializeCrashlytics() {
         Fabric.with(this, Crashlytics())
     }
 
-    fun getAppComponent(): AppComponent {
-        return mAppComponent
+    private fun initializeCalligraphy(){
+        CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Roboto-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        )
     }
 
     private fun enableStrictMode() {

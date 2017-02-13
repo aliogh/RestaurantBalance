@@ -22,6 +22,9 @@
     <color name="accent_dark">#D32F2F</color>
     <color name="accent">#FF5252</color>
 
+    <color name="negative_value">#D32F2F</color>
+    <color name="positive_value">#388E3C</color>
+
     <color name="primary_text">#212121</color>
     <color name="primary_text_white">#FFF</color>
     <color name="secondary_text">#757575</color>

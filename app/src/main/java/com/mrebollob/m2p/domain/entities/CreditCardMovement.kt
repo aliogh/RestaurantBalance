@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez
+ * Copyright (c) 2017. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,4 +16,6 @@
 
 package com.mrebollob.m2p.domain.entities
 
-data class CreditCardBalance(val balance: Float, val movements: List<CreditCardMovement>)
+import java.util.*
+
+data class CreditCardMovement constructor(val name: String, val date: Date, val amount: Float)

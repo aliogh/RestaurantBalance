@@ -16,13 +16,16 @@
 
 package com.mrebollob.m2p.presentation.view
 
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import com.mrebollob.m2p.presentation.M2PApp
-import com.mrebollob.m2p.presentation.di.components.AppComponent
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 open class BaseActivity : AppCompatActivity() {
 
-    protected fun getApplicationComponent(): AppComponent {
-        return (application as M2PApp).getAppComponent()
+    val appComponent by lazy { (application as M2PApp).appComponent }
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
 }
