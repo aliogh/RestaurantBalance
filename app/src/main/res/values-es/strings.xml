@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <string name="app_name">Saldo M2P</string>
+    <string name="app_name">Saldo Restaurant</string>
     <string name="action_settings">Ajustes</string>
     <string name="card_number">Número de tarjeta</string>
     <string name="exp_date">Exp. date</string>
