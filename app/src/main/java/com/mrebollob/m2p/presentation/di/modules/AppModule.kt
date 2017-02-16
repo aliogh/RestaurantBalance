@@ -17,11 +17,13 @@
 package com.mrebollob.m2p.presentation.di.modules
 
 import android.app.Application
+import com.crashlytics.android.answers.Answers
 import com.google.gson.Gson
 import com.mrebollob.m2p.data.executor.JobExecutor
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
 import com.mrebollob.m2p.presentation.executor.UIThread
+import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -40,6 +42,13 @@ class AppModule(val mApplication: Application) {
     @Singleton
     fun provideGson(): Gson {
         return Gson()
+    }
+
+    @Provides
+    @Singleton
+    fun providesAnalyticsHelper(): AnalyticsHelper {
+
+        return AnalyticsHelper(Answers.getInstance())
     }
 
     @Provides

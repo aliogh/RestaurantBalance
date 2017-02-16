@@ -32,6 +32,7 @@ import com.mrebollob.m2p.presentation.view.BaseActivity
 import com.mrebollob.m2p.presentation.view.form.FormActivity
 import com.mrebollob.m2p.presentation.view.lock.LockActivity
 import com.mrebollob.m2p.presentation.view.main.adapter.MovementsAdapter
+import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
 import com.mrebollob.m2p.utils.extensions.gone
 import com.mrebollob.m2p.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main.*
@@ -45,6 +46,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     var isNewActivity = false
     var shouldResetCvv = false
     @Inject lateinit var mPresenter: MainPresenter
+    @Inject lateinit var mAnalyticsHelper: AnalyticsHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +56,8 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         initUI()
 
         shouldResetCvv = false
+
+        mAnalyticsHelper.logContentView("Credit card balance view", "Output", "main-view")
     }
 
     private fun initializeDependencyInjector() {

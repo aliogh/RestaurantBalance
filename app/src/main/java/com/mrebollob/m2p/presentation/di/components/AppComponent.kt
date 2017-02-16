@@ -27,6 +27,9 @@ import com.mrebollob.m2p.presentation.view.main.MainActivity
 import dagger.Component
 import okhttp3.OkHttpClient
 import javax.inject.Singleton
+import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
+
+
 
 @Singleton
 @Component(modules = arrayOf(AppModule::class, NetworkModule::class, DbModule::class))
@@ -43,4 +46,6 @@ interface AppComponent {
     fun networkDataSource(): NetworkDataSource
 
     fun okHttpClient(): OkHttpClient
+
+    fun analyticsHelper(): AnalyticsHelper
 }

@@ -19,6 +19,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
 
+def STRING = "String"
+
 android {
     compileSdkVersion 25
     buildToolsVersion "24.0.2"
@@ -33,7 +35,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix '.develop'
+            buildConfigField STRING, "GIT_SHA", "\"DEBUG\""
+            buildConfigField STRING, "BUILD_TIME", "\"DEBUG\""
+            debuggable true
+            minifyEnabled false
+        }
+
         release {
+            def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+            def buildTime = new GregorianCalendar().format("MM-dd-yyyy' 'h:mm:ss a z")
+            buildConfigField STRING, "GIT_SHA", "\"${gitSha}\""
+            buildConfigField STRING, "BUILD_TIME", "\"${buildTime}\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

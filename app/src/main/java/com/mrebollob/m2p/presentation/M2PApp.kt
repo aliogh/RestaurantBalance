@@ -19,6 +19,8 @@ package com.mrebollob.m2p.presentation
 import android.app.Application
 import android.os.StrictMode
 import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.answers.Answers
+import com.crashlytics.android.core.CrashlyticsCore
 import com.mrebollob.m2p.BuildConfig
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.di.components.AppComponent
@@ -26,8 +28,6 @@ import com.mrebollob.m2p.presentation.di.components.DaggerAppComponent
 import com.mrebollob.m2p.presentation.di.modules.AppModule
 import io.fabric.sdk.android.Fabric
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
-
-
 
 
 class M2PApp : Application() {
@@ -50,10 +50,28 @@ class M2PApp : Application() {
     }
 
     private fun initializeCrashlytics() {
-        Fabric.with(this, Crashlytics())
+        val crashlyticsCore = CrashlyticsCore.Builder()
+                .disabled("debug" == BuildConfig.BUILD_TYPE)
+                .build()
+
+        val crashlytics = Crashlytics.Builder()
+                .core(crashlyticsCore)
+                .build()
+
+        val answers = Answers()
+
+        val fabric = Fabric.Builder(applicationContext)
+                .kits(crashlytics, answers)
+                .debuggable(BuildConfig.DEBUG)
+                .build()
+
+        Fabric.with(fabric)
+
+        Crashlytics.setString("GIT_SHA_KEY", BuildConfig.GIT_SHA)
+        Crashlytics.setString("BUILD_TIME", BuildConfig.BUILD_TIME)
     }
 
-    private fun initializeCalligraphy(){
+    private fun initializeCalligraphy() {
         CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/Roboto-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
