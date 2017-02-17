@@ -65,7 +65,7 @@ android {
             def buildTime = new GregorianCalendar().format("MM-dd-yyyy' 'h:mm:ss a z")
             buildConfigField STRING, "GIT_SHA", "\"${gitSha}\""
             buildConfigField STRING, "BUILD_TIME", "\"${buildTime}\""
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
