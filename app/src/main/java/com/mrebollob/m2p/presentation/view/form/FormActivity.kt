@@ -29,6 +29,7 @@ import android.view.inputmethod.InputMethodManager
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.presenter.form.FormPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
+import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
 import com.mrebollob.m2p.utils.creditcard.CardNumberTextWatcher
 import com.mrebollob.m2p.utils.creditcard.CreditCardTextWatcher
 import com.mrebollob.m2p.utils.creditcard.ExpDateTextWatcher
@@ -40,6 +41,7 @@ import javax.inject.Inject
 class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActionListener {
 
     @Inject lateinit var mPresenter: FormPresenter
+    @Inject lateinit var mAnalyticsHelper: AnalyticsHelper
     var isNewActivity = false
     var expDateTextWatcher: ExpDateTextWatcher? = null
 
@@ -50,6 +52,8 @@ class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActi
         isNewActivity = (savedInstanceState == null)
 
         initUI()
+        mAnalyticsHelper.logContentView("Credit card input view", "Input", "form-view",
+                "Is new", getCardNumber().isNullOrBlank().toString())
     }
 
     private fun initUI() {

@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <string name="app_name">Saldo M2P</string>
+    <string name="app_name">Saldo Restaurant</string>
     <string name="action_settings">Ajustes</string>
     <string name="card_number">Número de tarjeta</string>
     <string name="exp_date">Exp. date</string>
@@ -35,4 +35,7 @@
     <string name="remove_credit_card_error">Error al eliminar la tarjeta</string>
     <string name="remove_credit_card">Eliminar tarjeta</string>
     <string name="lock_view_info_text">Introduce tu CVV para comprobar el saldo de tu tarjeta o eliminala para introducir una tarjeta nueva</string>
+    <string name="share">Compartir</string>
+    <string name="share_text">Ei! Descarga la app Saldo Restaurant %1$s</string>
+    <string name="add_credit_card">Añade una tarjeta</string>
 </resources>

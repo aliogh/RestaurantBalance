@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2017. Manuel Rebollo Báez
   ~
@@ -15,13 +16,11 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context="com.mrebollob.m2p.presentation.view.main.MainActivity">
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/action_create"
-        android:icon="@drawable/ic_add"
-        android:orderInCategory="100"
-        android:title="@string/create"
-        app:showAsAction="ifRoom"/>
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share"
+        app:showAsAction="always"/>
 </menu>

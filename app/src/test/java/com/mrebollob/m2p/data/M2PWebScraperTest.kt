@@ -32,4 +32,15 @@ class M2PWebScraperTest {
 
         Assertions.assertThat(testFloat).isEqualTo(1.1f)
     }
+
+    @Test
+    fun shouldGetNegativeFloatFromString() {
+
+        val m2PWebScraper = M2PWebScraper()
+        val testString = "saldo: -1,1 €"
+
+        val testFloat = m2PWebScraper.getFloatFromString(testString)
+
+        Assertions.assertThat(testFloat).isEqualTo(-1.1f)
+    }
 }

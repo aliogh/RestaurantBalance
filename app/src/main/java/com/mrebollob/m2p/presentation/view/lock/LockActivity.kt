@@ -24,6 +24,7 @@ import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.presenter.lock.LockPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
 import com.mrebollob.m2p.presentation.view.main.MainActivity
+import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
 import com.mrebollob.m2p.utils.extensions.toast
 import kotlinx.android.synthetic.main.activity_lock.*
 import javax.inject.Inject
@@ -33,6 +34,7 @@ class LockActivity : BaseActivity(), LockMvpView {
 
     var isNewActivity = false
     @Inject lateinit var mPresenter: LockPresenter
+    @Inject lateinit var mAnalyticsHelper: AnalyticsHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,8 @@ class LockActivity : BaseActivity(), LockMvpView {
         initializeDependencyInjector()
         isNewActivity = (savedInstanceState == null)
         initUI()
+
+        mAnalyticsHelper.logContentView("Cvv input view", "Input", "lock-view")
     }
 
     private fun initializeDependencyInjector() {

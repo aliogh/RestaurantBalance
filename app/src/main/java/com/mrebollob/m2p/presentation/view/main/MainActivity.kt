@@ -24,6 +24,9 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuItem
+import com.mrebollob.m2p.BuildConfig
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
@@ -32,9 +35,11 @@ import com.mrebollob.m2p.presentation.view.BaseActivity
 import com.mrebollob.m2p.presentation.view.form.FormActivity
 import com.mrebollob.m2p.presentation.view.lock.LockActivity
 import com.mrebollob.m2p.presentation.view.main.adapter.MovementsAdapter
+import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
 import com.mrebollob.m2p.utils.extensions.gone
 import com.mrebollob.m2p.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 
@@ -45,6 +50,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     var isNewActivity = false
     var shouldResetCvv = false
     @Inject lateinit var mPresenter: MainPresenter
+    @Inject lateinit var mAnalyticsHelper: AnalyticsHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +60,31 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         initUI()
 
         shouldResetCvv = false
+
+        mAnalyticsHelper.logContentView("Credit card balance view", "Output", "main-view")
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_share, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_share) {
+            shareData()
+            return true
+        } else {
+            return super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun shareData() {
+        mAnalyticsHelper.logInvite()
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text, BuildConfig.APP_URL))
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share)))
     }
 
     private fun initializeDependencyInjector() {
@@ -61,6 +92,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     }
 
     private fun initUI() {
+        setSupportActionBar(toolbar)
         initRecyclerView()
         initRefreshLayout()
 
@@ -115,7 +147,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
 
         errorView.gone()
         dataView.visible()
-        cardBalanceTv.text = "Añade una tarjeta"
+        cardBalanceTv.text = getString(R.string.add_credit_card)
     }
 
     override fun showError(error: String) {

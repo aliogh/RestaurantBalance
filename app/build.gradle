@@ -14,10 +14,26 @@
  * limitations under the License.
  */
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.2'
+    }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
+apply plugin: 'com.getkeepsafe.dexcount'
+
+apply from: 'config/gradle/jacoco.gradle'
+
+def STRING = "String"
 
 android {
     compileSdkVersion 25
@@ -28,12 +44,27 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode computeVersionCode()
-        versionName "0.8"
+        versionName "0.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField STRING, "APP_URL", "\"https://play.google.com/apps/testing/com.mrebollob.restaurant\""
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix '.develop'
+            buildConfigField STRING, "GIT_SHA", "\"DEBUG\""
+            buildConfigField STRING, "BUILD_TIME", "\"DEBUG\""
+            debuggable true
+            minifyEnabled false
+            testCoverageEnabled true
+        }
+
         release {
+            def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+            def buildTime = new GregorianCalendar().format("MM-dd-yyyy' 'h:mm:ss a z")
+            buildConfigField STRING, "GIT_SHA", "\"${gitSha}\""
+            buildConfigField STRING, "BUILD_TIME", "\"${buildTime}\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -52,6 +83,19 @@ android {
 kapt {
     generateStubs = true
 }
+
+dexcount {
+    format = "list"
+    includeClasses = false
+    includeFieldCount = true
+    includeTotalMethodCount = true
+    orderByMethodCount = false
+    verbose = true
+    maxTreeDepth = Integer.MAX_VALUE
+    enableForInstantRun = false
+    runOnEachAssemble = false
+}
+
 dependencies {
     compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.android.support:design:25.1.1'

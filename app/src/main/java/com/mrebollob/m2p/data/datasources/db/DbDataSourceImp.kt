@@ -17,7 +17,6 @@
 package com.mrebollob.m2p.data.datasources.db
 
 import android.content.SharedPreferences
-import android.util.Log
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
@@ -47,7 +46,6 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
                     it.onError(NoCreditCardException())
                 }
             } catch (exception: IOException) {
-                Log.e("DbDataSourceImp", "getCreditCard", exception)
                 //TODO change exception
                 it.onError(exception)
             }
@@ -58,12 +56,10 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
         return Observable.create {
             try {
                 sharedPreferences.edit()
-                        .putString(CREDIT_CARD_NUMBER, "")
-                        .putString(CREDIT_CARD_EXP_DATE, "")
+                        .clear()
                         .apply()
                 it.onComplete()
             } catch (exception: IOException) {
-                Log.e("DbDataSourceImp", "removeCreditCard", exception)
                 //TODO change exception
                 it.onError(exception)
             }
@@ -79,7 +75,6 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
                         .apply()
                 it.onComplete()
             } catch (exception: IOException) {
-                Log.e("DbDataSourceImp", "createCreditCard", exception)
                 //TODO change exception
                 it.onError(exception)
             }

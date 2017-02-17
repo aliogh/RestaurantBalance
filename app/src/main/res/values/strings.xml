@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <string name="app_name">M2P Balance</string>
+    <string name="app_name">Restaurant Balance</string>
     <string name="action_settings">Settings</string>
     <string name="card_number">Card number</string>
     <string name="exp_date">Exp. date</string>
@@ -37,4 +37,7 @@
     <string name="remove_credit_card">Remove Credit Card</string>
     <string name="lock_view_info_text">Enter your CVV to check credit card balance or remove to insert new card</string>
     <string name="date_format" translatable="false">%1$te %1$tB %1$tY</string>
+    <string name="share">Share</string>
+    <string name="share_text">Ei! Download Restaurant Balance %1$s</string>
+    <string name="add_credit_card">Add restaurant card</string>
 </resources>
