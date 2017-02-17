@@ -31,6 +31,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
 apply plugin: 'com.getkeepsafe.dexcount'
 
+apply from: 'config/gradle/jacoco.gradle'
+
 def STRING = "String"
 
 android {
@@ -53,6 +55,7 @@ android {
             buildConfigField STRING, "BUILD_TIME", "\"DEBUG\""
             debuggable true
             minifyEnabled false
+            testCoverageEnabled true
         }
 
         release {
@@ -60,7 +63,7 @@ android {
             def buildTime = new GregorianCalendar().format("MM-dd-yyyy' 'h:mm:ss a z")
             buildConfigField STRING, "GIT_SHA", "\"${gitSha}\""
             buildConfigField STRING, "BUILD_TIME", "\"${buildTime}\""
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
