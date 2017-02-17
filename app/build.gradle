@@ -46,6 +46,8 @@ android {
         versionCode computeVersionCode()
         versionName "0.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField STRING, "APP_URL", "\"https://play.google.com/apps/testing/com.mrebollob.restaurant\""
     }
 
     buildTypes {

@@ -37,4 +37,7 @@
     <string name="remove_credit_card">Remove Credit Card</string>
     <string name="lock_view_info_text">Enter your CVV to check credit card balance or remove to insert new card</string>
     <string name="date_format" translatable="false">%1$te %1$tB %1$tY</string>
+    <string name="share">Share</string>
+    <string name="share_text">Ei! Download Restaurant Balance %1$s</string>
+    <string name="add_credit_card">Add restaurant card</string>
 </resources>
