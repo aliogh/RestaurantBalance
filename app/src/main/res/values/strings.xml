@@ -40,4 +40,5 @@
     <string name="share">Share</string>
     <string name="share_text">Ei! Download Restaurant Balance %1$s</string>
     <string name="add_credit_card">Add restaurant card</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
 </resources>
