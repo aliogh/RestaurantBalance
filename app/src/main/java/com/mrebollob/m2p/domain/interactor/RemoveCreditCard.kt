@@ -33,9 +33,9 @@ class RemoveCreditCard @Inject constructor(val dbDataSource: DbDataSource,
         return dbDataSource.removeCreditCard(params.id)
     }
 
-    class Params private constructor(val id: Int) {
+    class Params private constructor(val id: Long) {
         companion object {
-            fun withId(id: Int): Params {
+            fun withId(id: Long): Params {
                 return Params(id)
             }
         }

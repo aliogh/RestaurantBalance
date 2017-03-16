@@ -16,52 +16,46 @@
 
 package com.mrebollob.m2p.data.datasources.db
 
-import android.content.SharedPreferences
+import com.mrebollob.m2p.data.datasources.db.models.DbCreditCard
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
-import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
+import com.mrebollob.m2p.domain.exceptions.DbException
 import com.mrebollob.m2p.utils.encryption.Encryptor
+import com.orm.SugarRecord
 import io.reactivex.Observable
 import java.io.IOException
 import javax.inject.Inject
 
-class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferences,
-                                          val encryptor: Encryptor) : DbDataSource {
 
-    val CREDIT_CARD_NUMBER = "credit_card_number"
-    val CREDIT_CARD_EXP_DATE = "credit_card_exp_date"
+class DbDataSourceImp @Inject constructor(val encryptor: Encryptor) : DbDataSource {
 
     override fun getCreditCards(): Observable<List<CreditCard>> {
         return Observable.create {
             try {
-                val number = encryptor
-                        .getUnhashed(sharedPreferences.getString(CREDIT_CARD_NUMBER, ""))
-                val expDate = encryptor
-                        .getUnhashed(sharedPreferences.getString(CREDIT_CARD_EXP_DATE, ""))
+                val dbCreditCards = SugarRecord.listAll(DbCreditCard::class.java)
 
-                if (number.isNotBlank() && expDate.isNotBlank()) {
-                    it.onNext(listOf(CreditCard(1, number, expDate, "")))
-                    it.onComplete()
-                } else {
-                    it.onError(NoCreditCardException())
+                val creditCards = dbCreditCards.map {
+                    CreditCard(it.id, encryptor.getUnhashed(it.number),
+                            encryptor.getUnhashed(it.expDate), "")
                 }
+
+                it.onNext(creditCards)
+                it.onComplete()
             } catch (exception: IOException) {
-                //TODO change exception
-                it.onError(exception)
+                it.onError(DbException())
             }
         }
     }
 
-    override fun removeCreditCard(id: Int): Observable<Unit> {
+    override fun removeCreditCard(id: Long): Observable<Unit> {
         return Observable.create {
             try {
-                sharedPreferences.edit()
-                        .clear()
-                        .apply()
+                val dbCreditCard = SugarRecord.findById(DbCreditCard::class.java, id)
+                dbCreditCard.delete()
+
                 it.onComplete()
             } catch (exception: IOException) {
-                //TODO change exception
-                it.onError(exception)
+                it.onError(DbException())
             }
         }
     }
@@ -69,14 +63,12 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
     override fun createCreditCard(number: String, expDate: String): Observable<Unit> {
         return Observable.create {
             try {
-                sharedPreferences.edit()
-                        .putString(CREDIT_CARD_NUMBER, encryptor.getAsHash(number))
-                        .putString(CREDIT_CARD_EXP_DATE, encryptor.getAsHash(expDate))
-                        .apply()
+                val dbCreditCard = DbCreditCard(encryptor.getAsHash(number), encryptor.getAsHash(expDate))
+                dbCreditCard.save()
+
                 it.onComplete()
             } catch (exception: IOException) {
-                //TODO change exception
-                it.onError(exception)
+                it.onError(DbException())
             }
         }
     }

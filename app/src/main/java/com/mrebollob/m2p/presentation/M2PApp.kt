@@ -26,6 +26,7 @@ import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.di.components.AppComponent
 import com.mrebollob.m2p.presentation.di.components.DaggerAppComponent
 import com.mrebollob.m2p.presentation.di.modules.AppModule
+import com.orm.SugarContext
 import io.fabric.sdk.android.Fabric
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 
@@ -44,9 +45,14 @@ class M2PApp : Application() {
         if (BuildConfig.DEBUG) {
             enableStrictMode()
         }
-
+        SugarContext.init(this)
         initializeCalligraphy()
         initializeCrashlytics()
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        SugarContext.terminate()
     }
 
     private fun initializeCrashlytics() {
