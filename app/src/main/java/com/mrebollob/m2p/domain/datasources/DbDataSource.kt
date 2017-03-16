@@ -23,7 +23,7 @@ interface DbDataSource {
 
     fun createCreditCard(number: String, expDate: String): Observable<Unit>
 
-    fun removeCreditCard(): Observable<Unit>
+    fun removeCreditCard(id: Int): Observable<Unit>
 
-    fun getCreditCard(): Observable<CreditCard>
+    fun getCreditCards(): Observable<List<CreditCard>>
 }

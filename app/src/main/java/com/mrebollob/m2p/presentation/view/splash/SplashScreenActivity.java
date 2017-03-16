@@ -31,11 +31,10 @@ import com.mrebollob.m2p.R;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
+
     public static final int STARTUP_DELAY = 300;
     public static final int ANIM_ITEM_DURATION = 1000;
     public static final int ITEM_DELAY = 300;
-
-    private boolean animationStarted = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,13 +47,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-
-        if (!hasFocus || animationStarted) {
+        if (!hasFocus) {
             return;
         }
-
         animate();
-
         super.onWindowFocusChanged(hasFocus);
     }
 

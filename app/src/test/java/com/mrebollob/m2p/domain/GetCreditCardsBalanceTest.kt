@@ -29,7 +29,7 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.mockito.Mockito
 
-class GetCreditCardBalanceTest {
+class GetCreditCardsBalanceTest {
 
     @Rule @JvmField var expectedException = ExpectedException.none()
 

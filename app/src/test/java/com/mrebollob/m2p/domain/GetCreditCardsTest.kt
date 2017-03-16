@@ -20,7 +20,7 @@ import com.mrebollob.m2p.utils.mock
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
-import com.mrebollob.m2p.domain.interactor.GetCreditCard
+import com.mrebollob.m2p.domain.interactor.GetCreditCards
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,11 +28,11 @@ import org.junit.rules.ExpectedException
 import org.mockito.Mockito.*
 
 
-class GetCreditCardTest {
+class GetCreditCardsTest {
 
     @Rule @JvmField var expectedException = ExpectedException.none()
 
-    private lateinit var getCreditCard: GetCreditCard
+    private lateinit var mGetCreditCards: GetCreditCards
 
     private val mockDbDataSource: DbDataSource = mock()
     private val mockThreadExecutor: ThreadExecutor = mock()
@@ -40,12 +40,12 @@ class GetCreditCardTest {
 
     @Before
     fun setUp() {
-        getCreditCard = GetCreditCard(mockDbDataSource, mockThreadExecutor, mockPostExecutionThread)
+        mGetCreditCards = GetCreditCards(mockDbDataSource, mockThreadExecutor, mockPostExecutionThread)
     }
 
     @Test
     fun shouldGetACreditCard() {
-        getCreditCard.buildInteractorObservable(Unit)
+        mGetCreditCards.buildInteractorObservable(Unit)
 
         verify(mockDbDataSource).getCreditCard()
         verifyNoMoreInteractions(mockDbDataSource)

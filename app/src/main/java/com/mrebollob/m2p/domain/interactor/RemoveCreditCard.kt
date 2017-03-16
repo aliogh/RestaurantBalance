@@ -26,10 +26,18 @@ import javax.inject.Inject
 class RemoveCreditCard @Inject constructor(val dbDataSource: DbDataSource,
                                            threadExecutor: ThreadExecutor,
                                            postExecutionThread: PostExecutionThread)
-    : AbstractInteractor<Unit, Unit>(threadExecutor, postExecutionThread) {
+    : AbstractInteractor<Unit, RemoveCreditCard.Params>(threadExecutor, postExecutionThread) {
 
-    override fun buildInteractorObservable(params: Unit): Observable<Unit> {
+    override fun buildInteractorObservable(params: Params): Observable<Unit> {
 
-        return dbDataSource.removeCreditCard()
+        return dbDataSource.removeCreditCard(params.id)
+    }
+
+    class Params private constructor(val id: Int) {
+        companion object {
+            fun withId(id: Int): Params {
+                return Params(id)
+            }
+        }
     }
 }

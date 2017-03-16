@@ -31,7 +31,7 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
     val CREDIT_CARD_NUMBER = "credit_card_number"
     val CREDIT_CARD_EXP_DATE = "credit_card_exp_date"
 
-    override fun getCreditCard(): Observable<CreditCard> {
+    override fun getCreditCards(): Observable<List<CreditCard>> {
         return Observable.create {
             try {
                 val number = encryptor
@@ -40,7 +40,7 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
                         .getUnhashed(sharedPreferences.getString(CREDIT_CARD_EXP_DATE, ""))
 
                 if (number.isNotBlank() && expDate.isNotBlank()) {
-                    it.onNext(CreditCard(number, expDate, ""))
+                    it.onNext(listOf(CreditCard(1, number, expDate, "")))
                     it.onComplete()
                 } else {
                     it.onError(NoCreditCardException())
@@ -52,7 +52,7 @@ class DbDataSourceImp @Inject constructor(val sharedPreferences: SharedPreferenc
         }
     }
 
-    override fun removeCreditCard(): Observable<Unit> {
+    override fun removeCreditCard(id: Int): Observable<Unit> {
         return Observable.create {
             try {
                 sharedPreferences.edit()

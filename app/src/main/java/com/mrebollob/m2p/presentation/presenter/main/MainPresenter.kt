@@ -22,15 +22,15 @@ import com.mrebollob.m2p.domain.exceptions.GetBalanceException
 import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
 import com.mrebollob.m2p.domain.interactor.CreateCreditCard
 import com.mrebollob.m2p.domain.interactor.DefaultObserver
-import com.mrebollob.m2p.domain.interactor.GetCreditCard
 import com.mrebollob.m2p.domain.interactor.GetCreditCardBalance
+import com.mrebollob.m2p.domain.interactor.GetCreditCards
 import com.mrebollob.m2p.presentation.presenter.Presenter
 import com.mrebollob.m2p.presentation.view.main.MainMvpView
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardBalance,
                                         val createCreditCard: CreateCreditCard,
-                                        val getCreditCard: GetCreditCard) : Presenter<MainMvpView> {
+                                        val getCreditCards: GetCreditCards) : Presenter<MainMvpView> {
 
     var mView: MainMvpView? = null
     var mCreditCard: CreditCard? = null
@@ -52,7 +52,7 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
     }
 
     private fun getCreditCard() {
-        getCreditCard.execute(CreditCardObserver(), Unit)
+        getCreditCards.execute(CreditCardObserver(), Unit)
     }
 
     private fun getBalance(creditCard: CreditCard) {
@@ -68,15 +68,15 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
     override fun detachView() {
         getCreditCardBalance.dispose()
         createCreditCard.dispose()
-        getCreditCard.dispose()
+        getCreditCards.dispose()
     }
 
-    private inner class CreditCardObserver : DefaultObserver<CreditCard>() {
+    private inner class CreditCardObserver : DefaultObserver<List<CreditCard>>() {
 
-        override fun onNext(value: CreditCard) {
-            mCreditCard = value
-            mView?.showCreditCard(value)
-            getBalance(value)
+        override fun onNext(value: List<CreditCard>) {
+            mCreditCard = value[0]
+            mView?.showCreditCard(value[0])
+            getBalance(value[0])
         }
 
         override fun onComplete() {

@@ -32,7 +32,7 @@ class LockPresenter @Inject constructor(val removeCreditCard: RemoveCreditCard)
     }
 
     fun onRemoveCreditCardClick() {
-        removeCreditCard.execute(RemoveCreditCardObserver(), Unit)
+        removeCreditCard.execute(RemoveCreditCardObserver(), RemoveCreditCard.Params.withId(1))
     }
 
     fun onCvvComplete(cvv: String) {

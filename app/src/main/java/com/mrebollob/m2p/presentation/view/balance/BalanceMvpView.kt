@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez
+ * Copyright (c) 2017. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,14 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.domain.entities
+package com.mrebollob.m2p.presentation.view.balance
 
-import java.io.Serializable
+import com.mrebollob.m2p.domain.entities.CreditCard
+import com.mrebollob.m2p.domain.entities.CreditCardBalance
 
-data class CreditCard(val id: Int, val number: String, val expDate: String, val cvv: String) : Serializable {
+interface BalanceMvpView {
 
-    fun getExpMonth(): String {
-        return expDate.split("/")[0]
-    }
+    fun showCreditCard(creditCard: CreditCard)
 
-    fun getExpYear(): String {
-        return expDate.split("/")[1]
-    }
-
-    fun isValid(): Boolean {
-        return number.isNotBlank() && expDate.isNotBlank() && cvv.isNotBlank()
-    }
-
-    fun isNotValid(): Boolean {
-        return !isValid()
-    }
+    fun showCardBalance(creditCardBalance: CreditCardBalance)
 }
