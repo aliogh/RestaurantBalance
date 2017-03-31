@@ -51,7 +51,7 @@ class DbDataSourceImp @Inject constructor(val encryptor: Encryptor) : DbDataSour
         return Observable.create {
             try {
                 val dbCreditCard = SugarRecord.findById(DbCreditCard::class.java, id)
-                dbCreditCard.delete()
+                SugarRecord.delete(dbCreditCard)
 
                 it.onComplete()
             } catch (exception: IOException) {
@@ -63,9 +63,13 @@ class DbDataSourceImp @Inject constructor(val encryptor: Encryptor) : DbDataSour
     override fun createCreditCard(number: String, expDate: String): Observable<Unit> {
         return Observable.create {
             try {
-                val dbCreditCard = DbCreditCard(encryptor.getAsHash(number), encryptor.getAsHash(expDate))
+                val dbCreditCard = DbCreditCard()
+                dbCreditCard.number = encryptor.getAsHash(number)
+                dbCreditCard.expDate = encryptor.getAsHash(expDate)
+
                 dbCreditCard.save()
 
+//                SugarRecord.save(dbCreditCard)
                 it.onComplete()
             } catch (exception: IOException) {
                 it.onError(DbException())

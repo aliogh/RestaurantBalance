@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.view.splash.adapter
+package com.mrebollob.m2p.presentation.view.main.adapter
 
 import android.support.v7.widget.RecyclerView
 import com.mrebollob.m2p.databinding.ItemCardBinding

@@ -32,7 +32,7 @@ import android.view.ViewGroup;
 import com.mrebollob.m2p.R;
 import com.mrebollob.m2p.databinding.ActivitySplashScreenBinding;
 import com.mrebollob.m2p.domain.entities.CreditCard;
-import com.mrebollob.m2p.presentation.view.splash.adapter.CreditCardListAdapter;
+import com.mrebollob.m2p.presentation.view.main.adapter.CreditCardListAdapter;
 import com.mrebollob.m2p.utils.itemanimator.SlideInUpDelayedAnimator;
 
 import java.util.ArrayList;

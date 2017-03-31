@@ -21,6 +21,7 @@ import com.mrebollob.m2p.domain.datasources.NetworkDataSource
 import com.mrebollob.m2p.presentation.di.modules.AppModule
 import com.mrebollob.m2p.presentation.di.modules.DbModule
 import com.mrebollob.m2p.presentation.di.modules.NetworkModule
+import com.mrebollob.m2p.presentation.view.balance.BalanceActivity
 import com.mrebollob.m2p.presentation.view.form.FormActivity
 import com.mrebollob.m2p.presentation.view.lock.LockActivity
 import com.mrebollob.m2p.presentation.view.main.MainActivity
@@ -38,6 +39,8 @@ interface AppComponent {
     fun inject(activity: LockActivity)
 
     fun inject(activity: MainActivity)
+
+    fun inject(activity: BalanceActivity)
 
     fun inject(activity: FormActivity)
 

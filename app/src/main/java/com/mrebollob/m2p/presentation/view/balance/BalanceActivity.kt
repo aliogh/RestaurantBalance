@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez
+ * Copyright (c) 2017. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.view.main
+package com.mrebollob.m2p.presentation.view.balance
 
 import android.app.Activity
 import android.content.Context
@@ -24,9 +24,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
-import android.view.MenuItem
-import com.mrebollob.m2p.BuildConfig
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
@@ -34,6 +31,7 @@ import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
 import com.mrebollob.m2p.presentation.view.form.FormActivity
 import com.mrebollob.m2p.presentation.view.lock.LockActivity
+import com.mrebollob.m2p.presentation.view.main.MainMvpView
 import com.mrebollob.m2p.presentation.view.balance.adapter.MovementsAdapter
 import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
 import com.mrebollob.m2p.utils.extensions.gone
@@ -42,8 +40,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
-
-class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshListener {
+class BalanceActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshListener {
 
     val GET_CVV = 0x61
     val movementsAdapter = MovementsAdapter()
@@ -54,7 +51,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_balance)
         initializeDependencyInjector()
         isNewActivity = (savedInstanceState == null)
         initUI()
@@ -62,29 +59,6 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         shouldResetCvv = false
 
         mAnalyticsHelper.logContentView("Credit card balance view", "Output", "main-view")
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_share, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_share) {
-            shareData()
-            return true
-        } else {
-            return super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun shareData() {
-        mAnalyticsHelper.logInvite()
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = "text/plain"
-        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text, BuildConfig.APP_URL))
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.share)))
     }
 
     private fun initializeDependencyInjector() {
@@ -96,9 +70,6 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         initRecyclerView()
         initRefreshLayout()
 
-        fab.setOnClickListener { view ->
-            mPresenter.onEditCreditCardClick()
-        }
         retryBtn.setOnClickListener { view ->
             mPresenter.update()
         }
@@ -158,12 +129,12 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
     }
 
     override fun showCreditCardForm(number: String?, expDate: String?) {
-        FormActivity.openForResult(this@MainActivity, number, expDate)
+        FormActivity.openForResult(this@BalanceActivity, number, expDate)
     }
 
     override fun showLockScreen() {
         finish()
-        LockActivity.open(this@MainActivity)
+        LockActivity.open(this@BalanceActivity)
     }
 
     override fun showLoading() {
@@ -217,7 +188,7 @@ class MainActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshLi
         val EXTRA_CARD_CVV = "extra_card_cvv"
 
         fun open(context: Context, pin: String) {
-            val intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, BalanceActivity::class.java)
             intent.putExtra(EXTRA_CARD_CVV, pin)
             context.startActivity(intent)
         }

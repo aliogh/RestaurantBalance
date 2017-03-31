@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.presentation.view.splash.adapter
+package com.mrebollob.m2p.presentation.view.balance.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.mrebollob.m2p.databinding.ItemCardBinding
-import com.mrebollob.m2p.domain.entities.CreditCard
+import com.mrebollob.m2p.databinding.ItemMovementBinding
+import com.mrebollob.m2p.domain.entities.CreditCardMovement
 import kotlin.properties.Delegates
 
-class CreditCardListAdapter : RecyclerView.Adapter<CreditCardViewHolder>() {
+class MovementsAdapter : RecyclerView.Adapter<MovementViewHolder>() {
 
-    var creditCards: List<CreditCard> by Delegates.observable(emptyList())
+    var movements: List<CreditCardMovement> by Delegates.observable(emptyList())
     { prop, old, new -> notifyDataSetChange() }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreditCardViewHolder {
-        val binding = ItemCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CreditCardViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovementViewHolder {
+        val binding = ItemMovementBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MovementViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: CreditCardViewHolder, position: Int) {
-        holder.bind(creditCards[position])
+    override fun onBindViewHolder(holder: MovementViewHolder, position: Int) {
+        holder.bind(movements[position])
     }
 
     override fun getItemCount(): Int {
-        return creditCards.count()
+        return movements.count()
     }
 
     fun notifyDataSetChange() {
