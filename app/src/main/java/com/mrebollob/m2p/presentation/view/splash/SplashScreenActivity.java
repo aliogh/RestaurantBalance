@@ -16,71 +16,115 @@
 
 package com.mrebollob.m2p.presentation.view.splash;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
+import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.os.Handler;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.TypedValue;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.mrebollob.m2p.R;
+import com.mrebollob.m2p.databinding.ActivitySplashScreenBinding;
+import com.mrebollob.m2p.domain.entities.CreditCard;
+import com.mrebollob.m2p.presentation.view.splash.adapter.CreditCardListAdapter;
+import com.mrebollob.m2p.utils.itemanimator.SlideInUpDelayedAnimator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    public static final int STARTUP_DELAY = 300;
-    public static final int ANIM_ITEM_DURATION = 1000;
-    public static final int ITEM_DELAY = 300;
+    private int mContentViewHeight;
+
+    private ActivitySplashScreenBinding mBinding;
+    private CreditCardListAdapter mAdapter = new CreditCardListAdapter();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
-    }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        if (!hasFocus) {
-            return;
-        }
-        animate();
-        super.onWindowFocusChanged(hasFocus);
-    }
-
-    private void animate() {
-        ImageView logoImageView = (ImageView) findViewById(R.id.img_logo);
-        ViewGroup container = (ViewGroup) findViewById(R.id.container);
-
-        ViewCompat.animate(logoImageView)
-                .translationY(-250)
-                .setStartDelay(STARTUP_DELAY)
-                .setDuration(ANIM_ITEM_DURATION).setInterpolator(
-                new DecelerateInterpolator(1.2f)).start();
-
-        for (int i = 0; i < container.getChildCount(); i++) {
-            View v = container.getChildAt(i);
-            ViewPropertyAnimatorCompat viewAnimator;
-
-            if (!(v instanceof Button)) {
-                viewAnimator = ViewCompat.animate(v)
-                        .translationY(50).alpha(1)
-                        .setStartDelay((ITEM_DELAY * i) + 500)
-                        .setDuration(1000);
-            } else {
-                viewAnimator = ViewCompat.animate(v)
-                        .scaleY(1).scaleX(1)
-                        .setStartDelay((ITEM_DELAY * i) + 500)
-                        .setDuration(500);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onFakeCreate();
             }
+        }, getResources().getInteger(android.R.integer.config_mediumAnimTime));
+    }
 
-            viewAnimator.setInterpolator(new DecelerateInterpolator()).start();
-        }
+    private void onFakeCreate() {
+        setTheme(R.style.AppTheme);
+
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash_screen);
+
+        ViewCompat.animate(mBinding.textTitle)
+                .alpha(1)
+                .start();
+
+        mBinding.recycler.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.recycler.setItemAnimator(SlideInUpDelayedAnimator.Factory.create());
+        mBinding.recycler.setAdapter(mAdapter);
+
+        mBinding.toolbar.post(new Runnable() {
+            @Override
+            public void run() {
+                mContentViewHeight = mBinding.toolbar.getHeight();
+                startCollapseToolbarAnimation(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        List<CreditCard> creditCards = new ArrayList<>();
+                        creditCards.add(new CreditCard(1, "424242424242424242", "12/21", "452"));
+                        creditCards.add(new CreditCard(2, "424242424242424241", "12/21", "452"));
+
+                        mAdapter.setCreditCards(creditCards);
+
+                        // Animate fab
+                        ViewCompat.animate(mBinding.fab)
+                                .setStartDelay(getResources().getInteger(android.R.integer.config_mediumAnimTime))
+                                .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                                .scaleY(1)
+                                .scaleX(1)
+                                .start();
+                    }
+                });
+            }
+        });
+    }
+
+    private void startCollapseToolbarAnimation(final Runnable onCollapseEnd) {
+        final ValueAnimator valueHeightAnimator = ValueAnimator
+                .ofInt(mContentViewHeight, getToolbarHeight(this));
+
+        valueHeightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                ViewGroup.LayoutParams lp = mBinding.toolbar.getLayoutParams();
+                lp.height = (Integer) animation.getAnimatedValue();
+                mBinding.toolbar.setLayoutParams(lp);
+            }
+        });
+
+        valueHeightAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                onCollapseEnd.run();
+            }
+        });
+
+        valueHeightAnimator.start();
+    }
+
+    private static int getToolbarHeight(Context context) {
+        final TypedValue tv = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+        return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
     }
 }

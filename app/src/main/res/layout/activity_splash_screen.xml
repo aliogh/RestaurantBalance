@@ -14,73 +14,58 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<layout>
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?colorPrimary"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/container"
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingTop="144dp"
-        tools:ignore="HardcodedText">
+        android:layout_height="match_parent">
 
-        <TextView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey"
+            android:orientation="vertical"
+            tools:context=".presentation.view.splash.SplashScreenActivity">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="156dp"
+                android:background="?colorPrimary"
+                android:elevation="4dp"
+                app:theme="@style/ThemeOverlay.AppCompat.Light">
+
+                <TextView
+                    android:id="@+id/text_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:alpha="0"
+                    android:text="Hola"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"/>
+            </android.support.v7.widget.Toolbar>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingTop="8dp"/>
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:alpha="0"
-            android:text="Hello world"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-            android:textColor="@android:color/white"
-            android:textSize="22sp"
-            tools:alpha="1"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:alpha="0"
-            android:gravity="center"
-            android:text="This a nice text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Inverse"
-            android:textSize="20sp"
-            tools:alpha="1"/>
-
-        <Button
-            android:id="@+id/btn_choice1"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
             android:scaleX="0"
+            android:src="@drawable/ic_edit"
             android:scaleY="0"
-            android:text="A nice choice"/>
-
-        <Button
-            android:id="@+id/btn_choice2"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:scaleX="0"
-            android:scaleY="0"
-            android:text="Far better!"/>
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/img_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@mipmap/ic_launcher"
-        tools:visibility="gone"/>
-</FrameLayout>
+            app:fabSize="normal"/>
+    </FrameLayout>
+</layout>
