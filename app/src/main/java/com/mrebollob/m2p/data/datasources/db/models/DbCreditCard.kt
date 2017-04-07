@@ -16,11 +16,4 @@
 
 package com.mrebollob.m2p.data.datasources.db.models
 
-import com.orm.SugarRecord
-import com.orm.dsl.Table
-
-@Table
-class DbCreditCard : SugarRecord() {
-    var number: String = ""
-    var expDate: String = ""
-}
+class DbCreditCard(val id: Int, val number: String, val expDate: String)

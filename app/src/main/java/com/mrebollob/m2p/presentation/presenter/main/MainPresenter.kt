@@ -74,9 +74,11 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
     private inner class CreditCardObserver : DefaultObserver<List<CreditCard>>() {
 
         override fun onNext(value: List<CreditCard>) {
-            mCreditCard = value[0]
-            mView?.showCreditCard(value[0])
-            getBalance(value[0])
+            if (value.isNotEmpty()) {
+                mCreditCard = value[0]
+                mView?.showCreditCard(value[0])
+                getBalance(value[0])
+            }
         }
 
         override fun onComplete() {

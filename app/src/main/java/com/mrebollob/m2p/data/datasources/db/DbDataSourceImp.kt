@@ -16,27 +16,32 @@
 
 package com.mrebollob.m2p.data.datasources.db
 
-import com.mrebollob.m2p.data.datasources.db.models.DbCreditCard
 import com.mrebollob.m2p.domain.datasources.DbDataSource
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.exceptions.DbException
 import com.mrebollob.m2p.utils.encryption.Encryptor
-import com.orm.SugarRecord
 import io.reactivex.Observable
+import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.db.parseList
+import org.jetbrains.anko.db.rowParser
+import org.jetbrains.anko.db.select
 import java.io.IOException
 import javax.inject.Inject
 
 
-class DbDataSourceImp @Inject constructor(val encryptor: Encryptor) : DbDataSource {
+class DbDataSourceImp @Inject constructor(val database: DatabaseOpenHelper, val encryptor: Encryptor)
+    : DbDataSource {
 
     override fun getCreditCards(): Observable<List<CreditCard>> {
         return Observable.create {
             try {
-                val dbCreditCards = SugarRecord.listAll(DbCreditCard::class.java)
 
-                val creditCards = dbCreditCards.map {
-                    CreditCard(it.id, encryptor.getUnhashed(it.number),
-                            encryptor.getUnhashed(it.expDate), "")
+                val creditCards = database.use {
+                    select(database.TABLE_DB_CREDIT_CARD).exec {
+                        parseList(rowParser { id: Int, number: String, expDate: String ->
+                            CreditCard(id, encryptor.getUnhashed(number), encryptor.getUnhashed(expDate), "")
+                        })
+                    }
                 }
 
                 it.onNext(creditCards)
@@ -50,8 +55,7 @@ class DbDataSourceImp @Inject constructor(val encryptor: Encryptor) : DbDataSour
     override fun removeCreditCard(id: Long): Observable<Unit> {
         return Observable.create {
             try {
-                val dbCreditCard = SugarRecord.findById(DbCreditCard::class.java, id)
-                SugarRecord.delete(dbCreditCard)
+
 
                 it.onComplete()
             } catch (exception: IOException) {
@@ -63,13 +67,13 @@ class DbDataSourceImp @Inject constructor(val encryptor: Encryptor) : DbDataSour
     override fun createCreditCard(number: String, expDate: String): Observable<Unit> {
         return Observable.create {
             try {
-                val dbCreditCard = DbCreditCard()
-                dbCreditCard.number = encryptor.getAsHash(number)
-                dbCreditCard.expDate = encryptor.getAsHash(expDate)
+                database.use {
+                    insert(database.TABLE_DB_CREDIT_CARD,
+                            database.NUMBER to encryptor.getAsHash(number),
+                            database.EXP_DATE to encryptor.getAsHash(expDate)
+                    )
+                }
 
-                dbCreditCard.save()
-
-//                SugarRecord.save(dbCreditCard)
                 it.onComplete()
             } catch (exception: IOException) {
                 it.onError(DbException())

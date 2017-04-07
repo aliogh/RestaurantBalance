@@ -21,12 +21,12 @@ import android.os.StrictMode
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.core.CrashlyticsCore
+import com.facebook.stetho.Stetho
 import com.mrebollob.m2p.BuildConfig
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.di.components.AppComponent
 import com.mrebollob.m2p.presentation.di.components.DaggerAppComponent
 import com.mrebollob.m2p.presentation.di.modules.AppModule
-import com.orm.SugarContext
 import io.fabric.sdk.android.Fabric
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 
@@ -43,16 +43,11 @@ class M2PApp : Application() {
         super.onCreate()
 
         if (BuildConfig.DEBUG) {
+            initializeStetho()
             enableStrictMode()
         }
-        SugarContext.init(this)
         initializeCalligraphy()
         initializeCrashlytics()
-    }
-
-    override fun onTerminate() {
-        super.onTerminate()
-        SugarContext.terminate()
     }
 
     private fun initializeCrashlytics() {
@@ -75,6 +70,10 @@ class M2PApp : Application() {
 
         Crashlytics.setString("GIT_SHA_KEY", BuildConfig.GIT_SHA)
         Crashlytics.setString("BUILD_TIME", BuildConfig.BUILD_TIME)
+    }
+
+    private fun initializeStetho() {
+        Stetho.initializeWithDefaults(this)
     }
 
     private fun initializeCalligraphy() {
