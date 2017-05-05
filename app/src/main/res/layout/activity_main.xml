@@ -15,34 +15,42 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/itemsCoordinatorLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.view.main.MainActivity">
+    <data>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/cardsRecyclerView"
+        <variable
+            name="presenter"
+            type="com.mrebollob.m2p.presentation.presenter.main.MainPresenter"/>
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:clipToPadding="false"
-        android:fitsSystemWindows="true"
-        android:paddingTop="3dp"
-        tools:listitem="@layout/item_card"/>
+        tools:context=".presentation.view.main.MainActivity">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/newCard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
-        android:tint="@color/white"
-        app:layout_anchor="@id/cardsRecyclerView"
-        app:layout_anchorGravity="bottom|right|end"/>
-</android.support.design.widget.CoordinatorLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cardsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:clipToPadding="false"
+            android:fitsSystemWindows="true"
+            android:paddingTop="3dp"
+            tools:listitem="@layout/item_card"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/newCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:onClick="@{() -> presenter.onNewCardClick()}"
+            android:src="@drawable/ic_add"
+            android:tint="@color/white"
+            app:layout_anchor="@id/cardsRecyclerView"
+            app:layout_anchorGravity="bottom|right|end"/>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

@@ -32,6 +32,10 @@ class MainPresenter @Inject constructor(val getCreditCards: GetCreditCards) : Pr
         getCreditCards()
     }
 
+    fun onNewCardClick() {
+        mView?.showNewCardForm()
+    }
+
     private fun getCreditCards() {
         getCreditCards.execute(CreditCardObserver(), Unit)
     }

@@ -16,18 +16,22 @@
 
 package com.mrebollob.m2p.presentation.view.main
 
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.mrebollob.m2p.R
+import com.mrebollob.m2p.databinding.ActivityMainBinding
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
+import com.mrebollob.m2p.presentation.view.form.FormActivity
 import com.mrebollob.m2p.presentation.view.main.adapter.CreditCardListAdapter
 import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
 import com.mrebollob.m2p.utils.extensions.toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
+
 
 class MainActivity : BaseActivity(), MainMvpView {
 
@@ -38,10 +42,11 @@ class MainActivity : BaseActivity(), MainMvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
         initializeDependencyInjector()
         isNewActivity = (savedInstanceState == null)
-        initUI()
+        initUI(binding)
 
         mAnalyticsHelper.logContentView("Credit card balance view", "Output", "main-view")
     }
@@ -50,9 +55,11 @@ class MainActivity : BaseActivity(), MainMvpView {
         appComponent.inject(this)
     }
 
-    private fun initUI() {
+    private fun initUI(binding: ActivityMainBinding) {
         setSupportActionBar(toolbar)
         initRecyclerView()
+
+        binding.presenter = mPresenter
     }
 
     private fun initRecyclerView() {
@@ -66,6 +73,10 @@ class MainActivity : BaseActivity(), MainMvpView {
 
     override fun showGetCreditCardsError() {
         toast("Get Credit Cards Error")
+    }
+
+    override fun showNewCardForm() {
+        FormActivity.open(this)
     }
 
     override fun onStart() {

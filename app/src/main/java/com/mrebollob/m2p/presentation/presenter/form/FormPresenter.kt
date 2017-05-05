@@ -27,12 +27,11 @@ class FormPresenter @Inject constructor(private val createCreditCard: CreateCred
     : Presenter<FormMvpView> {
 
     private var mView: FormMvpView? = null
-    var mCardNumber: String? = null
-    var mCardExpDate: String? = null
+    var mCardId: String? = null
 
     override fun attachView(view: FormMvpView, isNew: Boolean) {
         mView = view
-        mView?.showCreditCard(mCardNumber, mCardExpDate)
+//        mView?.showCreditCard(mCardNumber, mCardExpDate)
     }
 
     fun updateCreditCard(number: String, expDate: String) {

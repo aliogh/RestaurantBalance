@@ -18,7 +18,6 @@
 <layout>
 
     <data>
-
         <variable
             name="creditCard"
             type="com.mrebollob.m2p.domain.entities.CreditCard"/>

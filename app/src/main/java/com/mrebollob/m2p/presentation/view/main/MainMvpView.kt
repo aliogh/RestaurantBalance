@@ -25,4 +25,6 @@ interface MainMvpView : MvpView {
     fun showCreditCards(creditCards: List<CreditCard>)
 
     fun showGetCreditCardsError()
+
+    fun showNewCardForm()
 }

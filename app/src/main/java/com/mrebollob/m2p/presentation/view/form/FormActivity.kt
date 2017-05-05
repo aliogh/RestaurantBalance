@@ -29,6 +29,7 @@ import android.view.inputmethod.InputMethodManager
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.presentation.presenter.form.FormPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
+import com.mrebollob.m2p.presentation.view.balance.BalanceActivity
 import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
 import com.mrebollob.m2p.utils.creditcard.CardNumberTextWatcher
 import com.mrebollob.m2p.utils.creditcard.CreditCardTextWatcher
@@ -52,8 +53,7 @@ class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActi
         isNewActivity = (savedInstanceState == null)
 
         initUI()
-        mAnalyticsHelper.logContentView("Credit card input view", "Input", "form-view",
-                "Is new", getCardNumber().isNullOrBlank().toString())
+        mAnalyticsHelper.logContentView("Credit card input view", "Input", "form-view", "Is new", "todo")
     }
 
     private fun initUI() {
@@ -136,8 +136,7 @@ class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActi
 
     override fun onStart() {
         super.onStart()
-        mPresenter.mCardNumber = getCardNumber()
-        mPresenter.mCardExpDate = getCardExpDate()
+        mPresenter.mCardId = getCardId()
         mPresenter.attachView(this, isNewActivity)
     }
 
@@ -146,25 +145,24 @@ class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActi
         mPresenter.detachView()
     }
 
-    private fun getCardNumber(): String? {
-        return intent.getStringExtra(EXTRA_CARD_NUMBER)
-    }
-
-    private fun getCardExpDate(): String? {
-        return intent.getStringExtra(EXTRA_CARD_EXPIRY)
+    private fun getCardId(): String {
+        return intent.getStringExtra(BalanceActivity.EXTRA_CARD_ID)
     }
 
     companion object Navigator {
 
-        val CREDIT_CARD_FORM = 0x24
-        val EXTRA_CARD_NUMBER = "card_number"
-        val EXTRA_CARD_EXPIRY = "card_expiry"
+        val EXTRA_CARD_ID = "extra_card_id"
 
-        fun openForResult(context: Activity, number: String?, expDate: String?) {
+        fun open(context: Context) {
             val intent = Intent(context, FormActivity::class.java)
-            intent.putExtra(EXTRA_CARD_NUMBER, number)
-            intent.putExtra(EXTRA_CARD_EXPIRY, expDate)
-            context.startActivityForResult(intent, CREDIT_CARD_FORM)
+            intent.putExtra(EXTRA_CARD_ID, "")
+            context.startActivity(intent)
+        }
+
+        fun open(context: Context, cardId: String) {
+            val intent = Intent(context, FormActivity::class.java)
+            intent.putExtra(EXTRA_CARD_ID, cardId)
+            context.startActivity(intent)
         }
     }
 }
