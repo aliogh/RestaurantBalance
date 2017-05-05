@@ -20,130 +20,29 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemsCoordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.mrebollob.m2p.presentation.view.main.MainActivity">
+    tools:context=".presentation.view.main.MainActivity">
 
-    <include layout="@layout/toolbar"/>
-
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cardsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <FrameLayout
-            android:id="@+id/cardContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/primary"
-            android:paddingBottom="@dimen/spacing_large">
-
-            <com.cooltechworks.creditcarddesign.CreditCardView
-                android:id="@+id/creditCardView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"/>
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.victor.loading.rotate.RotateLoading
-                android:id="@+id/loadingView"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                app:loading_color="@color/accent"
-                app:loading_width="5dp"
-                tools:visibility="visible"/>
-
-            <FrameLayout
-                android:id="@+id/mainView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.v4.widget.SwipeRefreshLayout
-                    android:id="@+id/dataView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="@string/balance"
-                            android:textColor="@color/primary_text"
-                            android:textSize="@dimen/font_large"/>
-
-                        <TextView
-                            android:id="@+id/cardBalanceTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:textColor="@color/primary_text"
-                            android:textSize="@dimen/font_larger"
-                            tools:text="8,04 €"/>
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/movementList"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            tools:listitem="@layout/item_movement"/>
-                    </LinearLayout>
-                </android.support.v4.widget.SwipeRefreshLayout>
-
-                <LinearLayout
-                    android:id="@+id/errorView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_normal"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/error"
-                        android:textColor="@color/primary_text"
-                        android:textSize="@dimen/font_normal"/>
-
-                    <TextView
-                        android:id="@+id/errorTv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/primary_text"
-                        android:textSize="@dimen/font_large"
-                        tools:text="Unknown error"/>
-
-                    <Button
-                        android:id="@+id/retryBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_normal"
-                        android:text="@string/retry"/>
-                </LinearLayout>
-            </FrameLayout>
-        </FrameLayout>
-    </LinearLayout>
+        android:background="@color/white"
+        android:clipToPadding="false"
+        android:fitsSystemWindows="true"
+        android:paddingTop="3dp"
+        tools:listitem="@layout/item_card"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/newCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
         android:src="@drawable/ic_add"
-        app:layout_anchor="@id/cardContainer"
-        app:layout_anchorGravity="bottom|end"/>
+        android:tint="@color/white"
+        app:layout_anchor="@id/cardsRecyclerView"
+        app:layout_anchorGravity="bottom|right|end"/>
 </android.support.design.widget.CoordinatorLayout>

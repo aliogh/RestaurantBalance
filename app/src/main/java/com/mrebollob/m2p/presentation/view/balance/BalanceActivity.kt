@@ -16,37 +16,28 @@
 
 package com.mrebollob.m2p.presentation.view.balance
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import com.mrebollob.m2p.R
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.entities.CreditCardBalance
-import com.mrebollob.m2p.presentation.presenter.main.MainPresenter
+import com.mrebollob.m2p.presentation.presenter.balance.BalancePresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
-import com.mrebollob.m2p.presentation.view.form.FormActivity
-import com.mrebollob.m2p.presentation.view.lock.LockActivity
-import com.mrebollob.m2p.presentation.view.main.MainMvpView
 import com.mrebollob.m2p.presentation.view.balance.adapter.MovementsAdapter
 import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
 import com.mrebollob.m2p.utils.extensions.gone
 import com.mrebollob.m2p.utils.extensions.visible
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_balance.*
 import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
-class BalanceActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefreshListener {
+class BalanceActivity : BaseActivity(), BalanceMvpView {
 
-    val GET_CVV = 0x61
     val movementsAdapter = MovementsAdapter()
     var isNewActivity = false
-    var shouldResetCvv = false
-    @Inject lateinit var mPresenter: MainPresenter
+    @Inject lateinit var mPresenter: BalancePresenter
     @Inject lateinit var mAnalyticsHelper: AnalyticsHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,8 +46,6 @@ class BalanceActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefres
         initializeDependencyInjector()
         isNewActivity = (savedInstanceState == null)
         initUI()
-
-        shouldResetCvv = false
 
         mAnalyticsHelper.logContentView("Credit card balance view", "Output", "main-view")
     }
@@ -68,11 +57,6 @@ class BalanceActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefres
     private fun initUI() {
         setSupportActionBar(toolbar)
         initRecyclerView()
-        initRefreshLayout()
-
-        retryBtn.setOnClickListener { view ->
-            mPresenter.update()
-        }
     }
 
     private fun initRecyclerView() {
@@ -80,26 +64,12 @@ class BalanceActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefres
         movementList.adapter = movementsAdapter
     }
 
-    private fun initRefreshLayout() {
-        dataView.setOnRefreshListener(this)
-        movementList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {}
-
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                val topRowVerticalPosition = if (recyclerView == null || recyclerView.childCount == 0)
-                    0 else recyclerView.getChildAt(0).top
-                dataView.isEnabled = topRowVerticalPosition >= 0
-            }
-        })
-    }
-
     override fun showCreditCard(creditCard: CreditCard) {
         creditCardView.cardHolderName = "M2P"
         creditCardView.cardNumber = creditCard.number
         creditCardView.setCardExpiry(creditCard.expDate)
 
-        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
+//        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_edit))
     }
 
     override fun showCardBalance(creditCardBalance: CreditCardBalance) {
@@ -108,33 +78,6 @@ class BalanceActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefres
 
         cardBalanceTv.text = getString(R.string.money_format, creditCardBalance.balance)
         movementsAdapter.movements = creditCardBalance.movements
-    }
-
-    override fun showEmptyCreditCard() {
-        creditCardView.cardHolderName = "M2P"
-        creditCardView.cardNumber = ""
-        creditCardView.setCardExpiry("")
-        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add))
-
-        errorView.gone()
-        dataView.visible()
-        cardBalanceTv.text = getString(R.string.add_credit_card)
-    }
-
-    override fun showError(error: String) {
-        dataView.gone()
-        errorView.visible()
-
-        errorTv.text = error
-    }
-
-    override fun showCreditCardForm(number: String?, expDate: String?) {
-        FormActivity.openForResult(this@BalanceActivity, number, expDate)
-    }
-
-    override fun showLockScreen() {
-        finish()
-        LockActivity.open(this@BalanceActivity)
     }
 
     override fun showLoading() {
@@ -149,28 +92,8 @@ class BalanceActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefres
         mainView.visible()
     }
 
-    override fun onRefresh() {
-        mPresenter.update()
-        dataView.isRefreshing = false
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && data != null) {
-            when (requestCode) {
-                GET_CVV -> {
-                    mPresenter.mCvv = data.getStringExtra(EXTRA_CARD_CVV)
-                }
-                FormActivity.CREDIT_CARD_FORM -> {
-                    isNewActivity = true
-                    shouldResetCvv = true
-                }
-            }
-        }
-    }
-
     override fun onStart() {
         super.onStart()
-        mPresenter.mCvv = getCvv()
         mPresenter.attachView(this, isNewActivity)
     }
 
@@ -179,17 +102,17 @@ class BalanceActivity : BaseActivity(), MainMvpView, SwipeRefreshLayout.OnRefres
         mPresenter.detachView()
     }
 
-    private fun getCvv(): String? {
-        return if (shouldResetCvv) "" else intent.getStringExtra(EXTRA_CARD_CVV)
+    private fun getCardId(): String {
+        return intent.getStringExtra(EXTRA_CARD_ID)
     }
 
     companion object Navigator {
 
-        val EXTRA_CARD_CVV = "extra_card_cvv"
+        val EXTRA_CARD_ID = "extra_card_id"
 
-        fun open(context: Context, pin: String) {
+        fun open(context: Context, cardId: String) {
             val intent = Intent(context, BalanceActivity::class.java)
-            intent.putExtra(EXTRA_CARD_CVV, pin)
+            intent.putExtra(EXTRA_CARD_ID, cardId)
             context.startActivity(intent)
         }
     }

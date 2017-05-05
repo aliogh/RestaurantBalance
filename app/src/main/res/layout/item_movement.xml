@@ -69,7 +69,6 @@
             android:maxLines="2"
             android:text="@{@string/money_format(movement.amount)}"
             android:textSize="@dimen/font_normal"
-            android:visibility="@{movement.amount < 0 ? View.VISIBLE : View.GONE}"
             tools:text="8,30 €"/>
     </LinearLayout>
 </layout>

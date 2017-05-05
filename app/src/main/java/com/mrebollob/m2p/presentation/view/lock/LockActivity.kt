@@ -71,12 +71,12 @@ class LockActivity : BaseActivity(), LockMvpView {
 
     override fun showCreditCardBalance(cvv: String) {
         finish()
-        MainActivity.open(this@LockActivity, cvv)
+//        MainActivity.open(this@LockActivity, cvv)
     }
 
     override fun showCreditCardRemoved() {
         finish()
-        MainActivity.open(this@LockActivity, "")
+//        MainActivity.open(this@LockActivity, "")
     }
 
     override fun showRemoveCreditCardError() {

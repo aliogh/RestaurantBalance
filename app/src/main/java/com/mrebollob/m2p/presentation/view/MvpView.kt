@@ -18,4 +18,7 @@ package com.mrebollob.m2p.presentation.view
 
 interface MvpView {
 
+    fun showLoading()
+
+    fun hideLoading()
 }

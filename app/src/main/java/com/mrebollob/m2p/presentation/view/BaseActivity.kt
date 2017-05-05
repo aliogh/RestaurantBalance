@@ -21,11 +21,17 @@ import android.support.v7.app.AppCompatActivity
 import com.mrebollob.m2p.presentation.M2PApp
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity : AppCompatActivity(), MvpView {
 
     val appComponent by lazy { (application as M2PApp).appComponent }
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
+    }
+
+    override fun showLoading() {
+    }
+
+    override fun hideLoading() {
     }
 }

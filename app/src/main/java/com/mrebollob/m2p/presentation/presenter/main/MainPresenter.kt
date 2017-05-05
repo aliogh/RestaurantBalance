@@ -17,86 +17,33 @@
 package com.mrebollob.m2p.presentation.presenter.main
 
 import com.mrebollob.m2p.domain.entities.CreditCard
-import com.mrebollob.m2p.domain.entities.CreditCardBalance
-import com.mrebollob.m2p.domain.exceptions.GetBalanceException
-import com.mrebollob.m2p.domain.exceptions.NoCreditCardException
-import com.mrebollob.m2p.domain.interactor.CreateCreditCard
 import com.mrebollob.m2p.domain.interactor.DefaultObserver
-import com.mrebollob.m2p.domain.interactor.GetCreditCardBalance
 import com.mrebollob.m2p.domain.interactor.GetCreditCards
 import com.mrebollob.m2p.presentation.presenter.Presenter
 import com.mrebollob.m2p.presentation.view.main.MainMvpView
 import javax.inject.Inject
 
-class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardBalance,
-                                        val createCreditCard: CreateCreditCard,
-                                        val getCreditCards: GetCreditCards) : Presenter<MainMvpView> {
+class MainPresenter @Inject constructor(val getCreditCards: GetCreditCards) : Presenter<MainMvpView> {
 
     var mView: MainMvpView? = null
-    var mCreditCard: CreditCard? = null
-    var mCvv: String? = null
 
     override fun attachView(view: MainMvpView, isNew: Boolean) {
         mView = view
-        if (mCreditCard == null || isNew) {
-            getCreditCard()
-        }
+        getCreditCards()
     }
 
-    fun onEditCreditCardClick() {
-        mView?.showCreditCardForm(mCreditCard?.number, mCreditCard?.expDate)
-    }
-
-    fun update() {
-        if (mCreditCard != null) getBalance(mCreditCard as CreditCard)
-    }
-
-    private fun getCreditCard() {
+    private fun getCreditCards() {
         getCreditCards.execute(CreditCardObserver(), Unit)
     }
 
-    private fun getBalance(creditCard: CreditCard) {
-        if (mCvv.isNullOrBlank()) {
-            mView?.showLockScreen()
-        } else {
-            mView?.showLoading()
-            getCreditCardBalance.execute(BalanceObserver(), GetCreditCardBalance.Params
-                    .forCreditCard(creditCard.copy(cvv = mCvv as String)))
-        }
-    }
-
     override fun detachView() {
-        getCreditCardBalance.dispose()
-        createCreditCard.dispose()
         getCreditCards.dispose()
     }
 
     private inner class CreditCardObserver : DefaultObserver<List<CreditCard>>() {
 
         override fun onNext(value: List<CreditCard>) {
-            if (value.isNotEmpty()) {
-                mCreditCard = value[0]
-                mView?.showCreditCard(value[0])
-                getBalance(value[0])
-            }
-        }
-
-        override fun onComplete() {
-        }
-
-        override fun onError(e: Throwable?) {
-            if (e is NoCreditCardException) {
-                mView?.showEmptyCreditCard()
-            } else {
-                mView?.showError("Unknown error")
-            }
-        }
-    }
-
-    private inner class BalanceObserver : DefaultObserver<CreditCardBalance>() {
-
-        override fun onNext(value: CreditCardBalance) {
-            mView?.showCardBalance(value)
+            mView?.showCreditCards(value)
         }
 
         override fun onComplete() {
@@ -105,11 +52,7 @@ class MainPresenter @Inject constructor(val getCreditCardBalance: GetCreditCardB
 
         override fun onError(e: Throwable?) {
             mView?.hideLoading()
-            if (e is GetBalanceException && !e.error.isEmpty()) {
-                mView?.showError(e.error)
-            } else {
-                mView?.showError("Unknown error")
-            }
+            mView?.showGetCreditCardsError()
         }
     }
 }

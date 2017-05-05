@@ -17,25 +17,12 @@
 package com.mrebollob.m2p.presentation.view.main
 
 import com.mrebollob.m2p.domain.entities.CreditCard
-import com.mrebollob.m2p.domain.entities.CreditCardBalance
 import com.mrebollob.m2p.presentation.view.MvpView
 
 
 interface MainMvpView : MvpView {
 
-    fun showCreditCard(creditCard: CreditCard)
+    fun showCreditCards(creditCards: List<CreditCard>)
 
-    fun showCardBalance(creditCardBalance: CreditCardBalance)
-
-    fun showEmptyCreditCard()
-
-    fun showError(error: String)
-
-    fun showCreditCardForm(number: String?, expDate: String?)
-
-    fun showLockScreen()
-
-    fun showLoading()
-
-    fun hideLoading()
+    fun showGetCreditCardsError()
 }
