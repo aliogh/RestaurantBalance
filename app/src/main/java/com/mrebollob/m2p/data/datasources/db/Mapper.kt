@@ -18,15 +18,13 @@ package com.mrebollob.m2p.data.datasources.db
 
 import com.mrebollob.m2p.data.datasources.db.models.DbCreditCard
 import com.mrebollob.m2p.domain.entities.CreditCard
-import com.mrebollob.m2p.utils.encryption.Encryptor
 import com.mrebollob.m2p.data.datasources.db.models.Color as DataColor
 import com.mrebollob.m2p.domain.entities.Color as DomainColor
 
 
 fun CreditCard.toDataCard(): DbCreditCard =
         with(this) {
-            DbCreditCard(localId, Encryptor.getAsHash(number), Encryptor.getAsHash(expDate),
-                    color.toDataColor(), position)
+            DbCreditCard(localId, number, expDate, color.toDataColor(), position)
         }
 
 fun DomainColor.toDataColor(): DataColor =
@@ -49,8 +47,7 @@ fun DataColor.toDomainColor(): DomainColor =
 
 fun DbCreditCard.toDomainCard(): CreditCard =
         with(this) {
-            CreditCard(localId, Encryptor.getUnhashed(number), Encryptor.getUnhashed(expDate),
-                    getColorAsEnum().toDomainColor(), position)
+            CreditCard(localId, number, expDate, getColorAsEnum().toDomainColor(), position)
         }
 
 fun List<DbCreditCard>.toDomainCardList(): List<CreditCard> =

@@ -31,7 +31,7 @@ enum class Color {
 @RealmClass
 open class DbCreditCard() : RealmModel {
 
-    constructor(localId: String, number: String, expDate: String,
+    constructor(localId: String, number: String?, expDate: String?,
                 colorEnum: Color = Color.WHITE, position: Long) : this() {
         this.localId = localId
         this.number = number
@@ -41,8 +41,8 @@ open class DbCreditCard() : RealmModel {
     }
 
     @PrimaryKey open var localId: String = ""
-    open var number: String = ""
-    open var expDate: String = ""
+    open var number: String? = null
+    open var expDate: String? = null
     @Ignore private var colorEnum: Color = Color.WHITE
     open var color: String = colorEnum.name
     open var position: Long = 0
@@ -71,8 +71,8 @@ open class DbCreditCard() : RealmModel {
 
     override fun hashCode(): Int {
         var result = localId.hashCode()
-        result = 31 * result + number.hashCode()
-        result = 31 * result + expDate.hashCode()
+        result = 31 * result + (number?.hashCode() ?: 0)
+        result = 31 * result + (expDate?.hashCode() ?: 0)
         result = 31 * result + colorEnum.hashCode()
         result = 31 * result + color.hashCode()
         result = 31 * result + position.hashCode()
