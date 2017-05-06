@@ -16,68 +16,83 @@
 
 package com.mrebollob.m2p.data.datasources.db
 
+import android.app.Application
+import com.mrebollob.m2p.data.datasources.db.models.DbCreditCard
 import com.mrebollob.m2p.domain.datasources.DbDataSource
+import com.mrebollob.m2p.domain.entities.Color
 import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.exceptions.DbException
-import com.mrebollob.m2p.utils.encryption.Encryptor
+import com.mrebollob.m2p.presentation.di.qualifiers.DataBaseName
 import io.reactivex.Observable
-import org.jetbrains.anko.db.insert
-import org.jetbrains.anko.db.parseList
-import org.jetbrains.anko.db.rowParser
-import org.jetbrains.anko.db.select
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import java.io.IOException
 import javax.inject.Inject
 
 
-class DbDataSourceImp @Inject constructor(val database: DatabaseOpenHelper, val encryptor: Encryptor)
-    : DbDataSource {
+class DbDataSourceImp @Inject constructor(context: Application, @DataBaseName dbName: String) : DbDataSource {
 
-    override fun getCreditCards(): Observable<List<CreditCard>> {
+    init {
+        Realm.init(context)
+        val realmConfig = RealmConfiguration.Builder()
+                .name(dbName)
+                .deleteRealmIfMigrationNeeded()
+                .build()
+        Realm.setDefaultConfiguration(realmConfig)
+    }
+
+    override fun createCard(localId: String, number: String, expDate: String,
+                            color: Color, position: Long): Observable<Unit> {
         return Observable.create {
+            val database = Realm.getDefaultInstance()
+
             try {
+                val dbCreditCard = DbCreditCard(
+                        localId = localId,
+                        number = number,
+                        expDate = expDate,
+                        colorEnum = color.toDataColor(),
+                        position = position)
 
-                val creditCards = database.use {
-                    select(database.TABLE_DB_CREDIT_CARD).exec {
-                        parseList(rowParser { id: Int, number: String, expDate: String ->
-                            CreditCard(id, encryptor.getUnhashed(number), encryptor.getUnhashed(expDate), "")
-                        })
-                    }
-                }
 
-                it.onNext(creditCards)
+                dbCreditCard.insertOrUpdate(database)
+
                 it.onComplete()
             } catch (exception: IOException) {
                 it.onError(DbException())
+            } finally {
+                database.close()
             }
         }
     }
 
-    override fun removeCreditCard(id: Long): Observable<Unit> {
+    override fun readCards(): Observable<List<CreditCard>> {
         return Observable.create {
+            val database = Realm.getDefaultInstance()
+
             try {
+                val dbCards = database.queryAllCardsSortedByPosition()
 
-
+                it.onNext(dbCards.toDomainCardList())
                 it.onComplete()
             } catch (exception: IOException) {
                 it.onError(DbException())
+            } finally {
+                database.close()
             }
         }
     }
 
-    override fun createCreditCard(number: String, expDate: String): Observable<Unit> {
-        return Observable.create {
-            try {
-                database.use {
-                    insert(database.TABLE_DB_CREDIT_CARD,
-                            database.NUMBER to encryptor.getAsHash(number),
-                            database.EXP_DATE to encryptor.getAsHash(expDate)
-                    )
-                }
+    override fun readCard(): Observable<CreditCard> {
+        TODO("Sin implementar")
+    }
 
-                it.onComplete()
-            } catch (exception: IOException) {
-                it.onError(DbException())
-            }
-        }
+    override fun updateCard(localId: String, number: String, expDate: String,
+                            color: Color, position: Long): Observable<CreditCard> {
+        TODO("Sin implementar")
+    }
+
+    override fun deleteCard(id: Long): Observable<Unit> {
+        TODO("Sin implementar")
     }
 }

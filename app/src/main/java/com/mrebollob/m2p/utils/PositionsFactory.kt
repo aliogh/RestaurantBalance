@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Manuel Rebollo Báez
+ * Copyright (c) 2017. Manuel Rebollo Báez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package com.mrebollob.m2p.domain.datasources
+package com.mrebollob.m2p.utils
 
-import com.mrebollob.m2p.domain.entities.CreditCard
-import com.mrebollob.m2p.domain.entities.CreditCardBalance
-import io.reactivex.Observable
-
-interface NetworkDataSource {
-
-    fun getCreditCardBalance(creditCard: CreditCard, cvv: String): Observable<CreditCardBalance>
+interface PositionsFactory {
+    fun newPosition() = System.nanoTime()
 }

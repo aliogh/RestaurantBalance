@@ -17,10 +17,15 @@
 package com.mrebollob.m2p.utils.extensions
 
 import android.content.Context
+import android.support.v4.content.ContextCompat.getColor
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import com.mrebollob.m2p.R
+import com.mrebollob.m2p.domain.entities.Color
+import com.mrebollob.m2p.domain.entities.CreditCard
 
 fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
@@ -39,3 +44,34 @@ fun View.invisible() {
 fun View.gone() {
     this.visibility = View.GONE
 }
+
+fun View.changeBackgroundColor(colorId: Int) =
+        setBackgroundColor(getColor(context, colorId))
+
+fun View.changeBackgroundColor(color: Color) =
+        setBackgroundColor(getColor(context, color.toColorResource()))
+
+fun Color.toColorResource(): Int =
+        //We don't use Presentation models, we enrich the Store models using EF
+        when (this) {
+            Color.RED -> R.color.red
+            Color.YELLOW -> R.color.yellow
+            Color.GREEN -> R.color.green
+            Color.BLUE -> R.color.blue
+            Color.WHITE -> R.color.white
+        }
+
+fun CreditCard.getStableId(): Long = localId.hashCode().toLong()
+
+fun EditText.updateText(newText: String?) =
+        newText?.let {
+            if (isNotBlank() && isDifferentThan(it)) {
+                setText(it)
+            }
+        }
+
+fun EditText.isDifferentThan(newText: String): Boolean =
+        text.toString() != newText
+
+fun EditText.isNotBlank(): Boolean =
+        text.isNotBlank()

@@ -22,6 +22,7 @@ import android.content.SharedPreferences
 import com.mrebollob.m2p.BuildConfig
 import com.mrebollob.m2p.data.datasources.db.DbDataSourceImp
 import com.mrebollob.m2p.domain.datasources.DbDataSource
+import com.mrebollob.m2p.presentation.di.qualifiers.DataBaseName
 import com.mrebollob.m2p.presentation.di.qualifiers.SharedPreferencesName
 import dagger.Module
 import dagger.Provides
@@ -34,7 +35,6 @@ class DbModule {
     @Provides
     @Singleton
     fun provideDbDataSource(dbDataSource: DbDataSourceImp): DbDataSource {
-
         return dbDataSource
     }
 
@@ -49,6 +49,13 @@ class DbModule {
     @Singleton
     @SharedPreferencesName
     fun provideSharedPreferencesName(): String {
+        return "M2P" + if (BuildConfig.DEBUG) "-dev" else ""
+    }
+
+    @Provides
+    @Singleton
+    @DataBaseName
+    fun provideDataBaseName(): String {
         return "M2P" + if (BuildConfig.DEBUG) "-dev" else ""
     }
 }

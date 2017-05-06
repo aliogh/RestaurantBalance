@@ -16,23 +16,32 @@
 
 package com.mrebollob.m2p.domain.entities
 
-import java.io.Serializable
+import com.mrebollob.m2p.utils.PositionsFactory
+import java.util.*
 
-data class CreditCard(val id: Int, val number: String, val expDate: String, val cvv: String) : Serializable {
+const val LOCAL_ID = "localId"
 
-    fun getExpMonth(): String {
-        return expDate.split("/")[0]
+fun generateLocalId(): String = LOCAL_ID + "_" + UUID.randomUUID().toString().replace("-".toRegex(), "")
+
+enum class Color {
+    RED, YELLOW, GREEN, BLUE, WHITE
+}
+
+data class CreditCard(val localId: String = generateLocalId(),
+                      val number: String? = null,
+                      val expDate: String? = null,
+                      val color: Color = Color.WHITE,
+                      val position: Long = object : PositionsFactory {}.newPosition()) {
+
+    fun getExpMonth(): String? {
+        return expDate?.split("/")?.get(0)
     }
 
-    fun getExpYear(): String {
-        return expDate.split("/")[1]
+    fun getExpYear(): String? {
+        return expDate?.split("/")?.get(1)
     }
 
-    fun isValid(): Boolean {
-        return number.isNotBlank() && expDate.isNotBlank() && cvv.isNotBlank()
-    }
+    fun isEmpty(): Boolean = number == null || expDate == null
 
-    fun isNotValid(): Boolean {
-        return !isValid()
-    }
+    fun isNotEmpty(): Boolean = !isEmpty()
 }

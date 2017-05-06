@@ -17,7 +17,7 @@
 package com.mrebollob.m2p.domain.interactor
 
 import com.mrebollob.m2p.domain.datasources.DbDataSource
-import com.mrebollob.m2p.domain.exceptions.InvalidCreditCardException
+import com.mrebollob.m2p.domain.entities.Color
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
 import io.reactivex.Observable
@@ -31,17 +31,19 @@ class CreateCreditCard @Inject constructor(val dbDataSource: DbDataSource,
 
     override fun buildInteractorObservable(params: Params): Observable<Unit> {
 
-        if (params.number.isBlank() || params.expDate.isBlank()) {
-            throw (InvalidCreditCardException())
-        }
-
-        return dbDataSource.createCreditCard(params.number, params.expDate)
+        return dbDataSource.createCard(
+                localId = params.localId,
+                number = params.number,
+                expDate = params.expDate,
+                color = params.color,
+                position = params.position)
     }
 
-    class Params private constructor(val number: String, val expDate: String) {
+    class Params private constructor(val localId: String, val number: String, val expDate: String,
+                                     val color: Color, val position: Long) {
         companion object {
-            fun newCreditCard(number: String, expDate: String): Params {
-                return Params(number, expDate)
+            fun newCreditCard(localId: String, number: String, expDate: String, color: Color, position: Long): Params {
+                return Params(localId, number, expDate, color, position)
             }
         }
     }

@@ -27,6 +27,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.mrebollob.m2p.R
+import com.mrebollob.m2p.domain.entities.Color
+import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.presentation.presenter.form.FormPresenter
 import com.mrebollob.m2p.presentation.view.BaseActivity
 import com.mrebollob.m2p.presentation.view.balance.BalanceActivity
@@ -34,6 +36,9 @@ import com.mrebollob.m2p.utils.analytics.AnalyticsHelper
 import com.mrebollob.m2p.utils.creditcard.CardNumberTextWatcher
 import com.mrebollob.m2p.utils.creditcard.CreditCardTextWatcher
 import com.mrebollob.m2p.utils.creditcard.ExpDateTextWatcher
+import com.mrebollob.m2p.utils.extensions.changeBackgroundColor
+import com.mrebollob.m2p.utils.extensions.isNotBlank
+import com.mrebollob.m2p.utils.extensions.updateText
 import kotlinx.android.synthetic.main.activity_form.*
 import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
@@ -64,6 +69,12 @@ class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActi
 
         showInputMethod(numberEt)
 
+        itemRedColor.setOnClickListener { changeColor(Color.RED) }
+        itemBlueColor.setOnClickListener { changeColor(Color.BLUE) }
+        itemGreenColor.setOnClickListener { changeColor(Color.GREEN) }
+        itemWhiteColor.setOnClickListener { changeColor(Color.WHITE) }
+        itemYellowColor.setOnClickListener { changeColor(Color.YELLOW) }
+
         val cardNumberTextWatcher = CardNumberTextWatcher(numberEt, this)
         numberEt.addTextChangedListener(cardNumberTextWatcher)
         expDateTextWatcher = ExpDateTextWatcher(this, expDateEt, this)
@@ -91,7 +102,7 @@ class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActi
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_done) {
-            updateCreditCard()
+            createOrUpdateCard(mPresenter.currentCard)
             return true
         } else {
             return super.onOptionsItemSelected(item)
@@ -104,21 +115,62 @@ class FormActivity : BaseActivity(), FormMvpView, CreditCardTextWatcher.CardActi
         }
     }
 
-    private fun updateCreditCard() {
-        mPresenter.updateCreditCard(numberEt.text.toString().replace(" ", ""),
-                expDateEt.text.toString())
-    }
+    override fun showCreditCard(creditCard: CreditCard) {
+        cardLayout.changeBackgroundColor(creditCard.color)
 
-    override fun showCreditCard(number: String?, expDate: String?) {
-        numberEt.setText(number)
-        expDateEt.setText(expDate)
+        numberEt.updateText(creditCard.number)
+        expDateEt.updateText(creditCard.expDate)
 
-        if (number.isNullOrBlank()) {
+        if (creditCard.number.isNullOrBlank()) {
             title = getString(R.string.new_card)
         } else {
             title = getString(R.string.edit_card)
         }
     }
+
+    private fun changeColor(color: Color) =
+            mPresenter.let {
+                with(it.currentCard) {
+                    if (isNotEmpty() && numberEt.isNotBlank() && expDateEt.isNotBlank()) {
+                        it.updateCreditCard(localId = localId,
+                                number = numberEt.text.toString().replace(" ", ""),
+                                expDate = expDateEt.text.toString(),
+                                color = color)
+                    } else {
+                        it.updateColor(localId = localId,
+                                color = color)
+                    }
+                }
+            }
+
+    private fun createOrUpdateCard(creditCard: CreditCard) =
+            mPresenter.let {
+                if (numberEt.isNotBlank() && expDateEt.isNotBlank()) {
+                    if (creditCard.isEmpty()) createCard(creditCard.localId)
+                    else updateItem(creditCard.localId)
+                }
+            }
+
+    private fun createCard(localId: String) =
+            mPresenter.let {
+                with(it.currentCard) {
+                    it.createCreditCard(
+                            localId = localId,
+                            number = numberEt.text.toString().replace(" ", ""),
+                            expDate = expDateEt.text.toString(),
+                            color = color,
+                            position = position)
+                }
+            }
+
+    private fun updateItem(localId: String) =
+            mPresenter.let {
+                it.updateCreditCard(
+                        localId = localId,
+                        number = numberEt.text.toString().replace(" ", ""),
+                        expDate = expDateEt.text.toString(),
+                        color = it.currentCard.color)
+            }
 
     override fun showCardBalanceView() {
         val returnIntent = Intent()

@@ -16,11 +16,12 @@
 
 package com.mrebollob.m2p.presentation.view.form
 
+import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.presentation.view.MvpView
 
 interface FormMvpView : MvpView {
 
-    fun showCreditCard(number: String?, expDate: String?)
+    fun showCreditCard(creditCard: CreditCard)
 
     fun showCardBalanceView()
 

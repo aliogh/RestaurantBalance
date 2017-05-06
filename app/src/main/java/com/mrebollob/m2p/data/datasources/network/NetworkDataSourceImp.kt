@@ -33,12 +33,12 @@ import javax.inject.Inject
 class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val m2PWebScraper: M2PWebScraper)
     : NetworkDataSource {
 
-    override fun getCreditCardBalance(creditCard: CreditCard): Observable<CreditCardBalance> {
+    override fun getCreditCardBalance(creditCard: CreditCard, cvv: String): Observable<CreditCardBalance> {
 
-        return getServerData(creditCard).map { m2PWebScraper.getCardBalance(it) }
+        return getServerData(creditCard, cvv).map { m2PWebScraper.getCardBalance(it) }
     }
 
-    fun getServerData(creditCard: CreditCard): Observable<String> {
+    fun getServerData(creditCard: CreditCard, cvv: String): Observable<String> {
         return Observable.create {
             try {
                 val requestCookie = Request.Builder()
@@ -57,7 +57,7 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val
                 val postFormUrl = m2PWebScraper.getPostFormUrl(formResponse.body().string())
                 val requestCard = Request.Builder()
                         .url(postFormUrl)
-                        .post(getFormBody(creditCard))
+                        .post(getFormBody(creditCard, cvv))
                         .build()
                 val response = httpClient.newCall(requestCard).execute()
                 val stringBody = response.body().string()
@@ -77,15 +77,15 @@ class NetworkDataSourceImp @Inject constructor(val httpClient: OkHttpClient, val
         }
     }
 
-    fun getFormBody(creditCard: CreditCard): FormBody {
+    fun getFormBody(creditCard: CreditCard, cvv: String): FormBody {
         return FormBody.Builder()
-                .add("card1", creditCard.number.substring(0, 4))
-                .add("card2", creditCard.number.substring(4, 8))
-                .add("card3", creditCard.number.substring(8, 12))
-                .add("card4", creditCard.number.substring(12, 16))
+                .add("card1", creditCard.number?.substring(0, 4))
+                .add("card2", creditCard.number?.substring(4, 8))
+                .add("card3", creditCard.number?.substring(8, 12))
+                .add("card4", creditCard.number?.substring(12, 16))
                 .add("cardMonth", creditCard.getExpMonth())
                 .add("cardYear", creditCard.getExpYear())
-                .add("ccv2", creditCard.cvv)
+                .add("ccv2", cvv)
                 .build()
     }
 

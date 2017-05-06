@@ -18,6 +18,7 @@
 <layout>
 
     <data>
+
         <variable
             name="creditCard"
             type="com.mrebollob.m2p.domain.entities.CreditCard"/>
@@ -49,7 +50,6 @@
                 tools:ignore="ContentDescription"/>
 
             <TextView
-                android:id="@+id/text_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -64,7 +64,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="4dp"
-                android:text="Provided by 500px"
+                android:text="@{creditCard.expDate}"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>

@@ -15,52 +15,114 @@
   ~  limitations under the License.
   -->
 
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.mrebollob.m2p.presentation.view.form.FormActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <include layout="@layout/toolbar"/>
+    <data>
 
-    <LinearLayout
+        <variable
+            name="presenter"
+            type="com.mrebollob.m2p.presentation.presenter.form.FormPresenter"/>
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/spacing_normal"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:fitsSystemWindows="true"
+        tools:context="com.mrebollob.m2p.presentation.view.form.FormActivity">
 
-        <android.support.design.widget.TextInputLayout
+        <include layout="@layout/toolbar"/>
+
+        <LinearLayout
+            android:id="@+id/cardLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_normal"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <EditText
-                android:id="@+id/numberEt"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/card_number"
-                android:inputType="number"
-                android:maxLength="19"
-                android:textColor="@color/primary_text"
-                android:textSize="@dimen/text_size_normal"/>
-        </android.support.design.widget.TextInputLayout>
+                android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/numberEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/card_number"
+                    android:inputType="number"
+                    android:maxLength="19"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text_size_normal"/>
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/expDateEt"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/exp_date"
-                android:inputType="number"
-                android:maxLength="5"
-                android:textColor="@color/primary_text"
-                android:textSize="@dimen/text_size_normal"/>
-        </android.support.design.widget.TextInputLayout>
-    </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/expDateEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/exp_date"
+                    android:inputType="number"
+                    android:maxLength="5"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text_size_normal"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_margin="10dp"
+                android:background="@color/primary_dark"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:weightSum="5">
+
+                <RadioButton
+                    android:id="@+id/itemRedColor"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/red"
+                    android:buttonTint="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/itemBlueColor"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/blue"
+                    android:buttonTint="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/itemGreenColor"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/green"
+                    android:buttonTint="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/itemWhiteColor"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:buttonTint="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/itemYellowColor"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/yellow"
+                    android:buttonTint="@android:color/black"/>
+
+            </RadioGroup>
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

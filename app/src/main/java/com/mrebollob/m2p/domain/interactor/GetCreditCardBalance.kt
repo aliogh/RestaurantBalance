@@ -32,17 +32,17 @@ class GetCreditCardBalance @Inject constructor(val networkDataSource: NetworkDat
 
     override fun buildInteractorObservable(params: Params): Observable<CreditCardBalance> {
 
-        if (params.creditCard.isNotValid()) {
+        if (params.creditCard.isNotEmpty() && params.cvv.isNotEmpty()) {
             throw (InvalidCreditCardException())
         }
 
-        return networkDataSource.getCreditCardBalance(params.creditCard)
+        return networkDataSource.getCreditCardBalance(params.creditCard, params.cvv)
     }
 
-    class Params private constructor(val creditCard: CreditCard) {
+    class Params private constructor(val creditCard: CreditCard, val cvv: String) {
         companion object {
-            fun forCreditCard(creditCard: CreditCard): Params {
-                return Params(creditCard)
+            fun forCreditCard(creditCard: CreditCard, cvv: String): Params {
+                return Params(creditCard, cvv)
             }
         }
     }

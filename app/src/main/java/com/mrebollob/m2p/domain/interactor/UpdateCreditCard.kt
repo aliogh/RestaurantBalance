@@ -17,26 +17,33 @@
 package com.mrebollob.m2p.domain.interactor
 
 import com.mrebollob.m2p.domain.datasources.DbDataSource
+import com.mrebollob.m2p.domain.entities.Color
+import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.executor.PostExecutionThread
 import com.mrebollob.m2p.domain.executor.ThreadExecutor
 import io.reactivex.Observable
 import javax.inject.Inject
 
-
-class RemoveCreditCard @Inject constructor(val dbDataSource: DbDataSource,
+class UpdateCreditCard @Inject constructor(val dbDataSource: DbDataSource,
                                            threadExecutor: ThreadExecutor,
                                            postExecutionThread: PostExecutionThread)
-    : AbstractInteractor<Unit, RemoveCreditCard.Params>(threadExecutor, postExecutionThread) {
+    : AbstractInteractor<CreditCard, UpdateCreditCard.Params>(threadExecutor, postExecutionThread) {
 
-    override fun buildInteractorObservable(params: Params): Observable<Unit> {
+    override fun buildInteractorObservable(params: Params): Observable<CreditCard> {
 
-        return dbDataSource.deleteCard(params.id)
+        return dbDataSource.updateCard(
+                localId = params.localId,
+                number = params.number,
+                expDate = params.expDate,
+                color = params.color,
+                position = params.position)
     }
 
-    class Params private constructor(val id: Long) {
+    class Params private constructor(val localId: String, val number: String, val expDate: String,
+                                     val color: Color, val position: Long) {
         companion object {
-            fun withId(id: Long): Params {
-                return Params(id)
+            fun updated(localId: String, number: String, expDate: String, color: Color, position: Long): Params {
+                return Params(localId, number, expDate, color, position)
             }
         }
     }

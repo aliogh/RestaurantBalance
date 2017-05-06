@@ -33,4 +33,12 @@
     <color name="divider">#BDBDBD</color>
 
     <color name="grey">#E2E2E2</color>
+
+    <color name="red">#FF5050</color>
+    <color name="yellow">#FFFF66</color>
+    <color name="green">#66FF66</color>
+    <color name="blue">#66CCFF</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="item_selected">@color/primary_dark</color>
 </resources>

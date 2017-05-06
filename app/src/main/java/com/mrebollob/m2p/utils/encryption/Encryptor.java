@@ -17,6 +17,7 @@
 package com.mrebollob.m2p.utils.encryption;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -48,12 +49,11 @@ public class Encryptor {
             (byte) 0x73, (byte) 0x15, (byte) 0x20, (byte) 0x51
     };
 
-    @Inject
-    public Encryptor() {
+    private Encryptor() {
     }
 
     @NonNull
-    public String getAsHash(@NonNull String var) {
+    public static String getAsHash(@Nullable String var) {
         String value;
         try {
             value = crypt(Cipher.ENCRYPT_MODE, var);
@@ -64,7 +64,7 @@ public class Encryptor {
     }
 
     @NonNull
-    public String getUnhashed(@NonNull String hashed) {
+    public static String getUnhashed(@Nullable String hashed) {
         String value;
         try {
             value = crypt(Cipher.DECRYPT_MODE, hashed);

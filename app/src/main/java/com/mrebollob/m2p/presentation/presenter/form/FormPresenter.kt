@@ -16,6 +16,8 @@
 
 package com.mrebollob.m2p.presentation.presenter.form
 
+import com.mrebollob.m2p.domain.entities.Color
+import com.mrebollob.m2p.domain.entities.CreditCard
 import com.mrebollob.m2p.domain.exceptions.InvalidCreditCardException
 import com.mrebollob.m2p.domain.interactor.CreateCreditCard
 import com.mrebollob.m2p.domain.interactor.DefaultObserver
@@ -28,16 +30,22 @@ class FormPresenter @Inject constructor(private val createCreditCard: CreateCred
 
     private var mView: FormMvpView? = null
     var mCardId: String? = null
+    val currentCard = CreditCard()
 
     override fun attachView(view: FormMvpView, isNew: Boolean) {
         mView = view
 //        mView?.showCreditCard(mCardNumber, mCardExpDate)
     }
 
-    fun updateCreditCard(number: String, expDate: String) {
-        createCreditCard.execute(CreateCreditCardObserver(),
-                CreateCreditCard.Params.newCreditCard(number, expDate))
-    }
+    fun createCreditCard(localId: String, number: String, expDate: String, color: Color, position: Long) =
+            createCreditCard.execute(CreateCreditCardObserver(),
+                    CreateCreditCard.Params.newCreditCard(localId, number, expDate, color, position))
+
+    fun updateCreditCard(localId: String, number: String, expDate: String, color: Color) =
+            createCreditCard.execute(CreateCreditCardObserver(),
+                    CreateCreditCard.Params.newCreditCard(localId, number, expDate, color, 0L))
+
+    fun updateColor(localId: String, color: Color) = mView?.showCreditCard(CreditCard(color = color))
 
     override fun detachView() {
         createCreditCard.dispose()

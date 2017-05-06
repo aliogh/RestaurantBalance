@@ -16,14 +16,21 @@
 
 package com.mrebollob.m2p.domain.datasources
 
+import com.mrebollob.m2p.domain.entities.Color
 import com.mrebollob.m2p.domain.entities.CreditCard
 import io.reactivex.Observable
 
 interface DbDataSource {
 
-    fun createCreditCard(number: String, expDate: String): Observable<Unit>
+    fun createCard(localId: String, number: String, expDate: String,
+                   color: Color, position: Long): Observable<Unit>
 
-    fun removeCreditCard(id: Long): Observable<Unit>
+    fun readCards(): Observable<List<CreditCard>>
 
-    fun getCreditCards(): Observable<List<CreditCard>>
+    fun readCard(): Observable<CreditCard>
+
+    fun updateCard(localId: String, number: String, expDate: String,
+                   color: Color, position: Long): Observable<CreditCard>
+
+    fun deleteCard(id: Long): Observable<Unit>
 }

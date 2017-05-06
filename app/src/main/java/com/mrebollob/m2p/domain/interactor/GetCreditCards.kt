@@ -29,6 +29,6 @@ class GetCreditCards @Inject constructor(val dbDataSource: DbDataSource,
     : AbstractInteractor<List<CreditCard>, Unit>(threadExecutor, postExecutionThread) {
 
     override fun buildInteractorObservable(params: Unit): Observable<List<CreditCard>> {
-        return dbDataSource.getCreditCards()
+        return dbDataSource.readCards()
     }
 }
